@@ -2,15 +2,18 @@ cmake_minimum_required(VERSION 2.8)
 
 project(Project)
 
+set(NAME_DLL "keylogger")
 set(NAME_LIB "common")
 set(NAME_CLIENT "client")
 set(NAME_SERVER "server")
 set(TEST_EXEC "UnitTester")
 
 set(INCLUDE_DIRECTORY "${PROJECT_SOURCE_DIR}/${NAME_LIB}/inc/"
+					  "${PROJECT_SOURCE_DIR}/${NAME_DLL}/inc/"
 					  "${PROJECT_SOURCE_DIR}/${NAME_CLIENT}/inc/"
 					  "${PROJECT_SOURCE_DIR}/${NAME_SERVER}/inc/")
 set(SRC_DIRECTORY "${PROJECT_SOURCE_DIR}/${NAME_LIB}/src/"
+				  "${PROJECT_SOURCE_DIR}/${NAME_DLL}/src/"
 				  "${PROJECT_SOURCE_DIR}/${NAME_CLIENT}/src/"
 				  "${PROJECT_SOURCE_DIR}/${NAME_SERVER}/src/")
 set(DOC_PATH "${PROJECT_SOURCE_DIR}/doc")
@@ -19,11 +22,9 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 
 # cmake modules
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
-find_package(CppUnit)
 find_package(Threads)
-find_package(SFML 2.1 COMPONENTS system window graphics audio)
 find_package(Boost 1.55.0 COMPONENTS system program_options REQUIRED)
-find_package(ENet)
+find_package(OpenSSL)
 
 INCLUDE(CMakeDependentOption)
 INCLUDE(CheckIncludeFile)
@@ -39,6 +40,8 @@ INCLUDE(DefineProjectVersion)
 INCLUDE(CurrentDate)
 INCLUDE(DemangleCppABI)
 INCLUDE(CheckApplyCXXCompilerFlags)
+INCLUDE(GenerateExportHeader)
+
 # --- global compiler flags ---
 if (UNIX)
   COMPILER_CXX_FLAGS(FLAGS "-pipe" "-Wall" "-Wextra"
@@ -96,6 +99,18 @@ file(
 
 file(
   GLOB_RECURSE
+  dll_source_files
+  ${NAME_DLL}/src/*
+)
+
+file(
+  GLOB_RECURSE
+  dll_include_files
+  ${NAME_DLL}/inc/*
+)
+
+file(
+  GLOB_RECURSE
   server_source_files
   ${NAME_SERVER}/src/*
 )
@@ -108,10 +123,10 @@ file(
 
 # configure a header file to pass some of the CMake settings
 # to the source code
-configure_file (
-  "${NAME_LIB}/inc/Config.h.in"
-  "${NAME_LIB}/inc/Config.h"
-)
+#configure_file (
+#  "${NAME_LIB}/inc/Config.h.in"
+#  "${NAME_LIB}/inc/Config.h"
+#)
 
 include_directories("${INCLUDE_DIRECTORY}")
 include_directories("${CMAKE_CURRENT_BINARY_DIR}/${NAME_LIB}/inc/")
@@ -122,6 +137,21 @@ add_library(
 # source files
   ${lib_source_files}
   ${lib_include_files}
+)
+
+add_library(
+# executable name
+  ${NAME_DLL} SHARED
+# source files
+  ${dll_source_files}
+  ${dll_include_files}
+)
+
+GENERATE_EXPORT_HEADER( ${NAME_DLL}
+             BASE_NAME ${NAME_DLL}
+             EXPORT_MACRO_NAME ${NAME_DLL}_EXPORT
+             EXPORT_FILE_NAME ${dll_include_files}
+             STATIC_DEFINE ${NAME_DLL}_BUILT_AS_STATIC
 )
 
 add_executable(
@@ -152,21 +182,10 @@ if (THREADS_FOUND)
   target_link_libraries (${NAME_LIB} ${CMAKE_THREAD_LIBS_INIT})
 endif()
 
-if (SFML_FOUND)
-  include_directories(${SFML_INCLUDE_DIR})
-  target_link_libraries (${NAME_CLIENT} ${SFML_LIBRARIES})
-endif()
-
 if (Boost_FOUND)
    include_directories(${Boost_INCLUDE_DIRS})
    target_link_libraries (${NAME_SERVER} ${Boost_LIBRARIES})
    target_link_libraries (${NAME_CLIENT} ${Boost_LIBRARIES})
-endif()
-
-if (ENET_FOUND)
-   include_directories(${ENet_INCLUDE_DIRS})
-   target_link_libraries(${NAME_SERVER} ${ENet_LIBRARIES})
-   target_link_libraries(${NAME_CLIENT} ${ENet_LIBRARIES})
 endif()
 
 # --- enable unit tests if desired ---
