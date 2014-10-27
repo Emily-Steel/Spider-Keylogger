@@ -26,7 +26,7 @@ void ScreenShot::print()
     std::cout << _data << std::endl;
 }
 
-std::vector<char> ScreenShot::to_bytes()
+std::vector<char> ScreenShot::to_bytes() const
 {
     std::vector<char> ret = to_byte_body();
     
@@ -40,7 +40,7 @@ std::vector<char> ScreenShot::to_bytes()
     return (ret);
 }
 
-std::string ScreenShot::to_readable()
+std::string ScreenShot::to_readable() const
 {
     
 }

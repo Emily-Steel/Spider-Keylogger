@@ -13,7 +13,7 @@ APacket::~APacket()
     
 }
 
-std::vector<char> APacket::to_byte_body()
+std::vector<char> APacket::to_byte_body() const
 {
     std::vector<char> ret;
 
@@ -21,7 +21,7 @@ std::vector<char> APacket::to_byte_body()
     return (ret);
 }
 
-std::string APacket::to_readable_body()
+std::string APacket::to_readable_body() const
 {
     std::stringstream ss(JSONPAIR);
     

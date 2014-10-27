@@ -27,7 +27,7 @@ void MouseClick::print()
     std::cout << _posY << std::endl;
 }
 
-std::vector<char> MouseClick::to_bytes()
+std::vector<char> MouseClick::to_bytes() const
 {
     std::vector<char> ret = to_byte_body();
     
@@ -37,7 +37,7 @@ std::vector<char> MouseClick::to_bytes()
     return (ret);
 }
 
-std::string MouseClick::to_readable()
+std::string MouseClick::to_readable() const
 {
     
 }

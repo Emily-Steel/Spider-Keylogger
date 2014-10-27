@@ -11,8 +11,8 @@ public:
     MouseClick(unsigned char button, unsigned short posX, unsigned short posY);
     ~MouseClick();
     
-    virtual std::vector<char> to_bytes();
-    virtual std::string to_readable();
+    virtual std::vector<char> to_bytes() const;
+    virtual std::string to_readable() const;
     virtual void from_bytes(const std::vector<char> &bytes);
     virtual void from_readable(const std::string &data);
     

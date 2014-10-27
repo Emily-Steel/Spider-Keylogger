@@ -1,13 +1,11 @@
 #include "SocketFactory.hpp"
 
-SocketFactory::SocketFactory()
-{
-    
-}
 
-SocketFactory::~SocketFactory()
+SocketFactory SocketFactory::_inst = SocketFactory();
+
+SocketFactory &SocketFactory::getInstance()
 {
-    
+    return (_inst);
 }
 
 ISocket *SocketFactory::createSocket()

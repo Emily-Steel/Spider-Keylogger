@@ -25,7 +25,7 @@ void Result::print()
     std::cout << (int)_success << std::endl;
 }
 
-std::vector<char> Result::to_bytes()
+std::vector<char> Result::to_bytes() const
 {
     std::vector<char> ret = to_byte_body();
     
@@ -33,7 +33,7 @@ std::vector<char> Result::to_bytes()
     return (ret);
 }
 
-std::string Result::to_readable()
+std::string Result::to_readable() const
 {
     
 }

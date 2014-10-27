@@ -25,7 +25,7 @@ void Keystroke::print()
     std::cout << _data << std::endl;
 }
 
-std::vector<char> Keystroke::to_bytes()
+std::vector<char> Keystroke::to_bytes() const
 {
     std::vector<char> ret = to_byte_body();
 
@@ -35,7 +35,7 @@ std::vector<char> Keystroke::to_bytes()
     return (ret);
 }
 
-std::string Keystroke::to_readable()
+std::string Keystroke::to_readable() const
 {
     
 }

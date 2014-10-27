@@ -7,10 +7,17 @@
 class SocketFactory {
     
 public:
-    SocketFactory();
-    ~SocketFactory();
-    
+    static SocketFactory &getInstance();
     ISocket *createSocket();
+    
+private:
+    SocketFactory() { }
+    ~SocketFactory() { }
+    
+    SocketFactory &operator=(const SocketFactory &) { }
+    SocketFactory(const SocketFactory &) { }
+    
+    static SocketFactory _inst;
 };
 
 #endif

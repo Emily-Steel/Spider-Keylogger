@@ -18,12 +18,12 @@ void Request::print()
     std::cout << (int)_type << std::endl;
 }
 
-std::vector<char> Request::to_bytes()
+std::vector<char> Request::to_bytes() const
 {
     return (to_byte_body());
 }
 
-std::string Request::to_readable()
+std::string Request::to_readable() const
 {
     
 }

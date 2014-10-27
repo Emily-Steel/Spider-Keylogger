@@ -31,32 +31,32 @@ public:
     APacket(PacketType type);
     virtual ~APacket();
     
-    virtual std::vector<char> to_bytes() = 0;
-    virtual std::string to_readable() = 0;
+    virtual std::vector<char> to_bytes() const = 0;
+    virtual std::string to_readable() const = 0;
     virtual void from_bytes(const std::vector<char> &bytes) = 0;
     virtual void from_readable(const std::string &data) = 0;
 
 protected:
-    std::vector<char> to_byte_body();
-    std::string to_readable_body();
+    std::vector<char> to_byte_body() const;
+    std::string to_readable_body() const;
     void from_byte_body(const std::vector<char> &bytes);
     void from_readable_body(const std::string &data);
 
     template <typename T>
-    void fill_bytes(std::vector<char> &bytes, T nb)
+    void fill_bytes(std::vector<char> &bytes, T nb) const
     {
         auto it = bytes.end();
 
         for (std::size_t i = 0;i < sizeof(T);++i)
         {
             it = bytes.insert(it, (nb & 0xFF));
-            nb >>= 8;
+            nb = nb >> 8;
         }
     }
 
     
     template <typename T>
-    void get_bytes(const std::vector<char> &bytes, std::size_t &pos, T &nb)
+    void get_bytes(const std::vector<char> &bytes, std::size_t &pos, T &nb) const
     {
         std::size_t i = 0;
         
