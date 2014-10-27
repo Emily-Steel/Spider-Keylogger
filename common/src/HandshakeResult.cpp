@@ -1,4 +1,4 @@
-#include "HandShakeResult.hpp"
+#include "HandshakeResult.hpp"
 
 HandshakeResult::HandshakeResult()
 : Result(HANDSHAKE)
