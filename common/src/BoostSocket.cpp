@@ -33,10 +33,17 @@ bool BoostSocket::connect(const std::string &address, int port)
 
 ISocket &BoostSocket::operator<<(const APacket &packet)
 {
-    std::vector<char> vec = packet.to_bytes();
+    try
+    {
+        std::vector<char> vec = packet.to_bytes();
     
-    _socket.write_some(boost::asio::buffer(vec));
-    return (*this);
+        _socket.write_some(boost::asio::buffer(vec));
+        return (*this);
+    }
+    catch(boost::system::system_error &e)
+    {
+        return (*this);
+    }
 }
 
 ISocket &BoostSocket::operator>>(APacket &packet)
@@ -46,8 +53,15 @@ ISocket &BoostSocket::operator>>(APacket &packet)
 
 bool BoostSocket::write(void *data, std::size_t size)
 {
-    _socket.write_some(boost::asio::buffer(data, size));
-    return (true);
+    try
+    {
+        _socket.write_some(boost::asio::buffer(data, size));
+        return (true);
+    }
+    catch (boost::system::system_error &e)
+    {
+        return (false);
+    }
 }
 
 bool BoostSocket::read(std::string &buffer, std::size_t size)

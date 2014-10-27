@@ -9,7 +9,7 @@
 class ISocket {
 
 public:
-    virtual ~ISocket();
+    virtual ~ISocket() {};
     
     virtual bool connect (const std::string &address, int port) = 0;
     virtual ISocket &operator<<(const APacket &packet) = 0;
