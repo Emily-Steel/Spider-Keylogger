@@ -30,8 +30,6 @@ std::string Request::to_readable() const
 
 void Request::from_bytes(const std::vector<char> &bytes)
 {
-    std::size_t pos = 1;
-    
     if (bytes.empty() && bytes[0] != _type)
         throw PacketException("Error while parse packet");
 }

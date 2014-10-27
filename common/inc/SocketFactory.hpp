@@ -14,7 +14,7 @@ private:
     SocketFactory() { }
     ~SocketFactory() { }
     
-    SocketFactory &operator=(const SocketFactory &) { }
+    SocketFactory &operator=(const SocketFactory &) = delete;
     SocketFactory(const SocketFactory &) { }
     
     static SocketFactory _inst;
