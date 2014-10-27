@@ -1,7 +1,7 @@
 #ifndef _PACKETEXCEPTION_HPP_
 # define _PACKETEXCEPTION_HPP_
 
-# include <exception>
+# include <stdexcept>
 # include <string>
 
 class PacketException: public std::runtime_error

@@ -3,11 +3,11 @@
 
 # include "Result.hpp"
 
-class HandShakeResult: public Result
+class HandshakeResult: public Result
 {
 public:
-    HandShakeResult();
-    HandShakeResult(char success);
+    HandshakeResult();
+    HandshakeResult(char success);
 };
 
 #endif

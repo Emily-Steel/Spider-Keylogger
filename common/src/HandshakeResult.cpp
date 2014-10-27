@@ -1,12 +1,12 @@
 #include "HandShakeResult.hpp"
 
-HandShakeResult::HandShakeResult()
+HandshakeResult::HandshakeResult()
 : Result(HANDSHAKE)
 {
     
 }
 
-HandShakeResult::HandShakeResult(char success)
+HandshakeResult::HandshakeResult(char success)
 : Result(HANDSHAKE, success)
 {
     
