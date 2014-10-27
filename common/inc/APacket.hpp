@@ -7,7 +7,7 @@
 # include "PacketException.hpp"
 
 # define JSONPAIR "\"type\": "
-# define JSONPAIRSIZE std::strlen("\"type\": ")
+# define JSONPAIRSIZE std::string("\"type\": ").size()
 
 # define DONE 1
 

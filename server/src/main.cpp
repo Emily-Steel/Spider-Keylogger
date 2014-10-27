@@ -8,7 +8,7 @@
 #include "ScreenShotRequest.hpp"
 #include "KillRequest.hpp"
 #include "KillConfirm.hpp"
-#include "HandShakeResult.hpp"
+#include "HandshakeResult.hpp"
 #include "ScreenShot.hpp"
 
 int	main(int ac, char **av)
@@ -28,8 +28,8 @@ int	main(int ac, char **av)
     KillConfirm d1(5);
     KillConfirm d2;
 
-    HandShakeResult e1(1);
-    HandShakeResult e2;
+    HandshakeResult e1(1);
+    HandshakeResult e2;
 
     ScreenShot f1(1, "salut");
     ScreenShot f2;
