@@ -8,7 +8,7 @@ SocketFactory &SocketFactory::getInstance()
     return (_inst);
 }
 
-ISocket *SocketFactory::createSocket()
+ASocket *SocketFactory::createSocket()
 {
     return (new BoostSocket());
 }

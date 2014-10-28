@@ -1,14 +1,14 @@
 #ifndef _SOCKETFACTORY_hpp
 # define _SOCKETFACTORY_hpp
 
-# include "ISocket.hpp"
+# include "ASocket.hpp"
 # include "BoostSocket.hpp"
 
 class SocketFactory {
     
 public:
     static SocketFactory &getInstance();
-    ISocket *createSocket();
+    ASocket *createSocket();
     
 private:
     SocketFactory() { }

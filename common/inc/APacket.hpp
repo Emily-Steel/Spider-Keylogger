@@ -53,7 +53,6 @@ protected:
             nb = nb >> 8;
         }
     }
-
     
     template <typename T>
     void get_bytes(const std::vector<char> &bytes, std::size_t &pos, T &nb) const
