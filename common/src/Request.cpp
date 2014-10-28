@@ -18,23 +18,22 @@ void Request::print()
     std::cout << (int)_type << std::endl;
 }
 
-std::vector<char> Request::to_bytes() const
+std::vector<char> Request::to_bytes_body() const
 {
-    return (to_byte_body());
+    return (std::vector<char>());
 }
 
-std::string Request::to_readable() const
+std::string Request::to_readable_body() const
+{
+    return ("");
+}
+
+void Request::from_bytes_body(const std::vector<char> &)
 {
     
 }
 
-void Request::from_bytes(const std::vector<char> &bytes)
-{
-    if (bytes.empty() && bytes[0] != _type)
-        throw PacketException("Error while parse packet");
-}
-
-void Request::from_readable(const std::string &data)
+void Request::from_readable_body(const std::string &)
 {
     
 }

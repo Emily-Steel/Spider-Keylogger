@@ -25,9 +25,9 @@ void Keystroke::print()
     std::cout << _data << std::endl;
 }
 
-std::vector<char> Keystroke::to_bytes() const
+std::vector<char> Keystroke::to_bytes_body() const
 {
-    std::vector<char> ret = to_byte_body();
+    std::vector<char> ret;
 
     fill_bytes(ret, static_cast<int>(_data.size()));
     for (auto c : _data)
@@ -35,28 +35,24 @@ std::vector<char> Keystroke::to_bytes() const
     return (ret);
 }
 
-std::string Keystroke::to_readable() const
+std::string Keystroke::to_readable_body() const
 {
     
 }
 
-void Keystroke::from_bytes(const std::vector<char> &bytes)
+void Keystroke::from_bytes_body(const std::vector<char> &bytes)
 {
     std::size_t pos = 1;
     unsigned int size = 0;
 
-    if (bytes.empty() && bytes[0] != _type)
-        throw PacketException("Error while parse packet");
-
     get_bytes(bytes, pos, size);
-    
     for (;pos < bytes.size();pos++)
         _data += bytes[pos];
     if (pos - (sizeof(int) + 1) != size)
-        throw PacketException("Error while parse packet");
+        throw std::invalid_argument("Error while parse packet");
 }
 
-void Keystroke::from_readable(const std::string &data)
+void Keystroke::from_readable_body(const std::string &data)
 {
     
 }

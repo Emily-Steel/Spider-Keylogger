@@ -25,30 +25,27 @@ void Result::print()
     std::cout << (int)_success << std::endl;
 }
 
-std::vector<char> Result::to_bytes() const
+std::vector<char> Result::to_bytes_body() const
 {
-    std::vector<char> ret = to_byte_body();
+    std::vector<char> ret;
     
     fill_bytes(ret, _success);
     return (ret);
 }
 
-std::string Result::to_readable() const
+std::string Result::to_readable_body() const
 {
     
 }
 
-void Result::from_bytes(const std::vector<char> &bytes)
+void Result::from_bytes_body(const std::vector<char> &bytes)
 {
     std::size_t pos = 1;
-    
-    if (bytes.empty() && bytes[0] != _type)
-        throw PacketException("Error while parse packet");
-    
+
     get_bytes(bytes, pos, _success);
 }
 
-void Result::from_readable(const std::string &data)
+void Result::from_readable_body(const std::string &data)
 {
     
 }
