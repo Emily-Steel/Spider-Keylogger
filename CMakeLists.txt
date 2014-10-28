@@ -25,6 +25,7 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
 find_package(Threads)
 find_package(Boost 1.55.0 COMPONENTS system program_options REQUIRED)
 find_package(OpenSSL)
+find_package(Sqlite3)
 
 INCLUDE(CMakeDependentOption)
 INCLUDE(CheckIncludeFile)
@@ -180,6 +181,11 @@ file(
 
 if (THREADS_FOUND)
   target_link_libraries (${NAME_LIB} ${CMAKE_THREAD_LIBS_INIT})
+endif()
+
+if (SQLITE3_FOUND)
+  include_directories(${SQLITE3_INCLUDE_DIR})
+  target_link_libraries (${NAME_LIB} ${SQLITE3_LIBRARIES})
 endif()
 
 if (Boost_FOUND)
