@@ -1,95 +1,132 @@
+#include <iostream>
+#include <vector>
+#include <assert.h>
+
 #include "BoostSocket.hpp"
 
-BoostSocket::BoostSocket()
-: _socket(_io_service), _accept(_io_service)
+boost::asio::io_service BoostSocket::_service;
+
+BoostSocket::BoostSocket(void) :
+  _socket(_service),
+  _acceptor(_service)
 {
 
 }
 
-BoostSocket::BoostSocket(boost::asio::ip::tcp::socket &socket)
-: _socket(_io_service), _accept(_io_service)
+bool BoostSocket::connect(const std::string &address, unsigned short port)
 {
-    _socket.assign(boost::asio::ip::tcp::v4(), socket.native_handle());
+  assert(_type == Type::NONE);
+
+  try
+  {
+    _socket.connect({boost::asio::ip::address::from_string(address), port});
+    _type = Type::ACTIVE;
+    return true;
+  }
+  catch (boost::system::system_error &e)
+  {
+    std::cerr << "Cannot connect to the server" << std::endl;
+    return false;
+  }
 }
 
-BoostSocket::~BoostSocket()
+ASocket& BoostSocket::operator<<(const APacket &packet)
 {
-    
+  assert(_type == Type::ACTIVE);
+
+  try
+  {
+    _socket.send(boost::asio::buffer(packet.to_bytes()));
+  }
+  catch (boost::system::system_error &e)
+  {
+    _throwNetworkException(e);
+  }
+  return *this;
 }
 
-bool BoostSocket::connect(const std::string &address, int port)
+ASocket& BoostSocket::operator>>(APacket &packet)
 {
-    try
-    {
-        _socket.connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(address), port));
-        return (true);
-    }
-    catch (boost::system::system_error &e)
-    {
-        std::cerr << "Cannot connect to the server" << std::endl;
-        return (false);
-    }
+  assert(_type == Type::ACTIVE);
+
+  try
+  {
+    std::vector<char> buffer(SIZEREAD);
+
+    _socket.receive(boost::asio::buffer(buffer, SIZEREAD));
+    packet.from_bytes(buffer);
+  }
+  catch (boost::system::system_error &e)
+  {
+    _throwNetworkException(e);
+  }
+  return *this;
 }
 
-ISocket &BoostSocket::operator<<(const APacket &packet)
+std::size_t BoostSocket::write(void *data, std::size_t size)
 {
-    try
-    {
-        std::vector<char> vec = packet.to_bytes();
-    
-        _socket.write_some(boost::asio::buffer(vec));
-        return (*this);
-    }
-    catch(boost::system::system_error &e)
-    {
-        return (*this);
-    }
+  assert(_type == Type::ACTIVE);
+
+  try
+  {
+    return _socket.write_some(boost::asio::buffer(data, size));
+  }
+  catch (boost::system::system_error &e)
+  {
+    _throwNetworkException(e);
+  }
+  return 0;
 }
 
-ISocket &BoostSocket::operator>>(APacket &packet)
+std::size_t BoostSocket::read(std::string &buffer, std::size_t size)
 {
-    return (*this);
+  assert(_type == Type::ACTIVE);
+
+  try
+  {
+    char vec[size];
+
+    std::size_t len = _socket.read_some(boost::asio::buffer(vec, size));
+    buffer += vec;
+    return len;
+  }
+  catch (boost::system::system_error &e)
+  {
+    _throwNetworkException(e);
+  }
+  return 0;
 }
 
-bool BoostSocket::write(void *data, std::size_t size)
+void BoostSocket::bind(unsigned short port)
 {
-    try
-    {
-        _socket.write_some(boost::asio::buffer(data, size));
-        return (true);
-    }
-    catch (boost::system::system_error &e)
-    {
-        return (false);
-    }
+  assert(_type == Type::NONE);
+
+  _acceptor.bind({boost::asio::ip::tcp::v4(), port});
+  _type = Type::PASSIVE;
 }
 
-bool BoostSocket::read(std::string &buffer, std::size_t size)
+void BoostSocket::listen(int backlog)
 {
-    char data[SIZEREAD + 1] = { 0 };
-    
-    for (std::size_t i = 0;i < size;i += SIZEREAD)
-    {
-        _socket.read_some(boost::asio::buffer(data, SIZEREAD));
-        buffer += data;
-    }
-    return (true);
+  assert(_type == Type::PASSIVE);
+
+  _acceptor.listen(backlog);
 }
 
-void BoostSocket::bind(int port)
+std::shared_ptr<ASocket> BoostSocket::accept(void)
 {
-    _accept.bind(boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port));
+  assert(_type == Type::PASSIVE);
+
+  auto	sock = std::make_shared<BoostSocket>();
+
+  _acceptor.accept(sock->_socket);
+  return sock;
 }
 
-void BoostSocket::listen(std::size_t backlog)
+void BoostSocket::_throwNetworkException(boost::system::system_error &e)
 {
-    
-}
-
-ISocket *BoostSocket::accept()
-{
-    boost::asio::ip::tcp::socket    s(_io_service);
-    
-    _accept.accept(s);
-    return (new BoostSocket(s));
+  if (e.code() == boost::asio::error::eof)
+  {
+    std::cerr << "Connection reset by peer." << std::endl;
+  }
+  throw std::runtime_error("Connection interrupted");
 }

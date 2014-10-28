@@ -15,8 +15,7 @@ public:
     virtual void close();
     virtual bool isGood() const;
     virtual void insert(const APacket &, const std::string &id);
-    virtual std::vector<APacket *> dump()
-    ;
+    virtual std::vector<APacket *> dump();
 
 private:
     std::fstream    _fileHandle;
