@@ -12,7 +12,7 @@ FileLog::~FileLog()
 
 void FileLog::open(const std::string &path)
 {
-    _fileHandle.open(path.c_str());
+    _fileHandle.open(path.c_str(), std::fstream::out | std::fstream::app);
 }
 
 void FileLog::close()
