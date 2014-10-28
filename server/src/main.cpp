@@ -1,4 +1,5 @@
 #include <iostream>
+#include <Server.hpp>
 
 #include "ASocket.hpp"
 #include "SocketFactory.hpp"
@@ -33,7 +34,16 @@ int	main(void)
 
     ScreenShot f1(1, "salut");
     ScreenShot f2;
-    
+
+    try
+    {
+        Server serv("toto.db");
+    }
+    catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        return (1);
+    }
+
     t2.from_bytes(t1.to_bytes());
     t2.print();
 
