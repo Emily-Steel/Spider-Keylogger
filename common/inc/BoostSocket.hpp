@@ -1,31 +1,38 @@
-#ifndef _SOCKET_HPP_
-# define _SOCKET_HPP_
+#ifndef	BOOSTSSLSOCKET_H
+# define BOOSTSSLSOCKET_H
 
-# include <boost/asio.hpp>
-# include "SocketFactory.hpp"
-# include "ISocket.hpp"
+# include <string>
+# include	<boost/asio.hpp>
 
-class BoostSocket : public ISocket
+# include "ASocket.hpp"
+
+class BoostSocket : public ASocket
 {
 public:
-    BoostSocket();
-    BoostSocket(boost::asio::ip::tcp::socket &socket);
-    ~BoostSocket();
-    
-    virtual bool connect (const std::string &address, int port);
-    virtual ISocket &operator<<(const APacket &packet);
-    virtual ISocket &operator>>(APacket &packet);
-    virtual bool write(void *data, std::size_t size);
-    virtual bool read(std::string &buffer, std::size_t size);
-    
-    virtual void bind(int port);
-    virtual void listen(std::size_t backlog);
-    virtual ISocket *accept();
+  BoostSocket(void);
+  virtual ~BoostSocket(void) = default;
+  BoostSocket(const BoostSocket&other) = delete;
+  BoostSocket&operator=(const BoostSocket&other) = delete;
+
+  bool				connect(const std::string &address, unsigned short port) override;
+  ASocket&operator<<(const APacket &packet) override;
+  ASocket                   &operator>>(APacket &packet) override;
+  std::size_t write(void *data, std::size_t size) override;
+  std::size_t read(std::string &buffer, std::size_t size) override;
+
+  void				bind(unsigned short port) override;
+  void				listen(int backlog) override;
+  std::shared_ptr<ASocket>	accept(void) override;
 
 private:
-    boost::asio::io_service             _io_service;
-    boost::asio::ip::tcp::socket        _socket;
-    boost::asio::ip::tcp::acceptor      _accept;
+  void        _throwNetworkException(boost::system::system_error &e);
+
+  static boost::asio::io_service    _service;
+
+  // only used if the socket is an active one
+  boost::asio::ip::tcp::socket			_socket;
+  // only used if the socket is a passive one
+  boost::asio::ip::tcp::acceptor		_acceptor;
 };
 
-#endif
+#endif /* BOOSTSSLSOCKET_H */

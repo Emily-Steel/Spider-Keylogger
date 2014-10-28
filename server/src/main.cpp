@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "ISocket.hpp"
+#include "ASocket.hpp"
 #include "SocketFactory.hpp"
 
 #include "KeyStroke.hpp"
@@ -11,7 +11,7 @@
 #include "HandshakeResult.hpp"
 #include "ScreenShot.hpp"
 
-int	main(int ac, char **av)
+int	main(void)
 {
     Keystroke t1("salut");
     Keystroke t2;
@@ -71,7 +71,7 @@ int	main(int ac, char **av)
 
     std::cout << "Hello World!" << std::endl;
     
-    ISocket *socket = SocketFactory::getInstance().createSocket();
+    ASocket *socket = SocketFactory::getInstance().createSocket();
 
     if (socket->connect("127.0.0.1", 6060) == false)
         return (1);
