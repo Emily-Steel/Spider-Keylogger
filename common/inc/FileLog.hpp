@@ -14,8 +14,8 @@ public:
     virtual void open(const std::string &path);
     virtual void close();
     virtual bool isGood() const;
-    virtual ALog &operator<<(const APacket &);
-    virtual ALog &operator>>(APacket &);
+    virtual void insert(const APacket &, const std::string &id) = 0;
+    virtual std::vector<APacket *> dump() = 0;
 
 private:
     std::fstream    _fileHandle;

@@ -26,14 +26,14 @@ bool FileLog::isGood() const
     return (_fileHandle.good());
 }
 
-ALog &FileLog::operator<<(const APacket &packet)
+void FileLog::insert(const APacket &packet, const std::string &id)
 {
     std::string tmp = packet.to_readable();
 
-    return (*this);
+//    return (*this);
 }
 
-ALog &FileLog::operator>>(APacket &packet)
+std::vector<APacket *> FileLog::dump()
 {
-    return (*this);
+//    return (*this);
 }
