@@ -27,9 +27,9 @@ void MouseClick::print()
     std::cout << _posY << std::endl;
 }
 
-std::vector<char> MouseClick::to_bytes() const
+std::vector<char> MouseClick::to_bytes_body() const
 {
-    std::vector<char> ret = to_byte_body();
+    std::vector<char> ret;
     
     fill_bytes(ret, _button);
     fill_bytes(ret, _posX);
@@ -37,17 +37,14 @@ std::vector<char> MouseClick::to_bytes() const
     return (ret);
 }
 
-std::string MouseClick::to_readable() const
+std::string MouseClick::to_readable_body() const
 {
-    
+
 }
 
-void MouseClick::from_bytes(const std::vector<char> &bytes)
+void MouseClick::from_bytes_body(const std::vector<char> &bytes)
 {
     std::size_t pos = 1;
-    
-    if (bytes.empty() && bytes[0] != _type)
-        throw PacketException("Error while parse packet");
     
     get_bytes(bytes, pos, _button);
     get_bytes(bytes, pos, _posX);
@@ -55,7 +52,7 @@ void MouseClick::from_bytes(const std::vector<char> &bytes)
     
 }
 
-void MouseClick::from_readable(const std::string &data)
+void MouseClick::from_readable_body(const std::string &data)
 {
     
 }

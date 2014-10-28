@@ -26,9 +26,9 @@ void ScreenShot::print()
     std::cout << _data << std::endl;
 }
 
-std::vector<char> ScreenShot::to_bytes() const
+std::vector<char> ScreenShot::to_bytes_body() const
 {
-    std::vector<char> ret = to_byte_body();
+    std::vector<char> ret;
     
     fill_bytes(ret, _success);
     if (_success == DONE)
@@ -40,18 +40,15 @@ std::vector<char> ScreenShot::to_bytes() const
     return (ret);
 }
 
-std::string ScreenShot::to_readable() const
+std::string ScreenShot::to_readable_body() const
 {
     
 }
 
-void ScreenShot::from_bytes(const std::vector<char> &bytes)
+void ScreenShot::from_bytes_body(const std::vector<char> &bytes)
 {
     std::size_t pos = 1;
     int size = 0;
-    
-    if (bytes.empty() && bytes[0] != _type)
-        throw PacketException("Error while parse packet");
     
     get_bytes(bytes, pos, _success);
     if (_success == DONE)
@@ -60,11 +57,11 @@ void ScreenShot::from_bytes(const std::vector<char> &bytes)
         for (;pos < bytes.size();pos++)
             _data += bytes[pos];
         if (pos - (sizeof(int) + sizeof(char) + 1) != size)
-            throw PacketException("Error while parse packet");
+            throw std::invalid_argument("Error while parse packet");
     }
 }
 
-void ScreenShot::from_readable(const std::string &data)
+void ScreenShot::from_readable_body(const std::string &data)
 {
     
 }

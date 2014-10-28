@@ -1,5 +1,3 @@
-#include <iostream>
-#include <sstream>
 #include "APacket.hpp"
 
 APacket::APacket(PacketType type)
@@ -13,29 +11,29 @@ APacket::~APacket()
     
 }
 
-std::vector<char> APacket::to_byte_body() const
+std::vector<char> APacket::to_bytes() const
 {
     std::vector<char> ret;
+    std::vector<char> tmp = to_bytes_body();
 
     ret.push_back(_type);
+    ret.insert(ret.end(), tmp.begin(), tmp.end());
     return (ret);
 }
 
-std::string APacket::to_readable_body() const
+std::string APacket::to_readable() const
 {
-    std::stringstream ss(JSONPAIR);
-    
-    ss << _type;
-    return (ss.str());
+    return ("");
 }
 
-void APacket::from_byte_body(const std::vector<char> &bytes)
+void APacket::from_bytes(const std::vector<char> &bytes)
 {
-    if (bytes.size() > 1)
-        _type = bytes[0];
+    if (bytes.empty() && bytes[0] != _type)
+        throw std::invalid_argument("Error while parse packet");
+    from_bytes_body(bytes);
 }
 
-void APacket::from_readable_body(const std::string &data)
+void APacket::from_readable(const std::string &data)
 {
     std::size_t pos;
     if ((pos = data.find(JSONPAIR)) != std::string::npos)

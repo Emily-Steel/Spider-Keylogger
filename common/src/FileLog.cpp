@@ -35,9 +35,5 @@ ALog &FileLog::operator<<(const APacket &packet)
 
 ALog &FileLog::operator>>(APacket &packet)
 {
-    std::string tmp("");
-    
-    
-    packet.from_readable(tmp);
     return (*this);
 }

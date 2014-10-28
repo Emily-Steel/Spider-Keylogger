@@ -1,10 +1,11 @@
 #ifndef _APACKET_HPP_
 # define _APACKET_HPP_
 
+# include <iostream>
+# include <sstream>
 # include <string>
 # include <vector>
-
-# include "PacketException.hpp"
+# include <stdexcept>
 
 # define JSONPAIR "\"type\": "
 # define JSONPAIRSIZE std::string("\"type\": ").size()
@@ -31,16 +32,16 @@ public:
     APacket(PacketType type);
     virtual ~APacket();
     
-    virtual std::vector<char> to_bytes() const = 0;
-    virtual std::string to_readable() const = 0;
-    virtual void from_bytes(const std::vector<char> &bytes) = 0;
-    virtual void from_readable(const std::string &data) = 0;
+    std::vector<char> to_bytes() const;
+    std::string to_readable() const;
+    void from_bytes(const std::vector<char> &bytes);
+    void from_readable(const std::string &data);
 
 protected:
-    std::vector<char> to_byte_body() const;
-    std::string to_readable_body() const;
-    void from_byte_body(const std::vector<char> &bytes);
-    void from_readable_body(const std::string &data);
+    virtual std::vector<char> to_bytes_body() const = 0;
+    virtual std::string to_readable_body() const = 0;
+    virtual void from_bytes_body(const std::vector<char> &bytes) = 0;
+    virtual void from_readable_body(const std::string &data) = 0;
 
     template <typename T>
     void fill_bytes(std::vector<char> &bytes, T nb) const
@@ -64,7 +65,7 @@ protected:
             nb = ((nb << 8) | bytes[pos + i]);
         pos += i;
         if (pos < sizeof(T) + 1)
-            throw PacketException("Error while parse packet");
+            throw std::invalid_argument("Error while parse packet");
     }
 
     
