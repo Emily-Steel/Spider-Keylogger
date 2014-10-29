@@ -23,7 +23,15 @@ std::vector<char> APacket::to_bytes() const
 
 std::string APacket::to_readable() const
 {
-    return ("");
+    std::string ret("");
+    std::stringstream ss("");
+    
+    ss << static_cast<int>(_type);
+    _parser->clear();
+    _parser->put("Type", ss.str());
+    to_readable_body();
+    _parser->write(ret);
+    return (ret);
 }
 
 void APacket::from_bytes(const std::vector<char> &bytes)
@@ -35,11 +43,16 @@ void APacket::from_bytes(const std::vector<char> &bytes)
 
 void APacket::from_readable(const std::string &data)
 {
-    std::size_t pos;
-    if ((pos = data.find(JSONPAIR)) != std::string::npos)
-    {
-        pos += JSONPAIRSIZE;
-        std::stringstream ss(data.substr(pos));
-        ss >> _type;
-    }
+    std::string tmp;
+    int type;
+    std::stringstream ss("");
+    
+    _parser->clear();
+    _parser->read(data);
+    _parser->get("Type", tmp);
+    ss.str(tmp);
+    ss >> type;
+    if (type != _type && !tmp.empty())
+        throw std::invalid_argument("Error while parsing packet");
+    from_readable_body();
 }

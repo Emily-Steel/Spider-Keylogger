@@ -40,7 +40,7 @@ std::vector<char> ScreenShot::to_bytes_body() const
     return (ret);
 }
 
-std::string ScreenShot::to_readable_body() const
+void ScreenShot::to_readable_body() const
 {
     
 }
@@ -61,7 +61,7 @@ void ScreenShot::from_bytes_body(const std::vector<char> &bytes)
     }
 }
 
-void ScreenShot::from_readable_body(const std::string &data)
+void ScreenShot::from_readable_body()
 {
     
 }

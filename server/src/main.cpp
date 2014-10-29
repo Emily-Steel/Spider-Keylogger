@@ -2,6 +2,7 @@
 
 #include "ASocket.hpp"
 #include "SocketFactory.hpp"
+#include "JSONParser.hpp"
 
 #include "KeyStroke.hpp"
 #include "MouseClick.hpp"
@@ -71,6 +72,9 @@ int	main(void)
 
     std::cout << "Hello World!" << std::endl;
     
+    std::string tmp = t1.to_readable();
+
+    std::cout << tmp << std::endl;
     ASocket *socket = SocketFactory::getInstance().createSocket();
 
     if (socket->connect("127.0.0.1", 6060) == false)

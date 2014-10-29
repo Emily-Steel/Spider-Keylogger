@@ -7,8 +7,7 @@
 # include <vector>
 # include <stdexcept>
 
-# define JSONPAIR "\"type\": "
-# define JSONPAIRSIZE std::string("\"type\": ").size()
+# include "IReadable.hpp"
 
 # define DONE 1
 
@@ -39,9 +38,9 @@ public:
 
 protected:
     virtual std::vector<char> to_bytes_body() const = 0;
-    virtual std::string to_readable_body() const = 0;
+    virtual void to_readable_body() const = 0;
     virtual void from_bytes_body(const std::vector<char> &bytes) = 0;
-    virtual void from_readable_body(const std::string &data) = 0;
+    virtual void from_readable_body() = 0;
 
     template <typename T>
     void fill_bytes(std::vector<char> &bytes, T nb) const
@@ -68,7 +67,8 @@ protected:
     }
 
     
-    char    _type;
+    char        _type;
+    IReadable   *_parser;
 };
 
 #endif

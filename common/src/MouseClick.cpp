@@ -37,7 +37,7 @@ std::vector<char> MouseClick::to_bytes_body() const
     return (ret);
 }
 
-std::string MouseClick::to_readable_body() const
+void MouseClick::to_readable_body() const
 {
 
 }
@@ -52,7 +52,7 @@ void MouseClick::from_bytes_body(const std::vector<char> &bytes)
     
 }
 
-void MouseClick::from_readable_body(const std::string &data)
+void MouseClick::from_readable_body()
 {
     
 }

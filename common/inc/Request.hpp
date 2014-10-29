@@ -13,9 +13,9 @@ public:
 
 protected:
     virtual std::vector<char> to_bytes_body() const;
-    virtual std::string to_readable_body() const;
+    virtual void to_readable_body() const;
     virtual void from_bytes_body(const std::vector<char> &);
-    virtual void from_readable_body(const std::string &);
+    virtual void from_readable_body();
 
 };
 

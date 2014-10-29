@@ -3,7 +3,7 @@
 HandshakeResult::HandshakeResult()
 : Result(HANDSHAKE)
 {
-    
+
 }
 
 HandshakeResult::HandshakeResult(char success)

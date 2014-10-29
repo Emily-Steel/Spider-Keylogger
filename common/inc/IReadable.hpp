@@ -11,8 +11,10 @@ public:
     virtual void put(const std::string &key, const std::string &value) = 0;
     virtual void get(const std::string &key, std::string &value) = 0;
     
-    virtual void getReadable(const std::string &) = 0;
-    virtual void setReadable(std::string &) = 0;
+    virtual void read(const std::string &) = 0;
+    virtual void write(std::string &) = 0;
+    
+    virtual void clear() = 0;
 };
 
 #endif

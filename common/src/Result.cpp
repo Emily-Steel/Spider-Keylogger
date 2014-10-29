@@ -33,7 +33,7 @@ std::vector<char> Result::to_bytes_body() const
     return (ret);
 }
 
-std::string Result::to_readable_body() const
+void Result::to_readable_body() const
 {
     
 }
@@ -45,7 +45,7 @@ void Result::from_bytes_body(const std::vector<char> &bytes)
     get_bytes(bytes, pos, _success);
 }
 
-void Result::from_readable_body(const std::string &data)
+void Result::from_readable_body()
 {
     
 }
