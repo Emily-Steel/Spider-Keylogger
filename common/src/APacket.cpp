@@ -21,16 +21,14 @@ std::vector<char> APacket::to_bytes() const
     return (ret);
 }
 
-std::string APacket::to_readable() const
+std::string APacket::to_readable(IReadable &parser) const
 {
-    std::string ret("");
-    std::stringstream ss("");
+    std::string ret;
     
-    ss << static_cast<int>(_type);
-    _parser->clear();
-    _parser->put("Type", ss.str());
-    to_readable_body();
-    _parser->write(ret);
+    parser.clear();
+    parser.put("Type", static_cast<int>(_type));
+    to_readable_body(parser);
+    parser.write(ret);
     return (ret);
 }
 
@@ -41,18 +39,14 @@ void APacket::from_bytes(const std::vector<char> &bytes)
     from_bytes_body(bytes);
 }
 
-void APacket::from_readable(const std::string &data)
+void APacket::from_readable(const std::string &data, IReadable &parser)
 {
-    std::string tmp;
-    int type;
-    std::stringstream ss("");
+    int type = -1;
     
-    _parser->clear();
-    _parser->read(data);
-    _parser->get("Type", tmp);
-    ss.str(tmp);
-    ss >> type;
-    if (type != _type && !tmp.empty())
+    parser.clear();
+    parser.read(data);
+    parser.get("Type", type);
+    if (type != _type)
         throw std::invalid_argument("Error while parsing packet");
-    from_readable_body();
+    from_readable_body(parser);
 }

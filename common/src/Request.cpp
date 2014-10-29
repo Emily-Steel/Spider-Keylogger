@@ -23,7 +23,7 @@ std::vector<char> Request::to_bytes_body() const
     return (std::vector<char>());
 }
 
-void Request::to_readable_body() const
+void Request::to_readable_body(IReadable &) const
 {
 
 }
@@ -33,7 +33,7 @@ void Request::from_bytes_body(const std::vector<char> &)
     
 }
 
-void Request::from_readable_body()
+void Request::from_readable_body(IReadable &)
 {
     
 }

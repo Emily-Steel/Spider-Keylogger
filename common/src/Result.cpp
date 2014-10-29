@@ -33,9 +33,9 @@ std::vector<char> Result::to_bytes_body() const
     return (ret);
 }
 
-void Result::to_readable_body() const
+void Result::to_readable_body(IReadable &parser) const
 {
-    
+    parser.put("Success", _success);
 }
 
 void Result::from_bytes_body(const std::vector<char> &bytes)
@@ -45,7 +45,7 @@ void Result::from_bytes_body(const std::vector<char> &bytes)
     get_bytes(bytes, pos, _success);
 }
 
-void Result::from_readable_body()
+void Result::from_readable_body(IReadable &parser)
 {
-    
+    parser.get("Success", _success);
 }

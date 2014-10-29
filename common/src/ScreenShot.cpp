@@ -40,15 +40,20 @@ std::vector<char> ScreenShot::to_bytes_body() const
     return (ret);
 }
 
-void ScreenShot::to_readable_body() const
+void ScreenShot::to_readable_body(IReadable &parser) const
 {
-    
+    parser.put("Success", _success);
+    if (_success == DONE)
+    {
+        parser.put("Size", static_cast<int>(_data.size()));
+        parser.put("Data", _data);
+    }
 }
 
 void ScreenShot::from_bytes_body(const std::vector<char> &bytes)
 {
     std::size_t pos = 1;
-    int size = 0;
+    unsigned int size = 0;
     
     get_bytes(bytes, pos, _success);
     if (_success == DONE)
@@ -56,12 +61,22 @@ void ScreenShot::from_bytes_body(const std::vector<char> &bytes)
         get_bytes(bytes, pos, size);
         for (;pos < bytes.size();pos++)
             _data += bytes[pos];
-        if (pos - (sizeof(int) + sizeof(char) + 1) != size)
-            throw std::invalid_argument("Error while parse packet");
+        if (pos - (sizeof(size) + sizeof(_type) + 1) != size)
+            throw std::invalid_argument("Error while parsing packet");
     }
 }
 
-void ScreenShot::from_readable_body()
+void ScreenShot::from_readable_body(IReadable &parser)
 {
-    
+    int size;
+
+    parser.get("Success", _success);
+    if (_success == DONE)
+    {
+        parser.get("Size", size);
+        parser.get("Data", _data);
+        
+        if (size != _data.size())
+            throw std::invalid_argument("Error while parsing packet");
+    }   
 }

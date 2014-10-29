@@ -32,15 +32,15 @@ public:
     virtual ~APacket();
     
     std::vector<char> to_bytes() const;
-    std::string to_readable() const;
+    std::string to_readable(IReadable &parser) const;
     void from_bytes(const std::vector<char> &bytes);
-    void from_readable(const std::string &data);
+    void from_readable(const std::string &data, IReadable &parser);
 
 protected:
     virtual std::vector<char> to_bytes_body() const = 0;
-    virtual void to_readable_body() const = 0;
+    virtual void to_readable_body(IReadable &parser) const = 0;
     virtual void from_bytes_body(const std::vector<char> &bytes) = 0;
-    virtual void from_readable_body() = 0;
+    virtual void from_readable_body(IReadable &parser) = 0;
 
     template <typename T>
     void fill_bytes(std::vector<char> &bytes, T nb) const
@@ -68,7 +68,6 @@ protected:
 
     
     char        _type;
-    IReadable   *_parser;
 };
 
 #endif

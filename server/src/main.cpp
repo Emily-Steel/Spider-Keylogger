@@ -82,9 +82,11 @@ int	main(void)
 
     std::cout << "Hello World!" << std::endl;
     
-    std::string tmp = t1.to_readable();
+    JSONParser json;
+    std::string tmp = t1.to_readable(json);
 
     std::cout << tmp << std::endl;
+
     ASocket *socket = SocketFactory::getInstance().createSocket();
 
     if (socket->connect("127.0.0.1", 6060) == false)

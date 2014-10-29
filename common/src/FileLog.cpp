@@ -28,7 +28,7 @@ bool FileLog::isGood() const
 
 void FileLog::insert(const APacket &packet, const std::string &id)
 {
-    std::string tmp = packet.to_readable();
+//    std::string tmp = packet.to_readable();
 
 //    return (*this);
 }

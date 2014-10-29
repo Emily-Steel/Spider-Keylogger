@@ -37,9 +37,11 @@ std::vector<char> MouseClick::to_bytes_body() const
     return (ret);
 }
 
-void MouseClick::to_readable_body() const
+void MouseClick::to_readable_body(IReadable &parser) const
 {
-
+    parser.put("Button", _button);
+    parser.put("X", _posX);
+    parser.put("Y", _posY);
 }
 
 void MouseClick::from_bytes_body(const std::vector<char> &bytes)
@@ -52,7 +54,16 @@ void MouseClick::from_bytes_body(const std::vector<char> &bytes)
     
 }
 
-void MouseClick::from_readable_body()
+void MouseClick::from_readable_body(IReadable &parser)
 {
+    short x, y;
+    char b;
+
+    parser.get("Button", b);
+    parser.get("X", x);
+    parser.get("Y", y);
     
+    _button = b;
+    _posX = x;
+    _posY = y;
 }
