@@ -2,15 +2,10 @@
 
 DataBaseLog::DataBaseLog() {
     _sqlCreateKeyStroke =  "CREATE TABLE IF NOT EXISTS KEY_STROKE("  \
-                  "NAME           TEXT    NOT NULL," \
-                  "AGE            INT     NOT NULL," \
-                  "ADDRESS        CHAR(50)," \
-                  "SALARY         REAL );";
+                  "ID           TEXT    NOT NULL);";
+
     _sqlCreateMouseClick =  "CREATE TABLE IF NOT EXISTS MOUSE_CLICK("  \
-                  "NAME           TEXT    NOT NULL," \
-                  "AGE            INT     NOT NULL," \
-                  "ADDRESS        CHAR(50)," \
-                  "SALARY         REAL );";
+                  "ID           TEXT    NOT NULL);";
 }
 
 DataBaseLog::~DataBaseLog() {
@@ -61,4 +56,40 @@ void DataBaseLog::insert(APacket const &param, std::string const &id) {
 }
 
 std::vector<APacket *> DataBaseLog::dump() {
+    std::vector<APacket *> allTablesRow;
+
+    allTablesRow = getAllRowFromTable("KEY_STROKE");
+    return allTablesRow;
+}
+
+std::vector<APacket *> DataBaseLog::getAllRowFromTable(std::string tableName) {
+    std::string query = "SELECT * FROM " + tableName;
+    std::vector<APacket *> allRow;
+    sqlite3_stmt *stmt;
+    int ret;
+
+    ret = sqlite3_prepare(_sqlDataBase, query.c_str(), query.size() + 1, &stmt, NULL);
+    if (ret != SQLITE_OK) {
+        _good = false;
+        std::cerr << "Error while getting all row from \"" + tableName + "\"" << std::endl;
+        return allRow;
+    }
+
+    while ((ret = sqlite3_step(stmt)) == SQLITE_ROW) {
+        const unsigned char * text;
+        text  = sqlite3_column_text (stmt, 0);
+        std::cout << text << std::endl;
+    }
+    if (ret != SQLITE_DONE) {
+        _good = false;
+        std::cerr << "Error while getting all row from \"" + tableName + "\"" << std::endl;
+        return allRow;
+    }
+    sqlite3_finalize(stmt);
+    return allRow;
+}
+
+
+APacket *DataBaseLog::rowToAPacket() {
+
 }
