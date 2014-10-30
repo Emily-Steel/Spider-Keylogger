@@ -1,7 +1,9 @@
 #include <iostream>
 #include <FileLog.hpp>
 #include <DataBaseLog.hpp>
-#include "Server.hpp"
+#include <MouseClick.hpp>
+#include <Server.hpp>
+#include <KeyStroke.hpp>
 
 Server::Server(const std::string &logPath) {
     std::string fileName = "";
@@ -29,7 +31,7 @@ Server::Server(const std::string &logPath) {
             std::unique_ptr<ALog> dataBaseLog(new DataBaseLog());
             log = std::move(dataBaseLog);
             log->open(logPath);
-            log->dump();
+            std::cout << "dump contain : " << log->dump().size() << " elements" << std::endl;
             log->close();
         }
         else {

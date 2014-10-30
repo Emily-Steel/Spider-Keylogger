@@ -4,6 +4,7 @@
 # include <APacket.hpp>
 # include <ALog.hpp>
 # include <sqlite3.h>
+# include "DataBaseParser.hpp"
 
 class DataBaseLog : public ALog {
 public:
@@ -21,8 +22,8 @@ private:
     APacket *rowToAPacket();
     sqlite3 *_sqlDataBase;
     bool _good = true;
-    std::string _sqlCreateKeyStroke;
-    std::string _sqlCreateMouseClick;
+    std::string _sqlCreateTable;
+    DataBaseParser _dataBaseParser;
 };
 
 #endif

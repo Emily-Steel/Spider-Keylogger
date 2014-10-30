@@ -15,8 +15,8 @@
 
 int	main(void)
 {
-    Keystroke t1("salut");
-    Keystroke t2;
+    KeyStroke t1("salut");
+    KeyStroke t2;
 
     MouseClick a1(1, 2, 3);
     MouseClick a2;
