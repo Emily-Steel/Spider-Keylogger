@@ -18,8 +18,6 @@ public:
     virtual std::vector<APacket *> dump();
 
 private:
-    std::vector<APacket *> getAllRowFromTable(std::string tableName);
-    APacket *rowToAPacket();
     sqlite3 *_sqlDataBase;
     bool _good = true;
     std::string _sqlCreateTable;

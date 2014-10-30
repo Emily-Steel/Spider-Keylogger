@@ -116,7 +116,3 @@ std::vector<APacket *> DataBaseLog::dump() {
     sqlite3_finalize(stmt);
     return allRowSorted;
 }
-
-APacket *DataBaseLog::rowToAPacket() {
-
-}

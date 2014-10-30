@@ -23,16 +23,11 @@ Server::Server(const std::string &logPath) {
             std::cout << "JSON FILE" << std::endl;
             std::unique_ptr<ALog> filelog(new FileLog());
             log = std::move(filelog);
-            log->open(logPath);
-            log->close();
         }
         else if (type.compare("db") == 0) {
             std::cout << "DATABASE FILE" << std::endl;
             std::unique_ptr<ALog> dataBaseLog(new DataBaseLog());
             log = std::move(dataBaseLog);
-            log->open(logPath);
-            std::cout << "dump contain : " << log->dump().size() << " elements" << std::endl;
-            log->close();
         }
         else {
             throw std::invalid_argument("Invalid log file type [" + fileName + "]" + "\n" + "File type must be .db or .json");
