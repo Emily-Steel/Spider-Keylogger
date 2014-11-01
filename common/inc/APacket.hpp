@@ -32,7 +32,7 @@ public:
     virtual ~APacket();
     
     std::vector<char> to_bytes() const;
-    std::string to_readable(IReadable &parser) const;
+    void to_readable(IReadable &parser) const;
     void from_bytes(const std::vector<char> &bytes);
     void from_readable(const std::string &data, IReadable &parser);
 

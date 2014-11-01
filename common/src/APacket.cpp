@@ -21,21 +21,19 @@ std::vector<char> APacket::to_bytes() const
     return (ret);
 }
 
-std::string APacket::to_readable(IReadable &parser) const
+void APacket::to_readable(IReadable &parser) const
 {
     std::string ret;
     
     parser.clear();
     parser.put("Type", static_cast<int>(_type));
     to_readable_body(parser);
-    parser.write(ret);
-    return (ret);
 }
 
 void APacket::from_bytes(const std::vector<char> &bytes)
 {
     if (bytes.empty() && bytes[0] != _type)
-        throw std::invalid_argument("Error while parse packet");
+        throw std::invalid_argument("Error while parsing packet");
     from_bytes_body(bytes);
 }
 

@@ -37,10 +37,7 @@ std::vector<char> Keystroke::to_bytes_body() const
 
 void Keystroke::to_readable_body(IReadable &parser) const
 {
-    std::stringstream ss("");
-
-    ss << _data.size();
-    parser.put("Size", ss.str());
+    parser.put("Size", static_cast<int>(_data.size()));
     parser.put("Data", _data);
 }
 

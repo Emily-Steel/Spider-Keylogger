@@ -1,8 +1,10 @@
+#include "JSONParser.hpp"
 #include "FileLog.hpp"
 
 FileLog::FileLog()
+: ALog()
 {
-    
+
 }
 
 FileLog::~FileLog()
@@ -28,12 +30,19 @@ bool FileLog::isGood() const
 
 void FileLog::insert(const APacket &packet, const std::string &id)
 {
-//    std::string tmp = packet.to_readable();
+    std::string tmp;
 
-//    return (*this);
+    _parser->clear();
+    packet.to_readable(*_parser);
+    _parser->put("ID", id);
+    _parser->write(tmp);
+    _fileHandle << tmp;
 }
 
 std::vector<APacket *> FileLog::dump()
 {
-//    return (*this);
+    std::vector<APacket *>  tab;
+    std::string buf;
+
+    return (tab);
 }

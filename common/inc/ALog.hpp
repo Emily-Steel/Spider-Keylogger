@@ -3,6 +3,7 @@
 
 # include <string>
 # include "APacket.hpp"
+# include "IReadable.hpp"
 
 class ALog
 {
@@ -16,6 +17,12 @@ public:
     virtual void insert(const APacket &, const std::string &id) = 0;
     virtual std::vector<APacket *> dump() = 0;
     operator bool() const;
+
+    void    setParser(IReadable *parser);
+    
+protected:
+    
+    IReadable   *_parser;
 };
 
 #endif
