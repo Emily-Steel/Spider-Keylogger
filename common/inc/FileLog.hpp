@@ -13,7 +13,6 @@ public:
 
     virtual void open(const std::string &path);
     virtual void close();
-    virtual bool isGood() const;
     virtual void insert(const APacket &, const std::string &id);
     virtual std::vector<APacket *> dump();
 
