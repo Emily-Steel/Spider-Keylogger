@@ -10,7 +10,10 @@ int printHelp(const std::string& name, std::ostream& out, int retVal);
 
 int printHelp(const std::string& name, std::ostream& out, int retVal)
 {
-    out << "This is the help for " << name << ", good luck with this!" << std::endl;
+    out << "This is the help for " << name << ":" << std::endl
+        << "-p, --port=PORT\t" << "Specify PORT the ipv4 port the server listen to." << std::endl
+        << "--db=DBFILE\t" << "Specify DBFILE the file where data will be stored." << std::endl
+        << "-h, --help\t" << "Display this help." << std::endl;
     return retVal;
 }
 

@@ -15,11 +15,6 @@ public:
     static constexpr const char* defaultLogPath = "spiderDb.json";
     static const uint16_t defaultPort = 4569;
 
-private:
-    std::atomic<bool> _quit;
-    std::thread _inputThread;
-    std::unique_ptr<ALog> _log;
-
 public:
     Server(const std::string &logPath = defaultLogPath, uint16_t port = defaultPort) noexcept;
     virtual ~Server() noexcept;
@@ -30,6 +25,10 @@ public:
 private:
     void handleInput();
 
+private:
+    std::atomic<bool> _quit;
+    std::thread _inputThread;
+    std::unique_ptr<ALog> _log;
 };
 
 #endif

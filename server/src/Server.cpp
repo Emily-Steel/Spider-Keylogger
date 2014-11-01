@@ -44,13 +44,11 @@ bool Server::run() {
 
 void Server::handleInput() {
     try {
-        std::string lign;
-
-        while (std::getline(std::cin, lign))
+        std::string line;
+        while (std::getline(std::cin, line))
         {
-            std::cout << "Command: " << lign << std::endl;
+            std::cout << "Command: " << line << std::endl;
         }
-
     }
     catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
