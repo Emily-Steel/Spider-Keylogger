@@ -76,7 +76,7 @@ void ScreenShot::from_readable_body(IReadable &parser)
         parser.get("Size", size);
         parser.get("Data", _data);
         
-        if (size != _data.size())
+        if (static_cast<unsigned int>(size) != _data.size())
             throw std::invalid_argument("Error while parsing packet");
     }   
 }

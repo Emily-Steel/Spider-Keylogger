@@ -4,10 +4,8 @@
 Network::Network() {
 }
 
-Network::~Network() {
-}
-
-void Network::init(int port) {
+void Network::init(uint16_t port)
+{
 }
 
 void Network::poll_clients(std::function<void(ALog *, const std::string &, APacket &)> callback) {

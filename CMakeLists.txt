@@ -23,7 +23,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 # cmake modules
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
 find_package(Threads)
-find_package(Boost 1.55.0 COMPONENTS system program_options REQUIRED)
+find_package(Boost 1.55.0 COMPONENTS system program_options filesystem REQUIRED)
 find_package(OpenSSL)
 find_package(Sqlite3)
 
