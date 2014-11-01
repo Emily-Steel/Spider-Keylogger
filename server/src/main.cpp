@@ -18,6 +18,8 @@ int	main(int ac, char *av[])
 {
     namespace po = boost::program_options;
 
+    Server *server = nullptr;
+
     try {
         std::string dbName = Server::defaultLogPath;
         uint16_t port = Server::defaultPort;
@@ -47,12 +49,14 @@ int	main(int ac, char *av[])
             return printHelp(appName, std::cerr, 1);
         }
 
-        Server server(dbName, port);
+        server = new Server(dbName, port);
 
-        server.run();
+        server->run();
+        delete server;
     }
     catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
+        delete server;
         return 1;
     }
 	return 0;

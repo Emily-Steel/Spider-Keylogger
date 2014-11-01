@@ -3,6 +3,7 @@
 
 #include <string>
 #include <thread>
+#include <atomic>
 #include <memory>
 #include <cstdint>
 
@@ -15,18 +16,19 @@ public:
     static const uint16_t defaultPort = 4569;
 
 private:
-    std::thread input_thread;
-    std::unique_ptr<ALog> log;
+    std::atomic<bool> _quit;
+    std::thread _inputThread;
+    std::unique_ptr<ALog> _log;
 
 public:
-    Server(const std::string &logPath = defaultLogPath, uint16_t port = defaultPort);
-    virtual ~Server();
+    Server(const std::string &logPath = defaultLogPath, uint16_t port = defaultPort) noexcept;
+    virtual ~Server() noexcept;
 
     bool run();
-    void pollCallback (ALog * log, const std::string &clientId, APacket &packet);
+    void pollCallback (ALog *log, const std::string &clientId, APacket &packet);
 
 private:
-    void handle_input();
+    void handleInput();
 
 };
 
