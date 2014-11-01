@@ -1,44 +1,29 @@
 #include <iostream>
-#include <FileLog.hpp>
-#include <DataBaseLog.hpp>
+#include <stdexcept>
+#include <boost/filesystem.hpp>
+
+#include "FileLog.hpp"
+#include "DataBaseLog.hpp"
 #include "Server.hpp"
 
-Server::Server(const std::string &logPath) {
-    std::string fileName = "";
-    size_t found;
+Server::Server(const std::string &logPath, uint16_t port)
+{
+    std::string dbext = boost::filesystem::extension(logPath);
 
-    found = logPath.find_last_of("/\\");
-    if (found != std::string::npos) {
-        fileName = logPath.substr(found + 1);
+    if (dbext == ".json")
+    {
+           std::cout << "JSON FILE" << std::endl;
+           std::unique_ptr<ALog> filelog(new FileLog());
+           log = std::move(filelog);
     }
-    else {
-        fileName = logPath;
+    else if (dbext == ".db")
+    {
+        std::cout << "DATABASE FILE" << std::endl;
+        std::unique_ptr<ALog> dataBaseLog(new DataBaseLog());
+        log = std::move(dataBaseLog);
     }
-    found = fileName.find_last_of(".");
-    if (found != std::string::npos) {
-        std::string type = fileName.substr(found + 1);
-        if (type.compare("json") == 0) {
-            std::cout << "JSON FILE" << std::endl;
-            std::unique_ptr<ALog> filelog(new FileLog());
-            log = std::move(filelog);
-            log->open(logPath);
-            log->close();
-        }
-        else if (type.compare("db") == 0) {
-            std::cout << "DATABASE FILE" << std::endl;
-            std::unique_ptr<ALog> dataBaseLog(new DataBaseLog());
-            log = std::move(dataBaseLog);
-            log->open(logPath);
-            log->dump();
-            log->close();
-        }
-        else {
-            throw std::invalid_argument("Invalid log file type [" + fileName + "]" + "\n" + "File type must be .db or .json");
-        }
-    }
-    else {
-        throw std::invalid_argument("Invalid log file type [" + fileName + "]" + "\n" + "File type must be .db or .json");
-    }
+    else
+        throw std::runtime_error("Bad db extension.");
 }
 
 Server::~Server() {
@@ -53,5 +38,7 @@ void Server::handle_input() {
 }
 
 void Server::pollCallback(ALog *log, const std::string &clientId, APacket &packet) {
-
+    (void)log;
+    (void)clientId;
+    (void)packet;
 }

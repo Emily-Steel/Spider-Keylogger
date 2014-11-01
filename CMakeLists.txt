@@ -23,7 +23,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 # cmake modules
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
 find_package(Threads)
-find_package(Boost 1.55.0 COMPONENTS system program_options REQUIRED)
+find_package(Boost 1.55.0 COMPONENTS system program_options filesystem REQUIRED)
 find_package(OpenSSL)
 find_package(Sqlite3)
 
@@ -68,6 +68,8 @@ CMAKE_DEPENDENT_OPTION(VALGRIND_CHECK "Decide if valgrind should be executed wit
 OPTION(CODE_METRICS "Decide if code's metrics should be generated." OFF)
 OPTION(CODE_CHECK "Decide if code should be checked for common errors." OFF)
 OPTION(GENERATE_DOC "Decide if documentation should be generated." OFF)
+OPTION(BUILD_SERVER "Does the compilation will build the server ?." ON)
+OPTION(BUILD_CLIENT "Does the compilation will build the client ?." ON)
 
 # --- global definitions ---
 DEFINE_PROJECT_VERSION(PROJECT 0 0 1 "snapshot")
@@ -140,38 +142,43 @@ add_library(
   ${lib_include_files}
 )
 
-add_library(
-# executable name
-  ${NAME_DLL} SHARED
-# source files
-  ${dll_source_files}
-  ${dll_include_files}
-)
+if(BUILD_CLIENT)
+  add_library(
+  # executable name
+    ${NAME_DLL} SHARED
+  # source files
+    ${dll_source_files}
+    ${dll_include_files}
+  )
 
-GENERATE_EXPORT_HEADER( ${NAME_DLL}
-             BASE_NAME ${NAME_DLL}
-             EXPORT_MACRO_NAME ${NAME_DLL}_EXPORT
-             EXPORT_FILE_NAME ${dll_include_files}
-             STATIC_DEFINE ${NAME_DLL}_BUILT_AS_STATIC
-)
+  GENERATE_EXPORT_HEADER( ${NAME_DLL}
+               BASE_NAME ${NAME_DLL}
+               EXPORT_MACRO_NAME ${NAME_DLL}_EXPORT
+               EXPORT_FILE_NAME ${dll_include_files}
+               STATIC_DEFINE ${NAME_DLL}_BUILT_AS_STATIC
+  )
 
-add_executable(
-# executable name
-  ${NAME_CLIENT}
-# source files
-  ${client_source_files}
-  ${client_include_files}
-)
+    add_executable(
+  # executable name
+    ${NAME_CLIENT}
+ # source files
+    ${client_source_files}
+    ${client_include_files}
+  )
+  
+  target_link_libraries(${NAME_CLIENT} ${NAME_LIB})
+endif()
 
-add_executable(
-  ${NAME_SERVER}
-# source files
-  ${server_source_files}
-  ${server_include_files}
-)
-
-target_link_libraries(${NAME_CLIENT} ${NAME_LIB})
-target_link_libraries(${NAME_SERVER} ${NAME_LIB})
+if (BUILD_SERVER)
+  add_executable(
+    ${NAME_SERVER}
+  # source files
+    ${server_source_files}
+    ${server_include_files}
+  )
+  
+  target_link_libraries(${NAME_SERVER} ${NAME_LIB})
+endif()
 
 file(
   GLOB_RECURSE
@@ -190,8 +197,9 @@ endif()
 
 if (Boost_FOUND)
    include_directories(${Boost_INCLUDE_DIRS})
-   target_link_libraries (${NAME_SERVER} ${Boost_LIBRARIES})
-   target_link_libraries (${NAME_CLIENT} ${Boost_LIBRARIES})
+   target_link_libraries (${NAME_LIB} ${Boost_LIBRARIES})
+#    target_link_libraries (${NAME_SERVER} ${Boost_LIBRARIES})
+#    target_link_libraries (${NAME_CLIENT} ${Boost_LIBRARIES})
 endif()
 
 # --- enable unit tests if desired ---

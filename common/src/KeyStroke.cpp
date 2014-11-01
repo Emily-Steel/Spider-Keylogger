@@ -1,31 +1,31 @@
 #include "KeyStroke.hpp"
 
-Keystroke::Keystroke()
+KeyStroke::KeyStroke()
 : APacket(KEYSTROKES), _data()
 {
 
 }
 
-Keystroke::Keystroke(const std::string &data)
+KeyStroke::KeyStroke(const std::string &data)
 : APacket(KEYSTROKES), _data(data)
 {
 
 }
 
-Keystroke::~Keystroke()
+KeyStroke::~KeyStroke()
 {
     
 }
 
 #include <iostream>
 
-void Keystroke::print()
+void KeyStroke::print()
 {
     std::cout << (int)_type << std::endl;
     std::cout << _data << std::endl;
 }
 
-std::vector<char> Keystroke::to_bytes_body() const
+std::vector<char> KeyStroke::to_bytes_body() const
 {
     std::vector<char> ret;
 
@@ -35,13 +35,13 @@ std::vector<char> Keystroke::to_bytes_body() const
     return (ret);
 }
 
-void Keystroke::to_readable_body(IReadable &parser) const
+void KeyStroke::to_readable_body(IReadable &parser) const
 {
     parser.put("Size", static_cast<int>(_data.size()));
     parser.put("Data", _data);
 }
 
-void Keystroke::from_bytes_body(const std::vector<char> &bytes)
+void KeyStroke::from_bytes_body(const std::vector<char> &bytes)
 {
     std::size_t pos = 1;
     unsigned int size = 0;
@@ -53,7 +53,7 @@ void Keystroke::from_bytes_body(const std::vector<char> &bytes)
         throw std::invalid_argument("Error while parsing packet");
 }
 
-void Keystroke::from_readable_body(IReadable &parser)
+void KeyStroke::from_readable_body(IReadable &parser)
 {
     int size;
     

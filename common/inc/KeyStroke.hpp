@@ -4,13 +4,13 @@
 # include "JSONParser.hpp"
 # include "APacket.hpp"
 
-class Keystroke: public APacket
+class KeyStroke: public APacket
 {
 
 public:
-    Keystroke();
-    Keystroke(const std::string &data);
-    ~Keystroke();
+    KeyStroke();
+    KeyStroke(const std::string &data);
+    ~KeyStroke();
 
     void print();
 

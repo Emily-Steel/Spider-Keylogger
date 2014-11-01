@@ -15,8 +15,8 @@ public:
   BoostSocket&operator=(const BoostSocket&other) = delete;
 
   bool				connect(const std::string &address, unsigned short port) override;
-  ASocket&operator<<(const APacket &packet) override;
-  ASocket                   &operator>>(APacket &packet) override;
+  ASocket&          operator<<(const APacket &packet) override;
+  ASocket           &operator>>(APacket &packet) override;
   std::size_t write(void *data, std::size_t size) override;
   std::size_t read(std::string &buffer, std::size_t size) override;
 

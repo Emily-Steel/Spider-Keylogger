@@ -1,105 +1,59 @@
 #include <iostream>
-#include <Server.hpp>
+#include <exception>
+#include <cstdint>
+#include <boost/program_options.hpp>
+#include <boost/filesystem.hpp>
 
-#include "ASocket.hpp"
-#include "SocketFactory.hpp"
-#include "JSONParser.hpp"
+#include "Server.hpp"
 
-#include "KeyStroke.hpp"
-#include "MouseClick.hpp"
-#include "ScreenShotRequest.hpp"
-#include "KillRequest.hpp"
-#include "KillConfirm.hpp"
-#include "HandshakeResult.hpp"
-#include "ScreenShot.hpp"
+int printHelp(const std::string& name, std::ostream& out, int retVal);
 
-int	main(void)
+int printHelp(const std::string& name, std::ostream& out, int retVal)
 {
-    Keystroke t1("salut");
-    Keystroke t2;
+    out << "This is the help for " << name << ", good luck with this!" << std::endl;
+    return retVal;
+}
 
-    MouseClick a1(1, 2, 3);
-    MouseClick a2;
+int	main(int ac, char *av[])
+{
+    namespace po = boost::program_options;
 
-    ScreenShotRequest b1;
-    ScreenShotRequest b2;
+    try {
+        std::string dbName = Server::defaultLogPath;
+        uint16_t port = Server::defaultPort;
+        std::string appName = boost::filesystem::basename(av[0]);
+        try {
+            po::options_description desc("Options");
+            desc.add_options()
+                    ("help,h", "You need help?")
+                    ("port,p", po::value<uint16_t>(&port), "The port of the server")
+                    ("db", po::value<std::string>(&dbName), "The database file");
 
-    KillRequest c1;
-    KillRequest c2;
+            po::variables_map vm;
+            po::store(po::parse_command_line(ac, av, desc), vm);
+            po::notify(vm);
 
-    KillConfirm d1(5);
-    KillConfirm d2;
+            if (vm.count("help"))
+                return printHelp(appName, std::cout, 0);
+            if (vm.count("db")) {
+                std::string dbn = vm["db"].as<std::string>();
+                std::string dbext = boost::filesystem::extension(dbn);
+                if (dbext != ".json" && dbext != ".db")
+                    throw po::error("Error: the required extension for the file of option '--db' it must be json or db");
+            }
+        }
+        catch (po::error &e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+            return printHelp(appName, std::cerr, 1);
+        }
 
-    HandshakeResult e1(1);
-    HandshakeResult e2;
+        Server server(dbName, port);
 
-    ScreenShot f1(1, "salut");
-    ScreenShot f2;
-
-    try
-    {
-        Server serv("toto.db");
+        server.run();
     }
-    catch (std::invalid_argument &e) {
+    catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
-        return (1);
+        return 1;
     }
-
-    t2.from_bytes(t1.to_bytes());
-    t2.print();
-
-    std::cout << "--" << std::endl;
-    
-    a2.from_bytes(a1.to_bytes());
-    a2.print();
-
-    std::cout << "--" << std::endl;
-
-    b2.from_bytes(b1.to_bytes());
-    b2.print();
-    
-    std::cout << "--" << std::endl;
-
-    c2.from_bytes(c1.to_bytes());
-    c2.print();
-    
-    std::cout << "--" << std::endl;
-
-    d2.from_bytes(d1.to_bytes());
-    d2.print();
-    
-    std::cout << "--" << std::endl;
-
-    e2.from_bytes(e1.to_bytes());
-    e2.print();
-    
-    std::cout << "--" << std::endl;
-
-    f2.from_bytes(f1.to_bytes());
-    f2.print();
-
-    std::cout << "--" << std::endl;
-
-    std::cout << "Hello World!" << std::endl;
-    
-    JSONParser json;
-    std::string tmp = t1.to_readable(json);
-
-    std::cout << tmp << std::endl;
-
-    ASocket *socket = SocketFactory::getInstance().createSocket();
-
-    if (socket->connect("127.0.0.1", 6060) == false)
-        return (1);
-    for (;;)
-    {
-        char data[] = "Hello World!\n";
-        std::string r;
-
-        if (socket->write(data, std::strlen(data)) == false)
-            return (1);
-        socket->read(r, 512);
-        std::cout << r << std::endl;
-    }
-	return (0);
+	return 0;
 }

