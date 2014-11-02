@@ -2,7 +2,7 @@
 # define BOOSTSSLSOCKET_H
 
 # include <string>
-# include	<boost/asio.hpp>
+# include <boost/asio.hpp>
 
 # include "ASocket.hpp"
 
@@ -14,18 +14,19 @@ public:
   BoostSocket(const BoostSocket&other) = delete;
   BoostSocket&operator=(const BoostSocket&other) = delete;
 
-  bool				connect(const std::string &address, unsigned short port) override;
   ASocket&          operator<<(const APacket &packet) override;
   ASocket           &operator>>(APacket &packet) override;
   std::size_t write(void *data, std::size_t size) override;
   std::size_t read(std::string &buffer, std::size_t size) override;
 
-  void				bind(unsigned short port) override;
+  bool				connect(const std::string &address, unsigned short port) override;
+  void				bind(const std::string &addr, uint16_t port) override;
   void				listen(int backlog) override;
   std::shared_ptr<ASocket>	accept(void) override;
 
 private:
   void        _throwNetworkException(boost::system::system_error &e);
+  boost::asio::ip::tcp familyFromAddr(const boost::asio::ip::address& addr) const;
 
   static boost::asio::io_service    _service;
 

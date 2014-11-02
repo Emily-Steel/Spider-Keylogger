@@ -1,13 +1,13 @@
-#include <Server.hpp>
 #include "Network.hpp"
 
-Network::Network() {
-}
+#include "SocketFactory.hpp"
 
-void Network::init(uint16_t port)
+Network::Network(uint16_t port, const std::string &addr)
+: _acceptor(SocketFactory::getInstance().createSocket())
 {
+    _acceptor->bind(addr, port);
 }
 
-void Network::poll_clients(std::function<void(ALog *, const std::string &, APacket &)> callback) {
-
+void Network::poll_clients(std::function<void(const std::string &, APacket &)> callback) {
+    (void)callback;
 }

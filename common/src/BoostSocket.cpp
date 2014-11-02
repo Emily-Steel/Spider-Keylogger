@@ -19,7 +19,10 @@ bool BoostSocket::connect(const std::string &address, unsigned short port)
 
   try
   {
-    _socket.connect({boost::asio::ip::address::from_string(address), port});
+      boost::asio::ip::address baddr = boost::asio::ip::address::from_string(address);
+
+    _acceptor.open(familyFromAddr(baddr));
+    _socket.connect({baddr, port});
     _type = Type::ACTIVE;
     return true;
   }
@@ -97,11 +100,14 @@ std::size_t BoostSocket::read(std::string &buffer, std::size_t size)
   return 0;
 }
 
-void BoostSocket::bind(unsigned short port)
+void BoostSocket::bind(const std::string &addr, uint16_t port)
 {
   assert(_type == Type::NONE);
 
-  _acceptor.bind({boost::asio::ip::tcp::v4(), port});
+  boost::asio::ip::address baddr = boost::asio::ip::address::from_string(addr);
+
+  _acceptor.open(familyFromAddr(baddr));
+  _acceptor.bind({baddr, port});
   _type = Type::PASSIVE;
 }
 
@@ -116,7 +122,7 @@ std::shared_ptr<ASocket> BoostSocket::accept(void)
 {
   assert(_type == Type::PASSIVE);
 
-  auto	sock = std::make_shared<BoostSocket>();
+  auto sock = std::make_shared<BoostSocket>();
 
   _acceptor.accept(sock->_socket);
   return sock;
@@ -129,4 +135,13 @@ void BoostSocket::_throwNetworkException(boost::system::system_error &e)
     std::cerr << "Connection reset by peer." << std::endl;
   }
   throw std::runtime_error("Connection interrupted");
+}
+
+
+boost::asio::ip::tcp BoostSocket::familyFromAddr(const boost::asio::ip::address &addr) const {
+    if (addr.is_v4())
+        return boost::asio::ip::tcp::v4();
+    else if (addr.is_v6())
+        return boost::asio::ip::tcp::v6();
+    throw std::runtime_error("Family address is not v4 nor v6.");
 }

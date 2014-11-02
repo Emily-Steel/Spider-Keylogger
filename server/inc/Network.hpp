@@ -4,18 +4,19 @@
 #include <map>
 #include <string>
 #include <memory>
+
+#include "ALog.hpp"
 #include "ASocket.hpp"
 
 class Network {
-private:
-    std::map<std::string, std::unique_ptr<ASocket> > clients;
-    std::unique_ptr<ASocket> acceptor;
-
 public:
-    Network();
+    Network(uint16_t port, const std::string &addr = "0.0.0.0");
     virtual ~Network() = default;
-    void init(uint16_t port);
-    void poll_clients (std::function<void(ALog *, const std::string&, APacket&)> callback);
+    void poll_clients(std::function<void(const std::string&, APacket&)> callback);
+
+private:
+    std::map<std::string, std::unique_ptr<ASocket> > _clients;
+    std::unique_ptr<ASocket> _acceptor;
 };
 
 #endif

@@ -19,10 +19,11 @@ DataBaseLog::~DataBaseLog() {
 
 void DataBaseLog::open(std::string const & path){
     int ret = sqlite3_open(path.c_str(), &_sqlDataBase);
-    char *sqlErrMsg = NULL;
+    char *sqlErrMsg = nullptr;
+    _good = true;
     if (ret != SQLITE_OK)
     {
-        std::cerr << "Error while openenig \"" + path + "\"" << std::endl;
+        std::cerr << "Error while openenig \"" << path << "\"" << std::endl;
         std::cerr << sqlite3_errmsg(_sqlDataBase) << std::endl;
         _good = false;
     }
@@ -30,7 +31,7 @@ void DataBaseLog::open(std::string const & path){
     if (ret != SQLITE_OK)
     {
         std::cerr << "Error while creating table" << std::endl;
-        std::cerr << "SQL error: " + std::string(sqlErrMsg) << std::endl;
+        std::cerr << "SQL error: " << sqlErrMsg << std::endl;
         sqlite3_free(sqlErrMsg);
         _good = false;
     }
@@ -42,10 +43,7 @@ void DataBaseLog::open(std::string const & path){
 
 void DataBaseLog::close() {
     sqlite3_close(_sqlDataBase);
-}
-
-bool DataBaseLog::isGood() const {
-    return _good;
+    _good = false;
 }
 
 void DataBaseLog::insert(APacket const &param, std::string const &id) {
@@ -88,7 +86,6 @@ std::vector<APacket *> DataBaseLog::dump() {
 
     ret = sqlite3_prepare(_sqlDataBase, query.c_str(), query.size() + 1, &stmt, NULL);
     if (ret != SQLITE_OK) {
-        _good = false;
         std::cerr << "Error while getting all row from spider table" << std::endl;
         return allRowSorted;
     }
@@ -109,7 +106,6 @@ std::vector<APacket *> DataBaseLog::dump() {
         text = nullptr;
     }
     if (ret != SQLITE_DONE) {
-        _good = false;
         std::cerr << "Error while getting all row from spider table" << std::endl;
         return allRowSorted;
     }

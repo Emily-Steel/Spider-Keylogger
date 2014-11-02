@@ -2,6 +2,8 @@
 # define ASOCKET_H
 
 # include <memory>
+# include <cstdint>
+
 # include "APacket.hpp"
 
 # define SIZEREAD 512
@@ -22,13 +24,13 @@ public:
   ASocket&	operator=(const ASocket& other) = delete;
 
   // pure methods
-  virtual bool        connect(const std::string& address, unsigned short port) = 0;
   virtual ASocket&	operator<<(const APacket& packet) = 0;
   virtual ASocket                   &	operator>>(APacket& packet) = 0;
   virtual std::size_t write(void *data, std::size_t size) = 0;
   virtual std::size_t read(std::string &buffer, std::size_t size) = 0;
 
-  virtual void				bind(unsigned short port) = 0;
+  virtual bool              connect(const std::string& address, unsigned short port) = 0;
+  virtual void				bind(const std::string &addr, uint16_t port) = 0;
   virtual void				listen(int backlog) = 0;
   virtual std::shared_ptr<ASocket>	accept(void) = 0;
 

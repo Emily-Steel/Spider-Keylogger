@@ -13,7 +13,10 @@ int printHelp(const std::string& name, std::ostream& out, int retVal);
 
 int printHelp(const std::string& name, std::ostream& out, int retVal)
 {
-    out << "This is the help for " << name << ", good luck with this!" << std::endl;
+    out << "This is the help for " << name << ":" << std::endl
+        << "-p, --port=PORT\t" << "Specify PORT the ipv4 port the server listen to." << std::endl
+        << "--db=DBFILE\t" << "Specify DBFILE the file where data will be stored." << std::endl
+        << "-h, --help\t" << "Display this help." << std::endl;
     return retVal;
 }
 
@@ -21,7 +24,9 @@ int	main(int ac, char *av[])
 {
     namespace po = boost::program_options;
 
-    /*try {
+    Server *server = nullptr;
+
+    try {
         std::string dbName = Server::defaultLogPath;
         uint16_t port = Server::defaultPort;
         std::string appName = boost::filesystem::basename(av[0]);
@@ -50,26 +55,15 @@ int	main(int ac, char *av[])
             return printHelp(appName, std::cerr, 1);
         }
 
-        Server server(dbName, port);
+        server = new Server(dbName, port);
 
-        server.run();
+        server->run();
+        delete server;
     }
     catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
+        delete server;
         return 1;
-    }*/
-    
-    KeyStroke _packet("salut");
-    
-    FileLog file;
-    JSONParser parser;
-
-    file.setParser(&parser);
-    file.open("toto.json");
-    
-    file.insert(_packet, "Test");
-    file.dump();
-
-    file.close();
+    }
 	return 0;
 }
