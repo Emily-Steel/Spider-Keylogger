@@ -34,37 +34,80 @@ void JSONParser::put(const std::string &key, const char &value)
 
 void JSONParser::get(const std::string &key, std::string &value)
 {
-    value = _json.get<std::string>(key);
+    try
+    {
+        value = _json.get<std::string>(key);
+    }
+    catch(boost::property_tree::ptree_bad_data e)
+    {
+        throw std::invalid_argument("Cannot find " + key);
+    }
 }
 
 void JSONParser::get(const std::string &key, int &value)
 {
-    value = _json.get<int>(key);
+    try
+    {
+        value = _json.get<int>(key);
+    }
+    catch(boost::property_tree::ptree_bad_data e)
+    {
+        throw std::invalid_argument("Cannot find " + key);
+    }
 }
 
 void JSONParser::get(const std::string &key, short &value)
 {
-    value = _json.get<short>(key);
+    try
+    {
+        value = _json.get<short>(key);
+    }
+    catch(boost::property_tree::ptree_bad_data e)
+    {
+        throw std::invalid_argument("Cannot find " + key);
+    }
 }
 
 void JSONParser::get(const std::string &key, char &value)
 {
-    value = _json.get<char>(key);
+    try
+    {
+        value = _json.get<char>(key);
+    }
+    catch(boost::property_tree::ptree_bad_data e)
+    {
+        throw std::invalid_argument("Cannot find " + key);
+    }
 }
 
-void JSONParser::read(const std::string &str)
+void JSONParser::read(std::string &str)
 {
-    std::stringstream ss(str);
+    try
+    {
+        std::stringstream ss(std::string(str.substr(0, str.find("}")) + "}"));
 
-    boost::property_tree::read_json(ss, _json);
+        str = str.substr(str.find("}") + 1);
+        boost::property_tree::read_json(ss, _json);
+    }
+    catch (boost::property_tree::json_parser_error e)
+    {
+        throw std::invalid_argument("Error while parsing data");
+    }
 }
 
 void JSONParser::write(std::string &str)
 {
-    std::stringstream ss("");
+    try
+    {
+        std::stringstream ss("");
     
-    boost::property_tree::write_json(ss, _json);
-    str = ss.str();
+        boost::property_tree::write_json(ss, _json);
+        str = ss.str();
+    }
+    catch (boost::property_tree::json_parser_error e)
+    {
+        throw std::invalid_argument("Error while parsing data");
+    }
 }
 
 void JSONParser::clear()

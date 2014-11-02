@@ -20,7 +20,7 @@ public:
     virtual void get(const std::string &key, short &value);
     virtual void get(const std::string &key, char &value);
 
-    virtual void read(const std::string &);
+    virtual void read(std::string &);
     virtual void write(std::string &);
 
     virtual void clear();

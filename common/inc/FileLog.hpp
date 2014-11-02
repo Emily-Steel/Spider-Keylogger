@@ -2,7 +2,10 @@
 # define _FILELOG_HPP_
 
 # include <fstream>
+# include <string>
 # include "ALog.hpp"
+# include "KeyStroke.hpp"
+# include "MouseClick.hpp"
 
 class FileLog: public ALog
 {
@@ -19,6 +22,7 @@ public:
 
 private:
     std::fstream    _fileHandle;
+    std::string     _filePath;
 };
 
 #endif

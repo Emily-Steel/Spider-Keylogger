@@ -9,7 +9,8 @@ class ALog
 {
 public:
 
-    virtual ~ALog() {};
+    ALog();
+    virtual ~ALog();
     
     virtual void open(const std::string &path) = 0;
     virtual void close() = 0;

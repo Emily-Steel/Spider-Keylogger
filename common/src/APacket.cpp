@@ -37,7 +37,7 @@ void APacket::from_bytes(const std::vector<char> &bytes)
     from_bytes_body(bytes);
 }
 
-void APacket::from_readable(const std::string &data, IReadable &parser)
+void APacket::from_readable(std::string &data, IReadable &parser)
 {
     int type = -1;
     

@@ -6,6 +6,9 @@
 
 #include "Server.hpp"
 
+# include "JSONParser.hpp"
+# include "FileLog.hpp"
+
 int printHelp(const std::string& name, std::ostream& out, int retVal);
 
 int printHelp(const std::string& name, std::ostream& out, int retVal)
@@ -18,7 +21,7 @@ int	main(int ac, char *av[])
 {
     namespace po = boost::program_options;
 
-    try {
+    /*try {
         std::string dbName = Server::defaultLogPath;
         uint16_t port = Server::defaultPort;
         std::string appName = boost::filesystem::basename(av[0]);
@@ -54,6 +57,19 @@ int	main(int ac, char *av[])
     catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         return 1;
-    }
+    }*/
+    
+    KeyStroke _packet("salut");
+    
+    FileLog file;
+    JSONParser parser;
+
+    file.setParser(&parser);
+    file.open("toto.json");
+    
+    file.insert(_packet, "Test");
+    file.dump();
+
+    file.close();
 	return 0;
 }

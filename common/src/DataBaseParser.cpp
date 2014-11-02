@@ -67,7 +67,7 @@ void DataBaseParser::get(const std::string &key, char &value)
     ss >> value;
 }
 
-void DataBaseParser::read(const std::string &str)
+void DataBaseParser::read(std::string &str)
 {
 }
 
