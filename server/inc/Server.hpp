@@ -8,7 +8,7 @@
 #include <cstdint>
 
 #include "ALog.hpp"
-#include "APacket.hpp"
+#include "Network.hpp"
 
 class Server {
 public:
@@ -20,7 +20,7 @@ public:
     virtual ~Server() noexcept;
 
     bool run();
-    void pollCallback (ALog *log, const std::string &clientId, APacket &packet);
+    void pollCallback (const std::string &clientId, APacket &packet);
 
 private:
     void handleInput();
@@ -29,6 +29,7 @@ private:
     std::atomic<bool> _quit;
     std::thread _inputThread;
     std::unique_ptr<ALog> _log;
+    Network _network;
 };
 
 #endif

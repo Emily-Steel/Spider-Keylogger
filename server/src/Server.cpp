@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdexcept>
+#include <functional>
 #include <boost/filesystem.hpp>
 
 #include "FileLog.hpp"
@@ -7,7 +8,7 @@
 #include "Server.hpp"
 
 Server::Server(const std::string &logPath, uint16_t port) noexcept
-: _quit(false)
+: _quit(false), _network(port)
 {
     std::string dbext = boost::filesystem::extension(logPath);
 
@@ -34,9 +35,10 @@ bool Server::run() {
     if (!_log->isGood())
         throw std::runtime_error("Database file isn't ready.");
     _inputThread = std::thread(&Server::handleInput, this);
+ //   auto clientPoller = std::bind(&Server::pollCallback, this);
     while (!_quit.load(std::memory_order_relaxed))
     {
-
+   // _network.poll_clients(clientPoller);
     }
     std::cout << "Server shutdown." << std::endl;
     return true;
@@ -56,8 +58,7 @@ void Server::handleInput() {
     _quit.store(true, std::memory_order_relaxed);
 }
 
-void Server::pollCallback(ALog *log, const std::string &clientId, APacket &packet) {
-    (void)log;
+void Server::pollCallback(const std::string &clientId, APacket &packet) {
     (void)clientId;
     (void)packet;
 }
