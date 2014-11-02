@@ -67,11 +67,11 @@ void DataBaseParser::get(const std::string &key, char &value)
     ss >> value;
 }
 
-void DataBaseParser::read(std::string &str)
+void DataBaseParser::read(std::string &)
 {
 }
 
-void DataBaseParser::write(std::string &str)
+void DataBaseParser::write(std::string &)
 {
 }
 
