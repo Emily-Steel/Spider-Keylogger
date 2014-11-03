@@ -1,13 +1,13 @@
 #include "KillConfirm.hpp"
 
 KillConfirm::KillConfirm()
-: Result(KILLRESPONSE)
+: Result(APacket::PacketType::KILLRESPONSE)
 {
     
 }
 
 KillConfirm::KillConfirm(char success)
-: Result(KILLRESPONSE, success)
+: Result(APacket::PacketType::KILLRESPONSE, success)
 {
     
 }

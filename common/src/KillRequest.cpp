@@ -1,7 +1,7 @@
 #include "KillRequest.hpp"
 
 KillRequest::KillRequest()
-: Request(KILL)
+: Request(APacket::PacketType::KILL)
 {
     
 }

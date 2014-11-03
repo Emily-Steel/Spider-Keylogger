@@ -9,24 +9,23 @@
 
 # include "IReadable.hpp"
 
-# define DONE 1
-
-enum PacketType
-{
-    HANDSHAKE = 0,
-    KEYSTROKES = 1,
-    MOUSECLICK = 2,
-    COMMANDRESPONSE = 3,
-    SCREENSHOTRESPONSE = 4,
-    KILLRESPONSE = 5,
-    COMMAND = 10,
-    SHORTRESPONSE = 11,
-    SCREENSHOT = 12,
-    KILL = 13,
-};
-
 class APacket
 {
+public:
+    enum class PacketType
+    {
+        HANDSHAKE = 0,
+        KEYSTROKES = 1,
+        MOUSECLICK = 2,
+        COMMANDRESPONSE = 3,
+        SCREENSHOTRESPONSE = 4,
+        KILLRESPONSE = 5,
+        COMMAND = 10,
+        SHORTRESPONSE = 11,
+        SCREENSHOT = 12,
+        KILL = 13,
+    };
+
 public:
     APacket(PacketType type);
     virtual ~APacket();
@@ -66,7 +65,6 @@ protected:
             throw std::invalid_argument("Error while parse packet");
     }
 
-    
     char        _type;
 };
 

@@ -1,13 +1,15 @@
 #include "ScreenShot.hpp"
 
+#include <iostream>
+
 ScreenShot::ScreenShot()
-: APacket(SCREENSHOT), _success(0), _data("")
+: APacket(APacket::PacketType::SCREENSHOT), _success(false), _data("")
 {
     
 }
 
-ScreenShot::ScreenShot(char success, const std::string &data)
-: APacket(SCREENSHOT), _success(success), _data(data)
+ScreenShot::ScreenShot(bool success, const std::string &data)
+: APacket(APacket::PacketType::SCREENSHOT), _success(success), _data(data)
 {
     
 }
@@ -17,12 +19,10 @@ ScreenShot::~ScreenShot()
     
 }
 
-#include <iostream>
-
 void ScreenShot::print()
 {
-    std::cout << (int)_type << std::endl;
-    std::cout << (int)_success << std::endl;
+    std::cout << static_cast<int>(_type) << std::endl;
+    std::cout << _success << std::endl;
     std::cout << _data << std::endl;
 }
 
@@ -31,7 +31,7 @@ std::vector<char> ScreenShot::to_bytes_body() const
     std::vector<char> ret;
     
     fill_bytes(ret, _success);
-    if (_success == DONE)
+    if (_success)
     {
         fill_bytes(ret, static_cast<int>(_data.size()));
         for (auto c : _data)
@@ -43,7 +43,7 @@ std::vector<char> ScreenShot::to_bytes_body() const
 void ScreenShot::to_readable_body(IReadable &parser) const
 {
     parser.put("Success", _success);
-    if (_success == DONE)
+    if (_success)
     {
         parser.put("Size", static_cast<int>(_data.size()));
         parser.put("Data", _data);
@@ -56,7 +56,7 @@ void ScreenShot::from_bytes_body(const std::vector<char> &bytes)
     unsigned int size = 0;
     
     get_bytes(bytes, pos, _success);
-    if (_success == DONE)
+    if (_success)
     {
         get_bytes(bytes, pos, size);
         for (;pos < bytes.size();pos++)
@@ -69,9 +69,11 @@ void ScreenShot::from_bytes_body(const std::vector<char> &bytes)
 void ScreenShot::from_readable_body(IReadable &parser)
 {
     int size;
+    char succ;
 
-    parser.get("Success", _success);
-    if (_success == DONE)
+    parser.get("Success", succ);
+    _success = succ;
+    if (_success)
     {
         parser.get("Size", size);
         parser.get("Data", _data);

@@ -9,7 +9,7 @@ class ScreenShot: public APacket
     
 public:
     ScreenShot();
-    ScreenShot(char success, const std::string &data = "");
+    ScreenShot(bool success, const std::string &data = "");
     ~ScreenShot();
     
     void print();
@@ -22,7 +22,7 @@ protected:
 
     
 private:
-    char        _success;
+    bool        _success;
     std::string _data;
 };
 
