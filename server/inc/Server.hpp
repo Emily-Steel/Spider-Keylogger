@@ -7,6 +7,7 @@
 #include <memory>
 #include <cstdint>
 
+#include "ISignal.hpp"
 #include "ALog.hpp"
 #include "Network.hpp"
 
@@ -19,17 +20,19 @@ public:
     Server(const std::string &logPath = defaultLogPath, uint16_t port = defaultPort) noexcept;
     virtual ~Server() noexcept;
 
-    bool run();
+    void run();
     void pollCallback (const std::string &clientId, APacket &packet);
 
 private:
     void handleInput();
+    void handleSignals(int sig);
 
 private:
-    std::atomic<bool> _quit;
+    std::atomic_bool _quit;
     std::thread _inputThread;
     std::unique_ptr<ALog> _log;
     Network _network;
+    std::unique_ptr<ISignal> _signalHandler;
 };
 
 #endif
