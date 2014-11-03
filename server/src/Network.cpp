@@ -6,6 +6,7 @@ Network::Network(uint16_t port, const std::string &addr)
 : _acceptor(SocketFactory::getInstance().createSocket())
 {
     _acceptor->bind(addr, port);
+    _acceptor->listen(20);
 }
 
 void Network::poll_clients(std::function<void(const std::string &, APacket &)> callback) {

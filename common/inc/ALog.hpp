@@ -22,7 +22,6 @@ public:
     void    setParser(IReadable *parser);
     
 protected:
-    
     IReadable   *_parser;
     bool _good;
 };
