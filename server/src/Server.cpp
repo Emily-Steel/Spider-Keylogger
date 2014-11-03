@@ -52,10 +52,12 @@ void Server::run() {
 void Server::handleInput() {
     try {
         std::string line;
-        while (std::getline(std::cin, line))
+        while (!_quit && std::getline(std::cin, line))
         {
             try {
                 std::cout << "Command: " << line << std::endl;
+                if (line == "quit")
+                    _quit = true;
             }
             catch (std::exception& e)
             {
