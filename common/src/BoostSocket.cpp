@@ -84,13 +84,12 @@ std::size_t BoostSocket::write(void *data, std::size_t size)
 std::size_t BoostSocket::read(std::string &buffer, std::size_t size)
 {
   assert(_type == Type::ACTIVE);
-
   try
   {
-    char vec[size];
+	  std::vector<char> vec;
 
-    std::size_t len = _socket.read_some(boost::asio::buffer(vec, size));
-    buffer += vec;
+    std::size_t len = _socket.read_some(boost::asio::buffer(vec.data(), size));
+    buffer += vec.data();
     return len;
   }
   catch (boost::system::system_error &e)

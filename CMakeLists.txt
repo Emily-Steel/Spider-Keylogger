@@ -23,9 +23,9 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 # cmake modules
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
 find_package(Threads)
-find_package(Boost 1.55.0 COMPONENTS system program_options filesystem REQUIRED)
-find_package(OpenSSL)
-find_package(Sqlite3)
+find_package(Boost 1.55.0 COMPONENTS system program_options REQUIRED)
+find_package(OpenSSL REQUIRED)
+find_package(Sqlite3 REQUIRED)
 
 INCLUDE(CMakeDependentOption)
 INCLUDE(CheckIncludeFile)
@@ -154,7 +154,7 @@ if(BUILD_CLIENT)
   GENERATE_EXPORT_HEADER( ${NAME_DLL}
                BASE_NAME ${NAME_DLL}
                EXPORT_MACRO_NAME ${NAME_DLL}_EXPORT
-               EXPORT_FILE_NAME ${dll_include_files}
+               EXPORT_FILE_NAME 
                STATIC_DEFINE ${NAME_DLL}_BUILT_AS_STATIC
   )
 
