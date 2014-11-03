@@ -10,20 +10,20 @@ public:
     DataBaseParser();
     ~DataBaseParser();
 
-    virtual void put(const std::string &key, const std::string &value);
-    virtual void put(const std::string &key, const int &value);
-    virtual void put(const std::string &key, const short &value);
-    virtual void put(const std::string &key, const char &value);
+    void put(const std::string &key, const std::string &value) override;
+    void put(const std::string &key, const int &value) override;
+    void put(const std::string &key, const short &value) override;
+    void put(const std::string &key, const char &value) override;
 
-    virtual void get(const std::string &key, std::string &value);
-    virtual void get(const std::string &key, int &value);
-    virtual void get(const std::string &key, short &value);
-    virtual void get(const std::string &key, char &value);
+    void get(const std::string &key, std::string &value) override;
+    void get(const std::string &key, int &value) override;
+    void get(const std::string &key, short &value) override;
+    void get(const std::string &key, char &value) override;
 
-    virtual void read(std::string &);
-    virtual void write(std::string &);
+    void read(std::string &str) override;
+    void write(std::string &str) override;
 
-    virtual void clear();
+    void clear() override;
 
 private:
     std::map<std::string, std::string> _map;

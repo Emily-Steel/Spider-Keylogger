@@ -1,13 +1,13 @@
 #include "KeyStroke.hpp"
 
 KeyStroke::KeyStroke()
-: APacket(KEYSTROKES), _data()
+: APacket(APacket::PacketType::KEYSTROKES), _data()
 {
 
 }
 
 KeyStroke::KeyStroke(const std::string &data)
-: APacket(KEYSTROKES), _data(data)
+: APacket(APacket::PacketType::KEYSTROKES), _data(data)
 {
 
 }

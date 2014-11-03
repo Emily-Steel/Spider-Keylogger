@@ -1,7 +1,7 @@
 #include "ScreenShotRequest.hpp"
 
 ScreenShotRequest::ScreenShotRequest()
-: Request(SCREENSHOT)
+: Request(APacket::PacketType::SCREENSHOT)
 {
     
 }

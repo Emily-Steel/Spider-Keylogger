@@ -78,3 +78,4 @@ Makefile
 cmake_install.cmake
 install_manifest.txt
 .idea/
+.DS_Store

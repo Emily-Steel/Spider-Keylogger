@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.8)
 
 project(Project)
 
@@ -23,9 +23,9 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 # cmake modules
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
 find_package(Threads)
-find_package(Boost 1.55.0 COMPONENTS system program_options filesystem REQUIRED)
-find_package(OpenSSL)
-find_package(Sqlite3)
+find_package(Boost 1.55.0 COMPONENTS filesystem system program_options REQUIRED)
+find_package(OpenSSL REQUIRED)
+find_package(Sqlite3 REQUIRED)
 
 INCLUDE(CMakeDependentOption)
 INCLUDE(CheckIncludeFile)
@@ -46,7 +46,7 @@ INCLUDE(GenerateExportHeader)
 # --- global compiler flags ---
 if (UNIX)
   COMPILER_CXX_FLAGS(FLAGS "-pipe" "-Wall" "-Wextra"
-			   "--std=c++1y"
+			   "--std=c++11"
 			   "-Wchar-subscripts" "-Winit-self" "-Wswitch-enum"
 			   "-Wstrict-aliasing=3"
 			   "-Wundef" "-Wno-endif-labels"
@@ -154,7 +154,7 @@ if(BUILD_CLIENT)
   GENERATE_EXPORT_HEADER( ${NAME_DLL}
                BASE_NAME ${NAME_DLL}
                EXPORT_MACRO_NAME ${NAME_DLL}_EXPORT
-               EXPORT_FILE_NAME ${dll_include_files}
+               EXPORT_FILE_NAME 
                STATIC_DEFINE ${NAME_DLL}_BUILT_AS_STATIC
   )
 
@@ -198,8 +198,6 @@ endif()
 if (Boost_FOUND)
    include_directories(${Boost_INCLUDE_DIRS})
    target_link_libraries (${NAME_LIB} ${Boost_LIBRARIES})
-#    target_link_libraries (${NAME_SERVER} ${Boost_LIBRARIES})
-#    target_link_libraries (${NAME_CLIENT} ${Boost_LIBRARIES})
 endif()
 
 # --- enable unit tests if desired ---

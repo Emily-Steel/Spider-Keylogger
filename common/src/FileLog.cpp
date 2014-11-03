@@ -52,16 +52,13 @@ std::vector<APacket *>  FileLog::dump()
     std::string tmp;
 
     if (!isGood() || !_parser)
-        throw std::invalid_argument("Error while dump the file");
+        throw std::invalid_argument("Error while dumping the file");
     
     _fileHandle.seekg(std::ios_base::beg);
-    while (_fileHandle)
-    {
-        std::getline(_fileHandle, tmp);
-        buf += tmp + "\n";
-    }
+    while (std::getline(_fileHandle, tmp))
+        buf += tmp;
     
-    while (!buf.empty() && buf != "\n\n")
+    while (!buf.empty() && buf != "\n")
     {
         tmp = buf;
         try

@@ -87,7 +87,7 @@ std::size_t BoostSocket::read(t_bytes &buffer, std::size_t size)
 
   try
   {
-    char vec[size];
+    char	vec[size];
 
     std::size_t len = _socket.read_some(boost::asio::buffer(vec, size));
     buffer.reserve(buffer.size() + len);

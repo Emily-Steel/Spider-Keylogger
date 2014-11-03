@@ -1,13 +1,13 @@
 #include "MouseClick.hpp"
 
 MouseClick::MouseClick()
-: APacket(MOUSECLICK), _button(0), _posX(0), _posY(0)
+: APacket(APacket::PacketType::MOUSECLICK), _button(0), _posX(0), _posY(0)
 {
     
 }
 
 MouseClick::MouseClick(unsigned char button, unsigned short posX, unsigned short posY)
-: APacket(MOUSECLICK), _button(button), _posX(posX), _posY(posY)
+: APacket(APacket::PacketType::MOUSECLICK), _button(button), _posX(posX), _posY(posY)
 {
     
 }

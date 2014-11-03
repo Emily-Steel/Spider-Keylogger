@@ -1,11 +1,11 @@
-#include <iostream>
-#include <stdexcept>
-#include <functional>
+#include "Server.hpp"
+
 #include <boost/filesystem.hpp>
+#include <functional>
 
 #include "FileLog.hpp"
 #include "DataBaseLog.hpp"
-#include "Server.hpp"
+#include "BoostSignal.hpp"
 
 Server::Server(const std::string &logPath, uint16_t port) noexcept
 : _quit(false), _network(port)
@@ -21,44 +21,64 @@ Server::Server(const std::string &logPath, uint16_t port) noexcept
 
     std::cout << "Opening " << logPath << std::endl;
     _log->open(logPath);
+
+    _signalHandler = std::unique_ptr<ISignal>(new BoostSignal(std::bind(&Server::handleSignals, this, std::placeholders::_1)));
+    _signalHandler->addSignal(SIGINT);
+    _signalHandler->addSignal(SIGTERM);
+    _signalHandler->addSignal(SIGQUIT);
 }
 
 Server::~Server() noexcept
 {
-    if (_inputThread.joinable())
-        _inputThread.join();
+    _inputThread.detach();
     if (_log->isGood())
         _log->close();
 }
 
-bool Server::run() {
+void Server::run() {
     if (!_log->isGood())
         throw std::runtime_error("Database file isn't ready.");
     _inputThread = std::thread(&Server::handleInput, this);
- //   auto clientPoller = std::bind(&Server::pollCallback, this);
-    while (!_quit.load(std::memory_order_relaxed))
+    _signalHandler->start();
+
+    while (!_quit)
     {
-   // _network.poll_clients(clientPoller);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::cout << "b" << std::endl;
     }
     std::cout << "Server shutdown." << std::endl;
-    return true;
 }
 
 void Server::handleInput() {
     try {
         std::string line;
-        while (std::getline(std::cin, line))
+        while (!_quit && std::getline(std::cin, line))
         {
-            std::cout << "Command: " << line << std::endl;
+            try {
+                std::cout << "Command: " << line << std::endl;
+                if (line == "quit")
+                    _quit = true;
+            }
+            catch (std::exception& e)
+            {
+                std::cerr << line << " throwed exception: " << e.what() << std::endl;
+            }
         }
+        _quit = true;
     }
-    catch (std::exception& e) {
-        std::cerr << "Exception: " << e.what() << std::endl;
-    }
-    _quit.store(true, std::memory_order_relaxed);
+    catch (std::exception& e)
+        {
+            std::cerr << "Exception: " << e.what() << std::endl;
+        }
+}
+
+void Server::handleSignals(int sig) {
+    std::cout << "Received signal " << sig << std::endl;
+    if (sig == SIGINT || sig == SIGTERM || sig == SIGQUIT)
+        _quit = true;
 }
 
 void Server::pollCallback(const std::string &clientId, APacket &packet) {
-    (void)clientId;
+    std::cout << "CallBack on: " << clientId << std::endl;
     (void)packet;
 }

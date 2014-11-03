@@ -1,7 +1,7 @@
 #include "APacket.hpp"
 
 APacket::APacket(PacketType type)
-: _type(type)
+: _type(static_cast<char>(type))
 {
     
 }
