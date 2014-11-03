@@ -19,7 +19,7 @@ bool BoostSocket::connect(const std::string &address, unsigned short port)
 
   try
   {
-      boost::asio::ip::address baddr = boost::asio::ip::address::from_string(address);
+    boost::asio::ip::address baddr = boost::asio::ip::address::from_string(address);
 
     _acceptor.open(familyFromAddr(baddr));
     _socket.connect({baddr, port});
@@ -33,7 +33,7 @@ bool BoostSocket::connect(const std::string &address, unsigned short port)
   }
 }
 
-ASocket& BoostSocket::operator<<(const APacket &packet)
+ASocket &BoostSocket::operator<<(const APacket &packet)
 {
   assert(_type == Type::ACTIVE);
 
@@ -48,7 +48,7 @@ ASocket& BoostSocket::operator<<(const APacket &packet)
   return *this;
 }
 
-ASocket& BoostSocket::operator>>(APacket &packet)
+ASocket &BoostSocket::operator>>(APacket &packet)
 {
   assert(_type == Type::ACTIVE);
 
@@ -81,7 +81,7 @@ std::size_t BoostSocket::write(void *data, std::size_t size)
   return 0;
 }
 
-std::size_t BoostSocket::read(std::string &buffer, std::size_t size)
+std::size_t BoostSocket::read(t_bytes &buffer, std::size_t size)
 {
   assert(_type == Type::ACTIVE);
 
@@ -90,7 +90,10 @@ std::size_t BoostSocket::read(std::string &buffer, std::size_t size)
     char vec[size];
 
     std::size_t len = _socket.read_some(boost::asio::buffer(vec, size));
-    buffer += vec;
+    buffer.reserve(buffer.size() + len);
+    for (unsigned i = 0; i < len; ++i) {
+      buffer.push_back(vec[i]);
+    }
     return len;
   }
   catch (boost::system::system_error &e)
@@ -98,6 +101,19 @@ std::size_t BoostSocket::read(std::string &buffer, std::size_t size)
     _throwNetworkException(e);
   }
   return 0;
+}
+
+void BoostSocket::async_write(void *data, std::size_t size, t_writeCallback &callback)
+{
+  (void)data;
+  (void)size;
+  (void)callback;
+}
+
+void BoostSocket::async_read(t_bytes &buffer, t_readCallback &callback)
+{
+  (void)buffer;
+  (void)callback;
 }
 
 void BoostSocket::bind(const std::string &addr, uint16_t port)
@@ -125,6 +141,7 @@ std::shared_ptr<ASocket> BoostSocket::accept(void)
   auto sock = std::make_shared<BoostSocket>();
 
   _acceptor.accept(sock->_socket);
+  sock->_type = Type::ACTIVE;
   return sock;
 }
 
