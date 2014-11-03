@@ -56,9 +56,9 @@ std::vector<APacket *>  FileLog::dump()
     
     _fileHandle.seekg(std::ios_base::beg);
     while (std::getline(_fileHandle, tmp))
-        buf += tmp + "\n";
+        buf += tmp;
     
-    while (!buf.empty() && buf != "\n\n")
+    while (!buf.empty() && buf != "\n")
     {
         tmp = buf;
         try

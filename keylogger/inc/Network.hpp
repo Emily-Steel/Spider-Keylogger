@@ -2,8 +2,8 @@
 # define _NETWORK_HPP_
 
 # include <iostream>
-
-typedef std::string APacket;
+# include "APacket.hpp"
+# include "ASocket.hpp"
 
 class Network
 {
@@ -14,11 +14,12 @@ public:
 	bool connect(int port, std::string host);
 	bool isConnected();
 
-	Network &operator<<(APacket &packet);
+	Network &operator<<(const APacket &packet);
 	Network &operator>>(APacket &packet);
 
 private:
-
+    ASocket *_socket;
+    bool    _connect;
 };
 
 #endif
