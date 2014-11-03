@@ -58,10 +58,10 @@ std::vector<APacket *>  FileLog::dump()
     while (_fileHandle)
     {
         std::getline(_fileHandle, tmp);
-        buf += tmp + "\n";
+        buf += tmp;
     }
     
-    while (!buf.empty() && buf != "\n\n")
+    while (!buf.empty() && buf != "\n")
     {
         tmp = buf;
         try
