@@ -44,8 +44,8 @@ void Server::run() {
 
     while (!_quit)
     {
+        //network code goes here
         std::this_thread::sleep_for(std::chrono::seconds(1));
-        std::cout << "b" << std::endl;
     }
     std::cout << "Server shutdown." << std::endl;
 }
