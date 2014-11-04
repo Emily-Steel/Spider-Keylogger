@@ -20,7 +20,7 @@ public:
     static SingleClass& instance(Args&&... args)
     {
         std::call_once(get_once_flag(), [](Args&&... arg){
-        _instance.reset((new SingleClass(std::forward<Args>(arg)...)));
+        _instance.reset(new SingleClass(std::forward<Args>(arg)...));
         }, std::forward<Args>(args)...);
         return *(_instance.get());
     };

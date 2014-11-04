@@ -5,9 +5,8 @@
 #include <cassert>
 
 #include "AFactory.hpp"
-#include "SocketFactory.hpp"
 
-AFactoryRegistration<ASocket, BoostSocket> boostSockFactRegister("BoostSoskcet");
+AFactoryRegistration<ASocket, BoostSocket> boostSockFactRegister("BoostSocket");
 boost::asio::io_service BoostSocket::_service;
 
 BoostSocket::BoostSocket(void) :

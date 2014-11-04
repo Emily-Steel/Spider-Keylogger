@@ -1,9 +1,11 @@
 #include "Network.hpp"
 
-#include "SocketFactory.hpp"
+#include "BoostSocket.hpp"
+
+#include "AFactory.hpp"
 
 Network::Network(uint16_t port, const std::string &addr)
-: _acceptor(SocketFactory::getInstance().createSocket())
+: _acceptor(AFactory<ASocket>::instance().create("BoostSocket"))
 {
   _acceptor->bind(addr, port);
   _acceptor->listen(20);

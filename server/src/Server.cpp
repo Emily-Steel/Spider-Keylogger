@@ -5,6 +5,7 @@
 
 #include <boost/filesystem.hpp>
 
+#include "AFactory.hpp"
 #include "FileLog.hpp"
 #include "DataBaseLog.hpp"
 #include "BoostSignal.hpp"
@@ -24,6 +25,7 @@ Server::Server(const std::string &logPath, uint16_t port) noexcept
     std::cout << "Opening " << logPath << std::endl;
     _log->open(logPath);
 
+    //_signalHandler = AFactory<ISignal>::instance().create("BoostSignal");
     _signalHandler = std::unique_ptr<ISignal>(new BoostSignal(std::bind(&Server::handleSignals, this, std::placeholders::_1)));
     _signalHandler->addSignal(SIGINT);
     _signalHandler->addSignal(SIGTERM);
