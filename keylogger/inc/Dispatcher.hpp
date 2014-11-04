@@ -5,6 +5,8 @@
 # include "ALog.hpp"
 # include "ClientNetwork.hpp"
 
+# define FILEPATH "log.json"
+
 class Dispatcher
 {
 public:

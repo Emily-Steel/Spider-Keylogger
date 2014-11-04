@@ -4,7 +4,8 @@
 Dispatcher::Dispatcher()
 : _log(new FileLog())
 {
-    
+	_log->open(FILEPATH);
+	_log->setParser(new JSONParser());
 }
 
 Dispatcher::~Dispatcher()
@@ -16,8 +17,11 @@ void                    Dispatcher::dispatch(const APacket &packet)
 {
     if (_net.isConnected())
         _net << packet;
-    else
-        _log->insert(packet, "Save");
+	else
+	{
+		std::cout << "IN FILE" << std::endl;
+		_log->insert(packet, "Save");
+	}
 }
 
 void                    Dispatcher::handlePacket(APacket &packet)
