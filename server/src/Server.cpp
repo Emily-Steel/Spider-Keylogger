@@ -1,7 +1,9 @@
 #include "Server.hpp"
 
-#include <boost/filesystem.hpp>
+#include <algorithm>
 #include <functional>
+
+#include <boost/filesystem.hpp>
 
 #include "FileLog.hpp"
 #include "DataBaseLog.hpp"
@@ -41,10 +43,24 @@ void Server::run() {
     _inputThread = std::thread(&Server::handleInput, this);
     _signalHandler->start();
 
+    std::chrono::steady_clock::time_point last(std::chrono::steady_clock::now());
+    std::string			bcStr = "Hey there noobs :D!";
+    std::vector<std::uint8_t>	bc(bcStr.length());
+    std::copy(bcStr.begin(), bcStr.end(), bc.begin());
+    for (std::uint8_t b : bc) {
+      std::cout << static_cast<char>(b);
+    }
+    std::cout << std::endl;
     while (!_quit)
     {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        std::cout << "b" << std::endl;
+        // std::this_thread::sleep_for(std::chrono::seconds(1));
+        // std::cout << "b" << std::endl;
+      _network.poll_clients();
+      std::chrono::steady_clock::time_point now(std::chrono::steady_clock::now());
+      if (std::chrono::duration_cast<std::chrono::seconds>(now - last).count() > 2) {
+	last = now;
+	_network.broadcast(bc, bc.size());
+      }
     }
     std::cout << "Server shutdown." << std::endl;
 }

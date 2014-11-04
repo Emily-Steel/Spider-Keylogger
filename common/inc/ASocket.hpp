@@ -19,9 +19,10 @@ public:
       ACTIVE
     };
 
-  typedef std::vector<std::uint8_t>			t_bytes;
-  typedef std::function<void(std::size_t)>		t_writeCallback;
+  typedef std::vector<std::uint8_t>	t_bytes;
+  typedef std::function<void(std::size_t)>	t_writeCallback;
   typedef std::function<void(t_bytes &, std::size_t)>	t_readCallback;
+  typedef std::function<void(std::shared_ptr<ASocket>)>	t_acceptCallback;
 
   ASocket(void);
   virtual ~ASocket(void) = default;
@@ -33,13 +34,14 @@ public:
   virtual ASocket	&operator>>(APacket& packet) = 0;
   virtual std::size_t	write(void *data, std::size_t size) = 0;
   virtual std::size_t	read(t_bytes &buffer, std::size_t size) = 0;
-  virtual void		async_write(void *data, std::size_t size, t_writeCallback &callback) = 0;
-  virtual void		async_read(t_bytes &buffer, t_readCallback &callback) = 0;
+  virtual void		async_write(void *data, std::size_t size, t_writeCallback callback) = 0;
+  virtual void		async_read(t_bytes &buffer, std::size_t size, t_readCallback callback) = 0;
 
   virtual bool				connect(const std::string& address, unsigned short port) = 0;
   virtual void				bind(const std::string &addr, uint16_t port) = 0;
   virtual void				listen(int backlog) = 0;
   virtual std::shared_ptr<ASocket>	accept(void) = 0;
+  virtual void				async_accept(t_acceptCallback callback) = 0;
 
   const Type&		getType(void) const;
 
