@@ -1,21 +1,21 @@
-#ifndef _NETWORK_HPP_
-# define _NETWORK_HPP_
+#ifndef _CLIENTNETWORK_HPP_
+# define _CLIENTNETWORK_HPP_
 
 # include <iostream>
 # include "APacket.hpp"
 # include "ASocket.hpp"
 
-class Network
+class ClientNetwork
 {
 public:
-	Network();
-	~Network();
+	ClientNetwork();
+	~ClientNetwork();
 
 	bool connect(int port, std::string host);
 	bool isConnected();
 
-	Network &operator<<(const APacket &packet);
-	Network &operator>>(APacket &packet);
+	ClientNetwork &operator<<(const APacket &packet);
+	ClientNetwork &operator>>(APacket &packet);
 
 private:
     ASocket *_socket;

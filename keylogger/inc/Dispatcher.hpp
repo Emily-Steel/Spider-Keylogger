@@ -3,7 +3,7 @@
 
 # include "APacket.hpp"
 # include "ALog.hpp"
-# include "Network.hpp"
+# include "ClientNetwork.hpp"
 
 class Dispatcher
 {
@@ -16,7 +16,7 @@ public:
     std::vector<APacket *>  pollNetwork();
     
 private:
-    Network                 _net;
+    ClientNetwork           _net;
     std::unique_ptr<ALog>   _log;
 };
 

@@ -1,17 +1,17 @@
-#include "Network.hpp"
+#include "ClientNetwork.hpp"
 
-Network::Network()
+ClientNetwork::ClientNetwork()
 : _connect(false)
 {
     
 }
 
-Network::~Network()
+ClientNetwork::~ClientNetwork()
 {
     
 }
 
-bool Network::connect(int port, std::string host)
+bool ClientNetwork::connect(int port, std::string host)
 {
     if (!_socket->connect(host, port))
     {
@@ -22,12 +22,12 @@ bool Network::connect(int port, std::string host)
     return (true);
 }
 
-bool Network::isConnected()
+bool ClientNetwork::isConnected()
 {
     return (_connect);
 }
 
-Network &Network::operator<<(const APacket &packet)
+ClientNetwork &ClientNetwork::operator<<(const APacket &packet)
 {
     try {
         (*_socket) << packet;
@@ -39,7 +39,7 @@ Network &Network::operator<<(const APacket &packet)
     return (*this);
 }
 
-Network &Network::operator>>(APacket &packet)
+ClientNetwork &ClientNetwork::operator>>(APacket &packet)
 {
     try {
         (*_socket) >> packet;
