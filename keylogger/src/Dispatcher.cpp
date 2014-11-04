@@ -2,9 +2,10 @@
 #include "Dispatcher.hpp"
 
 Dispatcher::Dispatcher()
-: _log(new FileLog)
+: _log(new FileLog())
 {
-    
+	_log->open(FILEPATH);
+	_log->setParser(new JSONParser());
 }
 
 Dispatcher::~Dispatcher()
@@ -16,8 +17,11 @@ void                    Dispatcher::dispatch(const APacket &packet)
 {
     if (_net.isConnected())
         _net << packet;
-    else
-        _log << packet;
+	else
+	{
+		std::cout << "IN FILE" << std::endl;
+		_log->insert(packet, "Save");
+	}
 }
 
 void                    Dispatcher::handlePacket(APacket &packet)
@@ -27,5 +31,7 @@ void                    Dispatcher::handlePacket(APacket &packet)
 
 std::vector<APacket *>  Dispatcher::pollNetwork()
 {
-    
+	std::vector<APacket *> ret;
+
+	return (ret);
 }

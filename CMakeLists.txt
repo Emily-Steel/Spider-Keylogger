@@ -166,7 +166,7 @@ if(BUILD_CLIENT)
     ${client_include_files}
   )
   
-  target_link_libraries(${NAME_CLIENT} ${NAME_LIB})
+  target_link_libraries(${NAME_DLL} ${NAME_LIB})
 endif()
 
 if (BUILD_SERVER)

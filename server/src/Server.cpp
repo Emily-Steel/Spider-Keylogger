@@ -1,7 +1,9 @@
 #include "Server.hpp"
 
-#include <boost/filesystem.hpp>
+#include <algorithm>
 #include <functional>
+
+#include <boost/filesystem.hpp>
 
 #include "FileLog.hpp"
 #include "DataBaseLog.hpp"
@@ -42,10 +44,19 @@ void Server::run() {
     _inputThread = std::thread(&Server::handleInput, this);
     _signalHandler->start();
 
+    std::string			bcStr = "Hello little Spider :)!";
+    std::vector<std::uint8_t>	bc(bcStr.length());
+    std::chrono::steady_clock::time_point last(std::chrono::steady_clock::now());
+
+    std::copy(bcStr.begin(), bcStr.end(), bc.begin());
     while (!_quit)
     {
-        //network code goes here
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+      _network.poll_clients();
+      std::chrono::steady_clock::time_point now(std::chrono::steady_clock::now());
+      if (std::chrono::duration_cast<std::chrono::seconds>(now - last).count() > 2) {
+	last = now;
+	_network.broadcast(bc, bc.size());
+      }
     }
     std::cout << "Server shutdown." << std::endl;
 }
