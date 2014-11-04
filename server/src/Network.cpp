@@ -33,14 +33,14 @@ void	Network::_queueAccept(void)
 
 void	Network::_onAccept(std::shared_ptr<ASocket> newSock)
 {
-  std::cout << "Accepted a bitch." << std::endl;
+  std::cout << "Accepted a spider." << std::endl;
   _pendingClients.emplace_back(new Spider(newSock));
   _queueAccept();
 }
 
 void	Network::_onRead(ASocket::t_bytes &buffer, std::size_t size)
 {
-  std::cout << "Some bitch said: ";
+  std::cout << "Some spider said: ";
   for (std::uint8_t b : buffer) {
     std::cout << static_cast<char>(b);
   }
@@ -49,5 +49,5 @@ void	Network::_onRead(ASocket::t_bytes &buffer, std::size_t size)
 
 void	Network::_onWrite(std::size_t size)
 {
-  std::cout << "Told that bitch off (" << size << ")" << std::endl;
+  std::cout << "Sent a message to a spider (" << size << ")" << std::endl;
 }
