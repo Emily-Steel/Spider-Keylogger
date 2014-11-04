@@ -1,8 +1,12 @@
+#include "BoostSocket.hpp"
+
 #include <iostream>
 #include <vector>
-#include <assert.h>
+#include <cassert>
 
-#include "BoostSocket.hpp"
+#include "AFactory.hpp"
+
+AFactoryRegistration<ASocket, BoostSocket> boostSockFactRegister("BoostSoskcet");
 
 boost::asio::io_service BoostSocket::_service;
 

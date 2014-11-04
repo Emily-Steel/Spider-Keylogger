@@ -1,5 +1,9 @@
 #include "BoostSignal.hpp"
 
+#include "AFactory.hpp"
+
+AFactoryRegistration<ISignal, BoostSignal> boostSignFactRegister("BoostSignal");
+
 BoostSignal::BoostSignal(const std::function<void(int signal)>& signalHandlerFunc)
 : _signalHandler(signalHandlerFunc), _signals(_ios)
 {
