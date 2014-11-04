@@ -25,15 +25,15 @@ int	main(int ac, char *av[])
     namespace po = boost::program_options;
 
     Server *server = nullptr;
-
     try {
-        std::string dbName = Server::defaultLogPath;
-        uint16_t port = Server::defaultPort;
+    std::string dbName = Server::defaultLogPath;
+    uint16_t port = Server::defaultPort;
+
         std::string appName = boost::filesystem::basename(av[0]);
         try {
             po::options_description desc("Options");
             desc.add_options()
-                    ("help,h", "You need help?")
+                    ("help,h", "Program's help.")
                     ("port,p", po::value<uint16_t>(&port), "The port of the server")
                     ("db", po::value<std::string>(&dbName), "The database file");
 
