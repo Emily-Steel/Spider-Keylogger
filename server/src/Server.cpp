@@ -26,6 +26,7 @@ Server::Server(const std::string &logPath, uint16_t port) noexcept
     _signalHandler->addSignal(SIGINT);
     _signalHandler->addSignal(SIGTERM);
     _signalHandler->addSignal(SIGQUIT);
+    _signalHandler->addSignal(SIGPIPE);
 }
 
 Server::~Server() noexcept
