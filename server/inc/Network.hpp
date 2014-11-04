@@ -7,6 +7,7 @@
 
 #include "ALog.hpp"
 #include "ASocket.hpp"
+#include "Spider.hpp"
 
 class Network {
 public:
@@ -23,11 +24,11 @@ private:
   void		_onRead(ASocket::t_bytes &buffer, std::size_t size);
   void		_onWrite(std::size_t size);
 
+  std::unique_ptr<ASocket>	_acceptor;
   // contains clients that have gone through handshake
-  std::map<std::string, std::shared_ptr<ASocket> >	_clients;
+  std::map<std::string, std::unique_ptr<Spider>>	_clients;
   // contains clients that are going through handshake
-  std::vector<std::shared_ptr<ASocket>>			_pendingClients;
-  std::unique_ptr<ASocket>				_acceptor;
+  std::vector<std::unique_ptr<Spider>>			_pendingClients;
 };
 
 #endif

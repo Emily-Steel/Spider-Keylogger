@@ -20,8 +20,7 @@ void	Network::broadcast(ASocket::t_bytes &buffer, std::size_t size)
   std::function<void(std::size_t)> w(std::bind(&Network::_onWrite, this, std::placeholders::_1));
 
   for (auto &client : _pendingClients) {
-    // client->write(buffer.data(), size);
-    client->async_write(buffer.data(), size, w);
+    client->getSocket()->async_write(buffer.data(), size, w);
   }
 }
 
@@ -35,7 +34,7 @@ void	Network::_queueAccept(void)
 void	Network::_onAccept(std::shared_ptr<ASocket> newSock)
 {
   std::cout << "Accepted a bitch." << std::endl;
-  _pendingClients.push_back(newSock);
+  _pendingClients.emplace_back(new Spider(newSock));
   _queueAccept();
 }
 
