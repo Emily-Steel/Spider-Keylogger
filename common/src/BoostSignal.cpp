@@ -3,8 +3,6 @@
 BoostSignal::BoostSignal(const std::function<void(int signal)>& signalHandlerFunc)
 : _signalHandler(signalHandlerFunc), _signals(_ios)
 {
-    _signals.add(SIGINT);
-    _signals.add(SIGTERM);
 }
 
 BoostSignal::~BoostSignal() {

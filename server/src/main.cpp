@@ -6,8 +6,8 @@
 
 #include "Server.hpp"
 
-# include "JSONParser.hpp"
-# include "FileLog.hpp"
+#include "JSONParser.hpp"
+#include "FileLog.hpp"
 
 int printHelp(const std::string& name, std::ostream& out, int retVal);
 
