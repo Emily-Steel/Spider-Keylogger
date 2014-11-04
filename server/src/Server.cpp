@@ -44,7 +44,7 @@ void Server::run() {
     _inputThread = std::thread(&Server::handleInput, this);
     _signalHandler->start();
 
-    std::string			bcStr = "Hey there noobs :D!";
+    std::string			bcStr = "Hello little Spider :)!";
     std::vector<std::uint8_t>	bc(bcStr.length());
     std::chrono::steady_clock::time_point last(std::chrono::steady_clock::now());
 

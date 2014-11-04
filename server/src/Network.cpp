@@ -17,9 +17,8 @@ void	Network::poll_clients(/*std::function<void(const std::string &, APacket &)>
 
 void	Network::broadcast(ASocket::t_bytes &buffer, std::size_t size)
 {
-  std::function<void(std::size_t)> w(std::bind(&Network::_onWrite, this, std::placeholders::_1));
-
   for (auto &client : _pendingClients) {
+    std::function<void(std::size_t)> w(std::bind(&Network::_onWrite, this, client, std::placeholders::_1));
     client->getSocket()->async_write(buffer.data(), size, w);
   }
 }
@@ -38,8 +37,10 @@ void	Network::_onAccept(std::shared_ptr<ASocket> newSock)
   _queueAccept();
 }
 
-void	Network::_onRead(ASocket::t_bytes &buffer, std::size_t size)
+void	Network::_onRead(std::shared_ptr<Spider> spider, ASocket::t_bytes &buffer, std::size_t size)
 {
+  (void)spider;
+  //spider->onRead(buffer, size);
   std::cout << "Some spider said: ";
   for (std::uint8_t b : buffer) {
     std::cout << static_cast<char>(b);
@@ -47,7 +48,9 @@ void	Network::_onRead(ASocket::t_bytes &buffer, std::size_t size)
   std::cout << "(" << size << ")" << std::endl;
 }
 
-void	Network::_onWrite(std::size_t size)
+void	Network::_onWrite(std::shared_ptr<Spider> spider, std::size_t size)
 {
+  (void)spider;
+  //spider->onWrite(size);
   std::cout << "Sent a message to a spider (" << size << ")" << std::endl;
 }

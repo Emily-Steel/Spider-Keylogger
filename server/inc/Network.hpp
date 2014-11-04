@@ -21,14 +21,14 @@ private:
   void		_queueAccept(void);
 
   void		_onAccept(std::shared_ptr<ASocket> newSock);
-  void		_onRead(ASocket::t_bytes &buffer, std::size_t size);
-  void		_onWrite(std::size_t size);
+  void		_onRead(std::shared_ptr<Spider> spider, ASocket::t_bytes &buffer, std::size_t size);
+  void		_onWrite(std::shared_ptr<Spider> spider, std::size_t size);
 
   std::unique_ptr<ASocket>	_acceptor;
   // contains clients that have gone through handshake
-  std::map<std::string, std::unique_ptr<Spider>>	_clients;
+  std::map<std::string, std::shared_ptr<Spider>>	_clients;
   // contains clients that are going through handshake
-  std::vector<std::unique_ptr<Spider>>			_pendingClients;
+  std::vector<std::shared_ptr<Spider>>			_pendingClients;
 };
 
 #endif

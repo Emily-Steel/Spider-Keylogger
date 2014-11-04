@@ -38,7 +38,21 @@ boost::circular_buffer<std::uint8_t>	&Spider::getWriteBuf(void)
   return _write;
 }
 
-bool		Spider::isHandshakeDone(void) const
+bool	Spider::isHandshakeDone(void) const
 {
   return _handshake_done;
+}
+
+void	Spider::onRead(ASocket::t_bytes &buffer, std::size_t size)
+{
+  for (std::size_t i = 0; i < size; ++i) {
+    _read.push_back(buffer[i]);
+  }
+}
+
+void	Spider::onWrite(std::size_t size)
+{
+  for (unsigned long i = 0; i < size; ++i) {
+    _write.pop_front();
+  }
 }

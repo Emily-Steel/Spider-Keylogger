@@ -25,6 +25,9 @@ public:
 
   bool		isHandshakeDone(void) const;
 
+  void		onRead(ASocket::t_bytes &buffer, std::size_t size);
+  void		onWrite(std::size_t size);
+
 private:
   bool	_handshake_done;
 
