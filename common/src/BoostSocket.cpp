@@ -130,6 +130,7 @@ void	BoostSocket::_onAccept(t_acceptCallback callback,
 			       std::shared_ptr<ASocket> sock)
 {
   //add ec check
+  (void)ec;
   callback(sock);
 }
 
@@ -138,6 +139,7 @@ void	BoostSocket::_onRead(t_readCallback callback,
 			     t_bytes& buffer, std::size_t size)
 {
   //add ec check
+  (void)ec;
   callback(buffer, size);
 }
 
@@ -146,6 +148,7 @@ void	BoostSocket::_onWrite(t_writeCallback callback,
 			      std::size_t size)
 {
   //add ec check
+  (void)ec;
   callback(size);
 }
 
