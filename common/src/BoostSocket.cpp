@@ -19,35 +19,19 @@ BoostSocket::BoostSocket(void) :
 bool	BoostSocket::connect(const std::string &address, unsigned short port)
 {
   assert(_type == Type::NONE);
+  boost::asio::ip::address baddr = boost::asio::ip::address::from_string(address);
 
-  try
-  {
-    boost::asio::ip::address baddr = boost::asio::ip::address::from_string(address);
-
-    _acceptor.open(familyFromAddr(baddr));
-    _socket.connect({baddr, port});
-    _type = Type::ACTIVE;
-    return true;
-  }
-  catch (boost::system::system_error &e)
-  {
-    std::cerr << "Cannot connect to the server" << std::endl;
-    return false;
-  }
+  _acceptor.open(familyFromAddr(baddr));
+  _socket.connect({baddr, port});
+  _type = Type::ACTIVE;
+  return true;
 }
 
 ASocket	&BoostSocket::operator<<(const APacket &packet)
 {
   assert(_type == Type::ACTIVE);
 
-  try
-  {
-    _socket.send(boost::asio::buffer(packet.to_bytes()));
-  }
-  catch (boost::system::system_error &e)
-  {
-    _throwNetworkException(e);
-  }
+  _socket.send(boost::asio::buffer(packet.to_bytes()));
   return *this;
 }
 
@@ -55,17 +39,10 @@ ASocket	&BoostSocket::operator>>(APacket &packet)
 {
   assert(_type == Type::ACTIVE);
 
-  try
-  {
-    std::vector<char> buffer(SIZEREAD);
+  std::vector<char> buffer(SIZEREAD);
 
-    _socket.receive(boost::asio::buffer(buffer, SIZEREAD));
-    packet.from_bytes(buffer);
-  }
-  catch (boost::system::system_error &e)
-  {
-    _throwNetworkException(e);
-  }
+  _socket.receive(boost::asio::buffer(buffer, SIZEREAD));
+  packet.from_bytes(buffer);
   return *this;
 }
 
@@ -73,15 +50,7 @@ std::size_t	BoostSocket::write(void *data, std::size_t size)
 {
   assert(_type == Type::ACTIVE);
 
-  try
-  {
-    return _socket.write_some(boost::asio::buffer(data, size));
-  }
-  catch (boost::system::system_error &e)
-  {
-    _throwNetworkException(e);
-  }
-  return 0;
+  return _socket.write_some(boost::asio::buffer(data, size));
 }
 
 void	BoostSocket::async_write(void *data, std::size_t size, t_writeCallback callback)
@@ -97,20 +66,12 @@ std::size_t	BoostSocket::read(t_bytes &buffer, std::size_t size)
 {
   assert(_type == Type::ACTIVE);
 
-  try
-  {
-    t_bytes	vec;
+  t_bytes	vec;
 
-	vec.resize(size);
-    std::size_t len = _socket.read_some(boost::asio::buffer(vec.data(), size));
-	buffer.insert(buffer.end(), vec.begin(), vec.end());
-    return len;
-  }
-  catch (boost::system::system_error &e)
-  {
-    _throwNetworkException(e);
-  }
-  return 0;
+  vec.resize(size);
+  std::size_t len = _socket.read_some(boost::asio::buffer(vec.data(), size));
+  buffer.insert(buffer.end(), vec.begin(), vec.end());
+  return len;
 }
 
 void	BoostSocket::async_read(t_bytes &buffer, std::size_t size, t_readCallback callback)
@@ -187,16 +148,6 @@ void	BoostSocket::_onWrite(t_writeCallback callback,
   //add ec check
   callback(size);
 }
-
-void	BoostSocket::_throwNetworkException(boost::system::system_error &e)
-{
-  if (e.code() == boost::asio::error::eof)
-  {
-    std::cerr << "Connection reset by peer." << std::endl;
-  }
-  throw std::runtime_error("Connection interrupted");
-}
-
 
 boost::asio::ip::tcp	BoostSocket::familyFromAddr(const boost::asio::ip::address &addr) const {
   if (addr.is_v4())

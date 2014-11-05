@@ -34,7 +34,6 @@ private:
   void		_onAccept(t_acceptCallback callback, const boost::system::error_code &ec, std::shared_ptr<ASocket> sock);
   void		_onRead(t_readCallback callback, const boost::system::error_code &ec, t_bytes& buffer, std::size_t size);
   void		_onWrite(t_writeCallback callback, const boost::system::error_code &ec, std::size_t size);
-  void		_throwNetworkException(boost::system::system_error &e);
   boost::asio::ip::tcp familyFromAddr(const boost::asio::ip::address& addr) const;
 
   // only used if the socket is an active one
