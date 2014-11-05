@@ -13,13 +13,15 @@ ClientNetwork::~ClientNetwork()
 
 bool ClientNetwork::connect(int port, std::string host)
 {
-    if (!_socket->connect(host, port))
-    {
-        _connect = false;
-        return (false);
-    }
-    _connect = true;
-    return (true);
+	if (!_socket->connect(host, port))
+	{
+		char data[] = "salut";
+		_socket->write(data, 5);
+		_connect = false;
+	}
+	else
+		_connect = true;
+	return (_connect);
 }
 
 bool ClientNetwork::isConnected()

@@ -5,6 +5,12 @@
 # include "APacket.hpp"
 # include "ASocket.hpp"
 
+# include "HandshakeResult.hpp"
+# include "KillConfirm.hpp"
+# include "ScreenShot.hpp"
+# include "ScreenShotRequest.hpp"
+# include "KillRequest.hpp"
+
 class ClientNetwork
 {
 public:
