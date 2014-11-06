@@ -3,13 +3,13 @@
 
 # include <thread>
 
+# include "ClientNetwork.hpp"
 # include "APacket.hpp"
 # include "ALog.hpp"
-# include "ClientNetwork.hpp"
 
 # define FILEPATH "log.json"
 
-# define HOST "10.10.253.251"
+# define HOST "10.10.253.238"
 # define PORT 6060
 
 class Dispatcher
@@ -26,7 +26,7 @@ private:
 	bool					_connect;
     ClientNetwork           _net;
     std::unique_ptr<ALog>   _log;
-	std::thread				_t;
+	std::thread				_thread;
 };
 
 #endif

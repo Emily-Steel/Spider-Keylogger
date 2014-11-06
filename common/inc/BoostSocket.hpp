@@ -1,9 +1,8 @@
-#ifndef	BOOSTSOCKET_H
-# define BOOSTSOCKET_H
+#ifndef	_BOOSTSOCKET_HPP_
+# define _BOOSTSOCKET_HPP_
 
 # include <string>
 # include <boost/asio.hpp>
-# include <boost/system/error_code.hpp>
 
 # include "ASocket.hpp"
 

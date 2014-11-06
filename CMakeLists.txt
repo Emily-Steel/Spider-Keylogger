@@ -20,6 +20,10 @@ set(DOC_PATH "${PROJECT_SOURCE_DIR}/doc")
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 
+set (Boost_USE_STATIC_LIBS ON)
+set (Boost_MULTITHREADED ON)
+set (Boost_USE_STATIC_RUNTIME OFF)
+
 # cmake modules
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
 find_package(Threads)
@@ -167,6 +171,7 @@ if(BUILD_CLIENT)
   )
   
   target_link_libraries(${NAME_DLL} ${NAME_LIB})
+  target_link_libraries(${NAME_CLIENT} ${NAME_LIB})
 endif()
 
 if (BUILD_SERVER)

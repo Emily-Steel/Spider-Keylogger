@@ -1,5 +1,5 @@
-#include "FileLog.hpp"
 #include "Dispatcher.hpp"
+#include "FileLog.hpp"
 
 Dispatcher::Dispatcher()
 	: _connect(false), _log(new FileLog())
@@ -7,12 +7,12 @@ Dispatcher::Dispatcher()
 	_log->open(FILEPATH);
 	_log->setParser(new JSONParser());
 
-	_t = std::thread(&Dispatcher::handlePacket, this);
+	_thread = std::thread(&Dispatcher::handlePacket, this);
 }
 
 Dispatcher::~Dispatcher()
 {
-	_t.detach();
+	_thread.join();
 }
 
 void                    Dispatcher::dispatch(const APacket &packet)
@@ -31,11 +31,11 @@ void                    Dispatcher::handlePacket()
 		std::cout << "HANDLE PACKET" << std::endl;
 		if (_net.isConnected())
 		{
-			APacket *packet;
+/*				APacket *packet;
 
-			_net >> *packet;
-			if (dynamic_cast<HandshakeResult *>(packet) != NULL)
-				_connect = true;
+				_net >> *packet;
+				if (dynamic_cast<HandshakeResult *>(packet) != NULL)
+				_connect = true;*/
 		}
 		else
 		{

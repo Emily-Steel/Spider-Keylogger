@@ -1,6 +1,7 @@
 #ifndef _CLIENTNETWORK_HPP_
 # define _CLIENTNETWORK_HPP_
 
+# include "BoostSocket.hpp"
 # include <iostream>
 # include "APacket.hpp"
 # include "ASocket.hpp"

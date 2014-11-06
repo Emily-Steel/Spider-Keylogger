@@ -3,7 +3,7 @@
 ClientNetwork::ClientNetwork()
 : _connect(false)
 {
-    
+	_socket = new BoostSocket();
 }
 
 ClientNetwork::~ClientNetwork()
@@ -14,13 +14,13 @@ ClientNetwork::~ClientNetwork()
 bool ClientNetwork::connect(int port, std::string host)
 {
 	if (!_socket->connect(host, port))
+		_connect = false;
+	else
 	{
 		char data[] = "salut";
 		_socket->write(data, 5);
-		_connect = false;
-	}
-	else
 		_connect = true;
+	}
 	return (_connect);
 }
 

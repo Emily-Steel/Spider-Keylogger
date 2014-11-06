@@ -10,6 +10,7 @@ AFactoryRegistration<ASocket, BoostSocket> boostSockFactRegister("BoostSocket");
 boost::asio::io_service BoostSocket::_service;
 
 BoostSocket::BoostSocket(void) :
+  ASocket(),
   _socket(_service),
   _acceptor(_service)
 {
@@ -19,10 +20,15 @@ BoostSocket::BoostSocket(void) :
 bool	BoostSocket::connect(const std::string &address, unsigned short port)
 {
   assert(_type == Type::NONE);
-  boost::asio::ip::address baddr = boost::asio::ip::address::from_string(address);
 
-  _acceptor.open(familyFromAddr(baddr));
-  _socket.connect({baddr, port});
+  try
+  {
+	  _socket.connect({ boost::asio::ip::address::from_string(address), port });
+  }
+  catch (boost::system::system_error &e)
+  {
+	  return (false);
+  }
   _type = Type::ACTIVE;
   return true;
 }
