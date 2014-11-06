@@ -3,8 +3,7 @@
 #include <algorithm>
 #include <functional>
 
-#include <boost/filesystem.hpp>
-
+#include "IFileSystemHelper.hpp"
 #include "AFactory.hpp"
 #include "FileLog.hpp"
 #include "DataBaseLog.hpp"
@@ -13,7 +12,9 @@
 Server::Server(const std::string &logPath, uint16_t port) noexcept
 : _quit(false), _network(port)
 {
-    std::string dbext = boost::filesystem::extension(logPath);
+    std::unique_ptr<IFileSystemHelper> fileSystem = AFactory<IFileSystemHelper>::instance().create("BoostFileSystemHelper");
+
+    std::string dbext = fileSystem->fileExtension(logPath);
 
     if (dbext == ".json")
         _log = std::unique_ptr<ALog>(new FileLog());
@@ -69,9 +70,10 @@ void Server::handleInput() {
         while (!_quit && std::getline(std::cin, line))
         {
             try {
-                std::cout << "Command: " << line << std::endl;
                 if (line == "quit")
                     _quit = true;
+                else if (line == "help")
+                    std::cout << "This is an help !" << std::endl;
             }
             catch (std::exception& e)
             {

@@ -3,7 +3,9 @@
 
 #include <boost/program_options.hpp>
 
-class BoostProgramOptions
+#include "IProgramOptions.hpp"
+
+class BoostProgramOptions : public IProgramOptions
 {
 public:
     BoostProgramOptions();

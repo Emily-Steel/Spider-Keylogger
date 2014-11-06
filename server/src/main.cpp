@@ -2,12 +2,13 @@
 #include <exception>
 #include <cstdint>
 #include <boost/program_options.hpp>
-#include <boost/filesystem.hpp>
 
+#include "IFileSystemHelper.hpp"
 #include "Server.hpp"
-
 #include "JSONParser.hpp"
 #include "FileLog.hpp"
+
+#include "BoostFileSystemHelper.hpp"
 
 int printHelp(const std::string& name, std::ostream& out, int retVal);
 
@@ -26,10 +27,11 @@ int	main(int ac, char *av[])
 
     Server *server = nullptr;
     try {
-    std::string dbName = Server::defaultLogPath;
-    uint16_t port = Server::defaultPort;
+        std::unique_ptr<IFileSystemHelper> fileSystem(new BoostFileSystemHelper());
+        std::string dbName = Server::defaultLogPath;
+        uint16_t port = Server::defaultPort;
 
-        std::string appName = boost::filesystem::basename(av[0]);
+        std::string appName = fileSystem->fileBaseName(av[0]);
         try {
             po::options_description desc("Options");
             desc.add_options()
@@ -45,7 +47,7 @@ int	main(int ac, char *av[])
                 return printHelp(appName, std::cout, 0);
             if (vm.count("db")) {
                 std::string dbn = vm["db"].as<std::string>();
-                std::string dbext = boost::filesystem::extension(dbn);
+                std::string dbext = fileSystem->fileExtension(dbn);
                 if (dbext != ".json" && dbext != ".db")
                     throw po::error("Error: the required extension for the file of option '--db' it must be json or db");
             }

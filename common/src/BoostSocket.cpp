@@ -153,8 +153,11 @@ void	BoostSocket::_onWrite(t_writeCallback callback,
 			      const boost::system::error_code &ec,
 			      std::size_t size)
 {
-  //add ec check
-  (void)ec;
+if (ec)
+{
+    std::cerr << "Error: " << ec.message() << std::endl;
+}
+    else
   callback(size);
 }
 
