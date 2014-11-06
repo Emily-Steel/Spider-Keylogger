@@ -45,9 +45,9 @@ ASocket	&BoostSocket::operator>>(APacket &packet)
 {
   assert(_type == Type::ACTIVE);
 
-  std::vector<char> buffer(SIZEREAD);
+  std::vector<char> buffer(ReadSize);
 
-  _socket.receive(boost::asio::buffer(buffer, SIZEREAD));
+  _socket.receive(boost::asio::buffer(buffer, ReadSize));
   packet.from_bytes(buffer);
   return *this;
 }

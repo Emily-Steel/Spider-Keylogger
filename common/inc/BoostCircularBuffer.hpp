@@ -1,5 +1,5 @@
-#ifndef BOOST_CIRCULAR_BUFFER_HPP
-# define BOOST_CIRCULAR_BUFFER_HPP
+#ifndef ABSTRACT_BOOST_CIRCULAR_BUFFER_HPP
+# define ABSTRACT_BOOST_CIRCULAR_BUFFER_HPP
 
 #include <memory>
 
@@ -17,7 +17,7 @@ public:
     void discardData(std::size_t size) override;
 
 private:
-  //  boost::circular_buffer<std::uint8_t> _buff;
+      boost::circular_buffer<std::uint8_t> _buff;
 };
 
 #endif

@@ -7,10 +7,11 @@
 
 # include "APacket.hpp"
 
-# define SIZEREAD 512
-
 class ASocket
 {
+protected:
+  const int ReadSize = 512;
+
 public:
   enum class Type
     {
