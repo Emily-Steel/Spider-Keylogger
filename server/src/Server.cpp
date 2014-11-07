@@ -58,7 +58,7 @@ void Server::run() {
       std::chrono::steady_clock::time_point now(std::chrono::steady_clock::now());
       if (std::chrono::duration_cast<std::chrono::seconds>(now - last).count() > 2) {
 	last = now;
-	_network.broadcast(bc, bc.size());
+	_network.broadcast(bc);
       }
     }
     std::cout << "Server shutdown." << std::endl;

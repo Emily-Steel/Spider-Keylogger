@@ -9,7 +9,7 @@ FileLog::FileLog()
 
 FileLog::~FileLog()
 {
-    
+    close();
 }
 
 void FileLog::open(const std::string &path)

@@ -1,16 +1,18 @@
 #ifndef _CLIENTNETWORK_HPP_
 # define _CLIENTNETWORK_HPP_
 
-# include "BoostSocket.hpp"
 # include <iostream>
+
+# include "IConnectSocket.hpp"
 # include "APacket.hpp"
-# include "ASocket.hpp"
 
 # include "HandshakeResult.hpp"
 # include "KillConfirm.hpp"
 # include "ScreenShot.hpp"
 # include "ScreenShotRequest.hpp"
 # include "KillRequest.hpp"
+
+#include <boost/asio.hpp> //ToRemove boost
 
 class ClientNetwork
 {
@@ -25,8 +27,9 @@ public:
 	ClientNetwork &operator>>(APacket &packet);
 
 private:
-    ASocket *_socket;
+    std::unique_ptr<IConnectSocket> _socket;
     bool    _connect;
+    boost::asio::io_service _ios;
 };
 
 #endif

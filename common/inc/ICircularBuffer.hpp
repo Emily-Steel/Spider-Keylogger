@@ -2,6 +2,7 @@
 #define ICIRCULAR_BUFFER_H
 
 #include <vector>
+#include <cstdint>
 
 #include "AFactory.hpp"
 

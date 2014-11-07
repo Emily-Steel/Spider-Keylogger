@@ -1,7 +1,5 @@
 #include "BoostCircularBuffer.hpp"
 
-#include <algorithm>
-
 //AFactoryRegistration<ICircularBuffer, BoostCircularBuffer> boostCircularBufFactRegister("CircularBuffer");
 
 BoostCircularBuffer::BoostCircularBuffer(size_t buffSize)

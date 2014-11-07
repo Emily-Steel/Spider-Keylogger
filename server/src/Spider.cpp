@@ -12,7 +12,7 @@ Spider::Spider()
 
 }
 
-Spider::Spider(const std::shared_ptr<ASocket>& sock)
+Spider::Spider(const std::shared_ptr<IConnectSocket>& sock)
 :  _handshake_done(false),
    _read(new BoostCircularBuffer(Spider::bufferSize)),
   _write(new BoostCircularBuffer(Spider::bufferSize)),
@@ -21,12 +21,12 @@ Spider::Spider(const std::shared_ptr<ASocket>& sock)
 
 }
 
-void	Spider::setSocket(const std::shared_ptr<ASocket>& sock)
+void	Spider::setSocket(const std::shared_ptr<IConnectSocket>& sock)
 {
   _socket.reset(sock.get());
 }
 
-const std::shared_ptr<ASocket>&	Spider::getSocket(void) const
+const std::shared_ptr<IConnectSocket>&	Spider::getSocket(void) const
 {
   return _socket;
 }
@@ -46,7 +46,7 @@ bool	Spider::isHandshakeDone(void) const
   return _handshake_done;
 }
 
-void	Spider::onRead(const ASocket::t_bytes &buffer)
+void	Spider::onRead(const std::vector<uint8_t> &buffer)
 {
     _read->pushData(buffer);
 }

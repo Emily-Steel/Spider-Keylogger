@@ -6,6 +6,10 @@ ALog::ALog()
     
 }
 
+ALog::~ALog()
+{
+}
+
 ALog::operator bool() const
 {
     return isGood();

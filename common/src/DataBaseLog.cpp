@@ -13,8 +13,9 @@ DataBaseLog::DataBaseLog() {
                         "id INTEGER PRIMARY KEY AUTOINCREMENT);";
 }
 
-DataBaseLog::~DataBaseLog() {
-
+DataBaseLog::~DataBaseLog()
+{
+    close();
 }
 
 void DataBaseLog::open(std::string const & path){

@@ -1,9 +1,11 @@
 #include "ClientNetwork.hpp"
 
+#include "BoostConnectSocket.hpp" //ToRemove Factory
+
 ClientNetwork::ClientNetwork()
 : _connect(false)
 {
-	_socket = new BoostSocket();
+	_socket = std::unique_ptr<IConnectSocket>(new BoostConnectSocket(_ios)); //AFactory<IConnectSocket>::instance().create("BoostConnectSocket");
 }
 
 ClientNetwork::~ClientNetwork()

@@ -205,6 +205,11 @@ if (Boost_FOUND)
    target_link_libraries (${NAME_LIB} ${Boost_LIBRARIES})
 endif()
 
+if (OPENSSL_FOUND)
+    include_directories(${OPENSSL_INCLUDE_DIRECTORIES})
+    target_link_libraries (${NAME_LIB} ${OPENSSL_LIBRARIES})
+endif()
+
 # --- enable unit tests if desired ---
 if(BUILD_TESTS)
   if(NOT CPPUNIT_FOUND)
