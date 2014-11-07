@@ -10,7 +10,7 @@ class ICircularBuffer
 public:
     virtual ~ICircularBuffer() = default;
 
-    virtual void pushData(const std::vector<std::uint8_t>& buffer) = 0;
+    virtual void pushData(const std::vector<uint8_t>& buffer) = 0;
     virtual void discardData(std::size_t size) = 0;
 
 };

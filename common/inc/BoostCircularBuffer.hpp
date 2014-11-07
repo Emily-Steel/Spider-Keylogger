@@ -13,11 +13,11 @@ public:
     BoostCircularBuffer(size_t buffSize);
     virtual ~BoostCircularBuffer() = default;
 
-    void pushData(const std::vector<std::uint8_t>& buffer) override;
+    void pushData(const std::vector<uint8_t>& buffer) override;
     void discardData(std::size_t size) override;
 
 private:
-      boost::circular_buffer<std::uint8_t> _buff;
+      boost::circular_buffer<uint8_t> _buff;
 };
 
 #endif
