@@ -20,6 +20,8 @@ public:
     virtual void listen(int backlog) = 0;
     virtual std::shared_ptr<IConnectSocket> accept() = 0;
     virtual void async_accept(const t_acceptCallback& callback) = 0;
+
+    virtual void poll() = 0;
 };
 
 #endif

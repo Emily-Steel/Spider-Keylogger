@@ -58,7 +58,12 @@ void	BoostListenSocket::onAccept(const t_acceptCallback& callback,
         callback(sock);
 }
 
-boost::asio::ip::tcp	BoostListenSocket::familyFromAddr(const boost::asio::ip::address &addr) const {
+void BoostListenSocket::poll()
+{
+    _ios->poll();
+}
+
+boost::asio::ip::tcp BoostListenSocket::familyFromAddr(const boost::asio::ip::address &addr) const {
     if (addr.is_v4())
         return boost::asio::ip::tcp::v4();
     else if (addr.is_v6())

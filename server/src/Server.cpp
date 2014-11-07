@@ -52,6 +52,7 @@ void Server::run() {
     std::chrono::steady_clock::time_point last(std::chrono::steady_clock::now());
 
     std::copy(bcStr.begin(), bcStr.end(), bc.begin());
+
     while (!_quit)
     {
       _network.poll_clients();

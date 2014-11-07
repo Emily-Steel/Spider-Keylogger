@@ -14,7 +14,7 @@ Network::Network(uint16_t port, const std::string &addr)
 
 void	Network::poll_clients(/*std::function<void(const std::string &, APacket &)> callback*/)
 {
- // BoostSocket::_service.poll();
+    _acceptor->poll();
 }
 
 void	Network::broadcast(const std::vector<uint8_t> &buffer)

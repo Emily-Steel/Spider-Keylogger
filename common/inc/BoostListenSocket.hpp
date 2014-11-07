@@ -18,6 +18,8 @@ public:
     std::shared_ptr <IConnectSocket> accept() override;
     void async_accept(const t_acceptCallback &callback) override;
 
+    void poll() override;
+
     const std::shared_ptr<boost::asio::io_service>& getIoService() const {return _ios;};
 
 protected:

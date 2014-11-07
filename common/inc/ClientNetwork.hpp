@@ -28,7 +28,7 @@ public:
 
 private:
     std::unique_ptr<IConnectSocket> _socket;
-    bool    _connect;
+    bool _connect;
     boost::asio::io_service _ios;
 };
 
