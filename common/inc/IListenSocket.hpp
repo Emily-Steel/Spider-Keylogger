@@ -22,6 +22,8 @@ public:
     virtual void async_accept(const t_acceptCallback& callback) = 0;
 
     virtual void poll() = 0;
+    virtual void start() = 0;
+    virtual void stop() = 0;
 };
 
 #endif

@@ -21,7 +21,7 @@ bool BoostConnectSocket::connect(const std::string &address, unsigned short port
     }
     catch (boost::system::system_error &e)
     {
-        std::cout << "Can't connect to remot, reason: " << e.what() << std::endl;
+        std::cout << "Can't connect to remote, reason: " << e.what() << std::endl;
         return false;
     }
     return true;

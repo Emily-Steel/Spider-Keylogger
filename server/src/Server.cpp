@@ -53,16 +53,7 @@ void Server::run() {
 
     std::copy(bcStr.begin(), bcStr.end(), bc.begin());
 
-    while (!_quit)
-    {
-      _network.poll_clients();
-      std::chrono::steady_clock::time_point now(std::chrono::steady_clock::now());
-      if (std::chrono::duration_cast<std::chrono::seconds>(now - last).count() > 2)
-      {
-	   last = now;
-	   _network.broadcast(bc);
-      }
-    }
+    _network.run();
     std::cout << "Server shutdown." << std::endl;
 }
 
@@ -73,16 +64,23 @@ void Server::handleInput() {
         {
             try {
                 if (line == "quit")
-                    _quit = true;
+                    _network.stop(); //_quit = true;
                 else if (line == "help")
                     std::cout << "This is an help !" << std::endl;
+                else if (line.compare(0, std::string("send ").size(), "send ") == 0)
+                {
+                    std::string	bcStr = line.substr(std::string("send ").size());
+                    std::vector<std::uint8_t>	bc(bcStr.length());
+                    std::copy(bcStr.begin(), bcStr.end(), bc.begin());
+                    _network.broadcast(bc);
+                }
             }
             catch (std::exception& e)
             {
                 std::cerr << line << " throwed exception: " << e.what() << std::endl;
             }
         }
-        _quit = true;
+        _network.stop(); //_quit = true;
     }
     catch (std::exception& e)
         {
@@ -91,7 +89,7 @@ void Server::handleInput() {
 }
 
 void Server::handleSignals(int sig) {
-    std::cout << "Received signal " << sig << std::endl;
+   // std::cout << "Received signal " << sig << std::endl;
     if (sig == SIGINT || sig == SIGTERM || sig == SIGQUIT)
-        _quit = true;
+        _network.stop(); //_quit = true;
 }

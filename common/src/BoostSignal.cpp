@@ -29,6 +29,7 @@ void BoostSignal::start() {
 
 void BoostSignal::stop() {
     _ios.stop();
+    //reset unix signal handler ?
     if (_signalHandlingThread.joinable())
         _signalHandlingThread.join();
 }

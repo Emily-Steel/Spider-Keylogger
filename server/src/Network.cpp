@@ -15,11 +15,16 @@ Network::Network(uint16_t port, const std::string &addr)
 void	Network::poll_clients()
 {
     _acceptor->poll();
-    for (auto &client : _pendingClients)
-    {
-        //Upadte client status
-        //client->onRead(<#(const std::vector<uint8_t>&)buffer#>)
-    }
+}
+
+void    Network::run()
+{
+  _acceptor->start();
+}
+
+void    Network::stop()
+{
+  _acceptor->stop();
 }
 
 void	Network::broadcast(const std::vector<uint8_t> &buffer)

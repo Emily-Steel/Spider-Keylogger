@@ -31,6 +31,16 @@ std::unique_ptr<ICircularBuffer>	&Spider::getWriteBuf(void)
   return _write;
 }*/
 
+void    Spider::read()
+{
+    _socket->async_read(_buff, 1, _readCallback);
+}
+
+void    Spider::write() const
+{
+    _socket->async_write(_buff2, _writeCallback);
+}
+
 bool	Spider::isHandshakeDone(void) const
 {
   return _handshake_done;
@@ -38,10 +48,12 @@ bool	Spider::isHandshakeDone(void) const
 
 void	Spider::onRead(const std::vector<uint8_t> &buffer)
 {
+    std::cout << "onRead " << static_cast<const unsigned char*>(buffer.data()) << std::endl;
     _read->pushData(buffer);
 }
 
 void	Spider::onWrite(std::size_t size)
 {
+    std::cout << "onWrite " << size << std::endl;
     _write->discardData(size);
 }

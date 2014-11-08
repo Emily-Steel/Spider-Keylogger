@@ -19,6 +19,8 @@ public:
     void async_accept(const t_acceptCallback &callback) override;
 
     void poll() override;
+    void start() override;
+    void stop() override;
 
     const std::shared_ptr<boost::asio::io_service>& getIoService() const {return _ios;};
 

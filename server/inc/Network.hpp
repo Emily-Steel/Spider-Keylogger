@@ -13,8 +13,10 @@ class Network {
 public:
   Network(uint16_t port, const std::string &addr = "0.0.0.0");
   virtual ~Network() = default;
-  void		poll_clients();
 
+  void		poll_clients();
+  void      run();
+  void      stop();
   void		broadcast(const std::vector<uint8_t> &buffer);
 
 private:

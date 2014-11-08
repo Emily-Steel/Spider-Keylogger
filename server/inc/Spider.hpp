@@ -23,10 +23,14 @@ public:
 
   bool		isHandshakeDone(void) const;
 
+  void      read();
+  void      write() const;
+
   void		onRead(const std::vector<uint8_t>& buffer);
   void		onWrite(std::size_t size);
 
   const std::string& getIdentity() const {return _identity;};
+  void setIdentity(const std::string& id) {_identity = id;};
 
 private:
   bool	_handshake_done;
@@ -37,6 +41,8 @@ private:
   std::unique_ptr<ICircularBuffer> _read;
   std::unique_ptr<ICircularBuffer> _write;
   std::shared_ptr<IConnectSocket> _socket;
+  std::vector<uint8_t>    _buff;
+  std::vector<uint8_t>    _buff2;
 };
 
 #endif /* SPIDER_H */
