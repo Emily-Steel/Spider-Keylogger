@@ -28,6 +28,7 @@ private:
 	bool copyFile(const std::string &from, const std::string &to) const;
 	bool isDirectory(const std::string &path) const;
 	bool isFile(const std::string &path) const;
+	bool createFile(const std::string &path) const;
 
 	std::string	_name;
 };
