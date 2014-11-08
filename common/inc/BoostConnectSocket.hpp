@@ -23,6 +23,8 @@ public:
 
     boost::asio::ip::tcp::socket& socket() {return _socket;};
 
+    bool isConnected() const override;
+
 protected:
     void onWrite(const t_writeCallback& callback, const boost::system::error_code &ec, size_t size);
     void onRead(const t_readCallback& callback, const boost::system::error_code &ec, size_t size);
@@ -32,6 +34,7 @@ private:
 
 protected:
     boost::asio::ip::tcp::socket _socket;
+    bool	_connected;
 };
 
 #endif
