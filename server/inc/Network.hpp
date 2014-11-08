@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <memory>
+#include <set>
 
 #include "ALog.hpp"
 #include "IListenSocket.hpp"
@@ -19,18 +20,17 @@ public:
   void      stop();
   void		broadcast(const std::vector<uint8_t> &buffer);
 
+  void      registerSpider(const std::shared_ptr<Spider>& spider);
+  void      unregisterSpider(const std::shared_ptr<Spider>& spider);
+
 private:
   void		queueAccept(void);
 
   void		onAccept(const std::shared_ptr<IConnectSocket>& newSock);
-  void		onRead(const std::shared_ptr<Spider>& spider, std::vector<uint8_t> &buffer, size_t size);
   void		onWrite(const std::shared_ptr<Spider>& spider, size_t size);
 
   std::unique_ptr<IListenSocket>	_acceptor;
-  // contains clients that have gone through handshake
-  std::map<std::string, std::shared_ptr<Spider>>	_clients;
-  // contains clients that are going through handshake
-  std::vector<std::shared_ptr<Spider>>			_pendingClients;
+  std::set<std::shared_ptr<Spider>> _clients;
 };
 
 #endif
