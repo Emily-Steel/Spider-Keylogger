@@ -49,12 +49,10 @@ void	BoostListenSocket::onAccept(const t_acceptCallback& callback,
         const boost::system::error_code &ec,
         const std::shared_ptr<IConnectSocket>& sock)
 {
-    if (ec)
-    {
-        std::cerr << "Error onAccept " << ec.message() << std::endl;
-    }
-    else
+    if (!ec)
         callback(sock);
+    else
+        std::cerr << "Error onAccept " << ec.message() << std::endl;
 }
 
 void BoostListenSocket::poll()

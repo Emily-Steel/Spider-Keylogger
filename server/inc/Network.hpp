@@ -20,11 +20,11 @@ public:
   void		broadcast(const std::vector<uint8_t> &buffer);
 
 private:
-  void		_queueAccept(void);
+  void		queueAccept(void);
 
-  void		_onAccept(std::shared_ptr<IConnectSocket> newSock);
-  void		_onRead(std::shared_ptr<Spider> spider, std::vector<uint8_t> &buffer, size_t size);
-  void		_onWrite(std::shared_ptr<Spider> spider, size_t size);
+  void		onAccept(const std::shared_ptr<IConnectSocket>& newSock);
+  void		onRead(const std::shared_ptr<Spider>& spider, std::vector<uint8_t> &buffer, size_t size);
+  void		onWrite(const std::shared_ptr<Spider>& spider, size_t size);
 
   std::unique_ptr<IListenSocket>	_acceptor;
   // contains clients that have gone through handshake

@@ -25,7 +25,7 @@ public:
 
 protected:
     void onWrite(const t_writeCallback& callback, const boost::system::error_code &ec, size_t size);
-    void onRead(const t_readCallback& callback, const boost::system::error_code &ec, const std::vector<uint8_t>& buffer, size_t size);
+    void onRead(const t_readCallback& callback, const boost::system::error_code &ec, size_t size);
 
 private:
     boost::asio::ip::tcp familyFromAddr(const boost::asio::ip::address& addr) const;

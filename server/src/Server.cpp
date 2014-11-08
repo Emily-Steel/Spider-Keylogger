@@ -47,12 +47,6 @@ void Server::run() {
     _inputThread = std::thread(&Server::handleInput, this);
     _signalHandler->start();
 
-    std::string			bcStr = "Hello little Spider :)!\n";
-    std::vector<std::uint8_t>	bc(bcStr.length());
-    std::chrono::steady_clock::time_point last(std::chrono::steady_clock::now());
-
-    std::copy(bcStr.begin(), bcStr.end(), bc.begin());
-
     _network.run();
     std::cout << "Server shutdown." << std::endl;
 }

@@ -8,37 +8,32 @@
 
 Spider::Spider(const std::shared_ptr<IConnectSocket>& sock)
 :  _handshake_done(false),
-   _read(new BoostCircularBuffer(Spider::bufferSize)),
-  _write(new BoostCircularBuffer(Spider::bufferSize)),
-  _socket(sock)
+   _read(Spider::bufferSize),
+  _write(Spider::bufferSize),
+  _socket(std::move(sock))
 {
     _writeCallback = std::bind(&Spider::onWrite, this, std::placeholders::_1);
     _readCallback = std::bind(&Spider::onRead, this, std::placeholders::_1);
+}
+
+void Spider::spy()
+{
+   read(5);
 }
 
 const std::shared_ptr<IConnectSocket>&	Spider::getSocket(void) const
 {
   return _socket;
 }
-/*
-std::unique_ptr<ICircularBuffer>	&Spider::getReadBuf(void)
+
+void    Spider::read(size_t size)
 {
-  return _read;
+    _socket->async_read(_read, size, _readCallback);
 }
 
-std::unique_ptr<ICircularBuffer>	&Spider::getWriteBuf(void)
+void    Spider::write()
 {
-  return _write;
-}*/
-
-void    Spider::read()
-{
-    _socket->async_read(_buff, 1, _readCallback);
-}
-
-void    Spider::write() const
-{
-    _socket->async_write(_buff2, _writeCallback);
+    _socket->async_write(_write, _writeCallback);
 }
 
 bool	Spider::isHandshakeDone(void) const
@@ -46,14 +41,17 @@ bool	Spider::isHandshakeDone(void) const
   return _handshake_done;
 }
 
-void	Spider::onRead(const std::vector<uint8_t> &buffer)
+void	Spider::onRead(size_t size)
 {
-    std::cout << "onRead " << static_cast<const unsigned char*>(buffer.data()) << std::endl;
-    _read->pushData(buffer);
+    std::cout << "onRead(" << size << ") " << static_cast<const unsigned char*>(_read.data()) << std::endl;
+    std::copy(_write.begin(), _write.end(), _read.begin());
+
+    write();
 }
 
-void	Spider::onWrite(std::size_t size)
+void	Spider::onWrite(size_t size)
 {
-    std::cout << "onWrite " << size << std::endl;
-    _write->discardData(size);
+    std::cout << "onWrite(" << size << ") " << std::endl;
+
+    read(5);
 }

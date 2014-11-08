@@ -66,39 +66,33 @@ void	BoostConnectSocket::async_write(const std::vector<uint8_t>& data, const t_w
 {
     auto f = std::bind(&BoostConnectSocket::onWrite, this, callback,
             std::placeholders::_1, std::placeholders::_2);
-    _socket.async_write_some(boost::asio::buffer(data), f);
+    boost::asio::async_write(_socket, boost::asio::buffer(data), f);
 }
 
 void	BoostConnectSocket::async_read(std::vector<uint8_t>& buffer, size_t size, const t_readCallback& callback)
 {
     auto f = std::bind(&BoostConnectSocket::onRead, this,
-            callback, std::placeholders::_1,
-            buffer, std::placeholders::_2);
-    _socket.async_read_some(boost::asio::buffer(buffer, size), f);
+            callback, std::placeholders::_1, std::placeholders::_2);
+    boost::asio::async_read(_socket, boost::asio::buffer(buffer, size), f);
 }
 
 void	BoostConnectSocket::onWrite(const t_writeCallback& callback,
         const boost::system::error_code &ec,
         size_t size)
 {
-    if (ec)
-    {
-        std::cerr << "Error write: " << ec.message() << std::endl;
-    }
-    else
+    if (!ec)
         callback(size);
+    else
+        std::cerr << "Error write: " << ec.message() << std::endl;
 }
 
 void	BoostConnectSocket::onRead(const t_readCallback& callback,
-        const boost::system::error_code &ec,
-        const std::vector<uint8_t>& buffer, size_t size)
+        const boost::system::error_code &ec, size_t size)
 {
-    if (ec)
-    {
-        std::cerr << "Error read: " << ec.message() << std::endl;
-    }
+    if (!ec)
+        callback(size);
     else
-        callback(buffer, size);
+        std::cerr << "Error read: " << ec.message() << std::endl;
 }
 
 boost::asio::ip::tcp	BoostConnectSocket::familyFromAddr(const boost::asio::ip::address &addr) const {

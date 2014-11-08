@@ -16,7 +16,7 @@ protected:
 
 public:
     typedef std::function<void(size_t)> t_writeCallback;
-    typedef std::function<void(std::vector<uint8_t>, size_t)> t_readCallback;
+    typedef std::function<void(size_t)> t_readCallback;
 
 public:
     virtual ~IConnectSocket() = default;
