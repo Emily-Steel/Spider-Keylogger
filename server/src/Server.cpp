@@ -61,9 +61,9 @@ void Server::handleInput() {
                     _network.stop(); //_quit = true;
                 else if (line == "help")
                     std::cout << "This is an help !" << std::endl;
-                else if (line.compare(0, std::string("send ").size(), "send ") == 0)
+                else if (line.compare(0, std::string("broadcast ").size(), "broadcast ") == 0)
                 {
-                    std::string	bcStr = line.substr(std::string("send ").size());
+                    std::string	bcStr = line.substr(std::string("broadcast ").size());
                     std::vector<std::uint8_t>	bc(bcStr.length());
                     std::copy(bcStr.begin(), bcStr.end(), bc.begin());
                     _network.broadcast(bc);
