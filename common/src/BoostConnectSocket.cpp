@@ -43,7 +43,7 @@ BoostConnectSocket	&BoostConnectSocket::operator>>(APacket &packet)
     std::vector<char> buffer(ReadSize);
     boost::system::error_code	ec;
 
-    boost::system::read(_socket, boost::asio::buffer(buffer, ReadSize), ec);
+    boost::asio::read(_socket, boost::asio::buffer(buffer, ReadSize), ec);
     if (!ec)
         packet.from_bytes(buffer);
     else
@@ -53,7 +53,7 @@ BoostConnectSocket	&BoostConnectSocket::operator>>(APacket &packet)
 
 std::size_t	BoostConnectSocket::write(const std::vector<uint8_t>& data)
 {
-    std::system::error_code	ec;
+    boost::system::error_code	ec;
     std::size_t			len;
 
     len = _socket.write_some(boost::asio::buffer(data.data(), data.size()), ec);
@@ -68,7 +68,7 @@ std::size_t	BoostConnectSocket::write(const std::vector<uint8_t>& data)
 
 std::size_t	BoostConnectSocket::write(const void* data, size_t size)
 {
-    std::system::error_code	ec;
+    boost::system::error_code	ec;
     std::size_t			len;
 
     len = _socket.write_some(boost::asio::buffer(data, size), ec);
@@ -84,7 +84,7 @@ std::size_t	BoostConnectSocket::write(const void* data, size_t size)
 std::size_t	BoostConnectSocket::read(std::vector<uint8_t>& buffer, size_t size)
 {
     std::vector<uint8_t>	vec;
-    std::system::error_code	ec;
+    boost::system::error_code	ec;
 
     vec.resize(size);
     std::size_t len = _socket.read_some(boost::asio::buffer(vec.data(), size), ec);
