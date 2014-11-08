@@ -10,16 +10,16 @@
 #include "BoostSignal.hpp"
 
 Server::Server(const std::string &logPath, uint16_t port) noexcept
-: _quit(false), _network(port)
+ : _quit(false), _network(port)
 {
     std::unique_ptr<IFileSystemHelper> fileSystem = AFactory<IFileSystemHelper>::instance().create("BoostFileSystemHelper");
 
     std::string dbext = fileSystem->fileExtension(logPath);
 
     if (dbext == ".json")
-        _log = std::unique_ptr<ALog>(new FileLog());
+        _log = std::unique_ptr<ALog>(new FileLog()); //AFactory<ALog>::instance().create("FileLog");
     else if (dbext == ".db")
-        _log = std::unique_ptr<ALog>(new DataBaseLog());
+        _log = std::unique_ptr<ALog>(new DataBaseLog()); //AFactory<ALog>::instance().create("DataBaseLog");
     else
         throw std::runtime_error("Bad db extension.");
 
@@ -47,7 +47,7 @@ void Server::run() {
     _inputThread = std::thread(&Server::handleInput, this);
     _signalHandler->start();
 
-    std::string			bcStr = "Hello little Spider :)!";
+    std::string			bcStr = "Hello little Spider :)!\n";
     std::vector<std::uint8_t>	bc(bcStr.length());
     std::chrono::steady_clock::time_point last(std::chrono::steady_clock::now());
 
@@ -57,9 +57,10 @@ void Server::run() {
     {
       _network.poll_clients();
       std::chrono::steady_clock::time_point now(std::chrono::steady_clock::now());
-      if (std::chrono::duration_cast<std::chrono::seconds>(now - last).count() > 2) {
-	last = now;
-	_network.broadcast(bc);
+      if (std::chrono::duration_cast<std::chrono::seconds>(now - last).count() > 2)
+      {
+	   last = now;
+	   _network.broadcast(bc);
       }
     }
     std::cout << "Server shutdown." << std::endl;
@@ -93,9 +94,4 @@ void Server::handleSignals(int sig) {
     std::cout << "Received signal " << sig << std::endl;
     if (sig == SIGINT || sig == SIGTERM || sig == SIGQUIT)
         _quit = true;
-}
-
-void Server::pollCallback(const std::string &clientId, APacket &packet) {
-    std::cout << "CallBack on: " << clientId << std::endl;
-    (void)packet;
 }

@@ -1,9 +1,11 @@
 #ifndef _ILOG_HPP_
 # define _ILOG_HPP_
 
-# include <string>
-# include "APacket.hpp"
-# include "IReadable.hpp"
+#include <string>
+
+#include "APacket.hpp"
+#include "IReadable.hpp"
+#include "AFactory.hpp"
 
 class ALog
 {

@@ -14,6 +14,7 @@ class IConnectSocket
 protected:
     const int ReadSize = 512;
 
+public:
     typedef std::function<void(size_t)> t_writeCallback;
     typedef std::function<void(std::vector<uint8_t>, size_t)> t_readCallback;
 

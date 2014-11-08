@@ -2,6 +2,8 @@
 #include <MouseClick.hpp>
 #include "DataBaseLog.hpp"
 
+//AFactoryRegistration<ALog, DataBaseLog> fileLogFactReg("DataBaseLog");
+
 DataBaseLog::DataBaseLog() {
     _sqlCreateTable =   "CREATE TABLE IF NOT EXISTS SPIDER("
                         "client_id TEXT,"

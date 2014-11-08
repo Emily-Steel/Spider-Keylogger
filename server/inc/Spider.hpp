@@ -2,6 +2,7 @@
 # define SPIDER_H
 
 #include <memory>
+#include <string>
 
 #include "ICircularBuffer.hpp"
 #include "IConnectSocket.hpp"
@@ -11,13 +12,11 @@ class Spider
   constexpr static unsigned	bufferSize = 1024;
 
 public:
-  Spider();
   Spider(const std::shared_ptr<IConnectSocket>& sock);
   virtual ~Spider(void) = default;
   Spider(const Spider& other) = delete;
   Spider&	operator=(const Spider& other) = delete;
 
-  void		setSocket(const std::shared_ptr<IConnectSocket>& sock);
   const std::shared_ptr<IConnectSocket>&	getSocket(void) const;
   /*std::unique_ptr<ICircularBuffer>	&getReadBuf(void);
   std::unique_ptr<ICircularBuffer>	&getWriteBuf(void);*/
@@ -27,12 +26,17 @@ public:
   void		onRead(const std::vector<uint8_t>& buffer);
   void		onWrite(std::size_t size);
 
+  const std::string& getIdentity() const {return _identity;};
+
 private:
   bool	_handshake_done;
+  std::string _identity;
 
+  IConnectSocket::t_writeCallback _writeCallback;
+  IConnectSocket::t_readCallback _readCallback;
   std::unique_ptr<ICircularBuffer> _read;
   std::unique_ptr<ICircularBuffer> _write;
-  std::shared_ptr<IConnectSocket>		  _socket;
+  std::shared_ptr<IConnectSocket> _socket;
 };
 
 #endif /* SPIDER_H */

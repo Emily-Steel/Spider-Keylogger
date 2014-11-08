@@ -1,16 +1,10 @@
 #include "Spider.hpp"
 
+#include <functional>
+
 #include "AFactory.hpp"
+
 #include "BoostCircularBuffer.hpp"
-
-Spider::Spider()
-:  _handshake_done(false),
-  _read(new BoostCircularBuffer(Spider::bufferSize)),
-  _write(new BoostCircularBuffer(Spider::bufferSize)),
-  _socket(nullptr)
-{
-
-}
 
 Spider::Spider(const std::shared_ptr<IConnectSocket>& sock)
 :  _handshake_done(false),
@@ -18,12 +12,8 @@ Spider::Spider(const std::shared_ptr<IConnectSocket>& sock)
   _write(new BoostCircularBuffer(Spider::bufferSize)),
   _socket(sock)
 {
-
-}
-
-void	Spider::setSocket(const std::shared_ptr<IConnectSocket>& sock)
-{
-  _socket.reset(sock.get());
+    _writeCallback = std::bind(&Spider::onWrite, this, std::placeholders::_1);
+    _readCallback = std::bind(&Spider::onRead, this, std::placeholders::_1);
 }
 
 const std::shared_ptr<IConnectSocket>&	Spider::getSocket(void) const

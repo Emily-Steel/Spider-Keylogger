@@ -12,9 +12,14 @@ Network::Network(uint16_t port, const std::string &addr)
   _queueAccept();
 }
 
-void	Network::poll_clients(/*std::function<void(const std::string &, APacket &)> callback*/)
+void	Network::poll_clients()
 {
     _acceptor->poll();
+    for (auto &client : _pendingClients)
+    {
+        //Upadte client status
+        //client->onRead(<#(const std::vector<uint8_t>&)buffer#>)
+    }
 }
 
 void	Network::broadcast(const std::vector<uint8_t> &buffer)
@@ -39,10 +44,9 @@ void	Network::_onAccept(std::shared_ptr<IConnectSocket> newSock)
   _queueAccept();
 }
 
-void	Network::_onRead(std::shared_ptr<Spider> spider, std::vector<uint8_t> &buffer, std::size_t size)
+void	Network::_onRead(std::shared_ptr<Spider> spider, std::vector<uint8_t> &buffer, size_t size)
 {
-  (void)spider;
-  //spider->onRead(buffer, size);
+  spider->onRead(buffer);
   std::cout << "Some spider said: ";
   for (std::uint8_t b : buffer) {
     std::cout << static_cast<char>(b);

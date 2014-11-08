@@ -1,6 +1,8 @@
 #include <iostream>
 #include "FileLog.hpp"
 
+//AFactoryRegistration<ALog, FileLog> fileLogFactReg("FileLog");
+
 FileLog::FileLog()
 : ALog()
 {

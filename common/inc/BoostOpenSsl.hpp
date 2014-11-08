@@ -8,7 +8,6 @@
 
 #include "IOpenSsl.hpp"
 
-
 class BoostOpenSsl : public IOpenSsl
 {
 public:

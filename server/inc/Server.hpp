@@ -21,7 +21,6 @@ public:
     virtual ~Server() noexcept;
 
     void run();
-    void pollCallback (const std::string &clientId, APacket &packet);
 
 private:
     void handleInput();
