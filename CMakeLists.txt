@@ -206,7 +206,7 @@ if (Boost_FOUND)
 endif()
 
 if (OPENSSL_FOUND)
-    include_directories(${OPENSSL_INCLUDE_DIRECTORIES})
+    include_directories(${OPENSSL_INCLUDE_DIR})
     target_link_libraries (${NAME_LIB} ${OPENSSL_LIBRARIES})
 endif()
 

