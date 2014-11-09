@@ -13,14 +13,16 @@ ClientNetwork::~ClientNetwork()
     
 }
 
-bool ClientNetwork::connect(int port, std::string host)
+bool ClientNetwork::connect(int port, std::string host, const std::string &id)
 {
 	if (!_socket->connect(host, port))
 		_connect = false;
 	else
 	{
-		char data[] = "salut";
-		_socket->write(data, 5);
+		int version = 0xFF000000;
+
+		_socket->write(&version, sizeof(version));
+		_socket->write(id.c_str(), id.size() + 1);
 		_connect = true;
 	}
 	return (_connect);
@@ -36,7 +38,7 @@ ClientNetwork &ClientNetwork::operator<<(const APacket &packet)
     try {
         (*_socket) << packet;
     }
-    catch (std::runtime_error e)
+    catch (std::runtime_error &e)
     {
         _connect = false;
     }
@@ -48,7 +50,7 @@ ClientNetwork &ClientNetwork::operator>>(APacket &packet)
     try {
         (*_socket) >> packet;
     }
-    catch (std::runtime_error e)
+    catch (std::runtime_error &e)
     {
         _connect = false;
     }
