@@ -1,12 +1,14 @@
 #include "ClientNetwork.hpp"
 
-#include "BoostConnectSocket.hpp" //ToRemove Factory
+#include "BoostOpenSslConnectSocket.hpp"
 #include "BoostSslCtxClient.hpp"
 
 ClientNetwork::ClientNetwork()
 : _connect(false)
 {
-    _socket = std::unique_ptr<IConnectSocket>(new BoostOpenSslConnectSocket(_ios, BoostSslCtxClient())); //AFactory<IConnectSocket>::instance().create("BoostConnectSocket");
+    BoostSslCtxClient ctx;
+    BoostSslCtx &ctxref = ctx;
+    _socket = std::unique_ptr<IConnectSocket>(new BoostOpenSslConnectSocket(_ios, ctxref));
 }
 
 ClientNetwork::~ClientNetwork()
