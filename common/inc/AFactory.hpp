@@ -44,7 +44,7 @@ class AFactoryRegistration
 public:
     AFactoryRegistration(const IDKey& key)
     {
-        std::cout << "Registering: " << key << std::endl;
+        //std::cout << "Registering: " << key << std::endl;
         AFactory<BaseType>::instance().registerNewClass(key, &instancier);
     };
 
