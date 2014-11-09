@@ -67,15 +67,12 @@ void	ClientLogger::run()
 {
 	MSG msg;
 
-	while (_quit)
+	while (GetMessage(&msg, NULL, 0, 0))
 	{
-		while (GetMessage(&msg, NULL, 0, 0))
-		{
-			if (msg.message == WM_QUIT || msg.message == WM_DESTROY || msg.message == WM_CLOSE)
-				_quit = false;
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
+		if (msg.message == WM_QUIT || msg.message == WM_DESTROY || msg.message == WM_CLOSE)
+				break;
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
 	}
 	if (!unset())
 	{

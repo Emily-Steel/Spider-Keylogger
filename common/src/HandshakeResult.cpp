@@ -1,13 +1,13 @@
 #include "HandshakeResult.hpp"
 
 HandshakeResult::HandshakeResult()
-: Result(APacket::PacketType::HANDSHAKE)
+	: Result(APacket::PacketType::SHORTRESPONSE)
 {
 
 }
 
 HandshakeResult::HandshakeResult(char success)
-: Result(APacket::PacketType::HANDSHAKE, success)
+	: Result(APacket::PacketType::SHORTRESPONSE, success)
 {
     
 }

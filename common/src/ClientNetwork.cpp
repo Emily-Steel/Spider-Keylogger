@@ -20,10 +20,21 @@ bool ClientNetwork::connect(int port, std::string host, const std::string &id)
 	else
 	{
 		int version = 0x312E3076;
+		std::vector<uint8_t> result;
+		HandshakeResult test;
 
 		_socket->write(&version, sizeof(version));
 		_socket->write(id.c_str(), id.size() + 1);
-		_connect = true;
+		_socket->read(result, 10);
+		try
+		{
+			test.from_bytes(result);
+			_connect = true;
+		}
+		catch (std::runtime_error &e)
+		{
+			_connect = false;
+		}
 	}
 	return (_connect);
 }

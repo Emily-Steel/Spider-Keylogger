@@ -16,7 +16,6 @@ class APacket
 public:
     enum class PacketType
     {
-        HANDSHAKE = 0,
         KEYSTROKES = 1,
         MOUSECLICK = 2,
         COMMANDRESPONSE = 3,
