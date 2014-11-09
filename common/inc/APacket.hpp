@@ -7,6 +7,8 @@
 # include <vector>
 # include <stdexcept>
 
+# include <ctime>
+
 # include "IReadable.hpp"
 
 class APacket

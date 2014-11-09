@@ -19,7 +19,7 @@ bool ClientNetwork::connect(int port, std::string host, const std::string &id)
 		_connect = false;
 	else
 	{
-		int version = 0xFF000000;
+		int version = 0x312E3076;
 
 		_socket->write(&version, sizeof(version));
 		_socket->write(id.c_str(), id.size() + 1);
