@@ -55,7 +55,7 @@ std::size_t	BoostConnectSocket::write(const std::vector<uint8_t>& data)
     boost::system::error_code	ec;
     std::size_t			len;
 
-    len = _socket.write_some(boost::asio::buffer(data.data(), data.size()), ec);
+	len = boost::asio::write(_socket, boost::asio::buffer(data.data(), data.size()), ec);
     if (!ec)
         return len;
     else
@@ -70,13 +70,14 @@ std::size_t	BoostConnectSocket::write(const void* data, size_t size)
     boost::system::error_code	ec;
     std::size_t			len;
 
-    len = _socket.write_some(boost::asio::buffer(data, size), ec);
+	len = boost::asio::write(_socket, boost::asio::buffer(data, size), ec);
     if (!ec)
         return len;
     else
     {
         _connected = false;
-	return 0;
+		std::cerr << "Error write: " << ec.message() << std::endl;
+		return 0;
     }
 }
 
@@ -86,9 +87,17 @@ std::size_t	BoostConnectSocket::read(std::vector<uint8_t>& buffer, size_t size)
     boost::system::error_code	ec;
 
     vec.resize(size);
-    std::size_t len = _socket.read_some(boost::asio::buffer(vec.data(), size), ec);
+
+    std::size_t len = boost::asio::read(_socket, boost::asio::buffer(vec.data(), size), ec);
     buffer.insert(buffer.end(), vec.begin(), vec.end());
-    return len;
+	if (!ec)
+		return len;
+	else
+	{
+		_connected = false;
+		std::cerr << "Error write: " << ec.message() << std::endl;
+		return 0;
+	}
 }
 
 void	BoostConnectSocket::async_write(const std::vector<uint8_t>& data, const t_writeCallback& callback)

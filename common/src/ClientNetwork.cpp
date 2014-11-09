@@ -39,31 +39,25 @@ bool ClientNetwork::connect(int port, std::string host, const std::string &id)
 	return (_connect);
 }
 
-bool ClientNetwork::isConnected()
+bool ClientNetwork::isConnected() const
 {
     return (_connect);
 }
 
 ClientNetwork &ClientNetwork::operator<<(const APacket &packet)
 {
-    try {
-        (*_socket) << packet;
-    }
-    catch (std::runtime_error &e)
-    {
+	if (_socket->isConnected())
+		(*_socket) << packet;
+	else
         _connect = false;
-    }
     return (*this);
 }
 
 ClientNetwork &ClientNetwork::operator>>(APacket &packet)
 {
-    try {
-        (*_socket) >> packet;
-    }
-    catch (std::runtime_error &e)
-    {
-        _connect = false;
-    }
-    return (*this);
+	if (_socket->isConnected())
+		(*_socket) >> packet;
+	else
+		_connect = false;
+	return (*this);
 }

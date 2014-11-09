@@ -23,7 +23,6 @@ public:
     std::vector<APacket *>  pollNetwork();
     
 private:
-	bool					_connect;
     ClientNetwork           _net;
     std::unique_ptr<ALog>   _log;
 	std::thread				_thread;

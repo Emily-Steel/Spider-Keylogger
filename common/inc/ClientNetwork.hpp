@@ -22,7 +22,7 @@ public:
 	~ClientNetwork();
 
 	bool connect(int port, std::string host, const std::string &id);
-	bool isConnected();
+	bool isConnected() const;
 
 	ClientNetwork &operator<<(const APacket &packet);
 	ClientNetwork &operator>>(APacket &packet);

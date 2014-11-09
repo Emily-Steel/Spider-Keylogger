@@ -2,7 +2,7 @@
 #include "FileLog.hpp"
 
 Dispatcher::Dispatcher(const std::string &id)
-	: _connect(false), _log(new FileLog()), _id(id)
+	: _log(new FileLog()), _id(id)
 {
 	_log->open(FILEPATH);
 	_log->setParser(new JSONParser());
@@ -17,11 +17,17 @@ Dispatcher::~Dispatcher()
 
 void                    Dispatcher::dispatch(const APacket &packet)
 {
-	std::cout << "WRITE" << std::endl;
-    if (_connect)
-        _net << packet;
+	std::cout << "WRITE";
+	if (_net.isConnected())
+	{
+		std::cout << " NET" << std::endl;
+		_net << packet;
+	}
 	else
+	{
+		std::cout << " LOG" << std::endl;
 		_log->insert(packet, "");
+	}
 }
 
 void                    Dispatcher::handlePacket()
@@ -39,7 +45,6 @@ void                    Dispatcher::handlePacket()
 		}
 		else
 		{
-			_connect = false;
 			if (_net.connect(PORT, HOST, _id))
 				std::cout << "CONNECTED" << std::endl;
 		}
