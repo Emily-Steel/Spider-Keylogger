@@ -39,7 +39,7 @@ BoostConnectSocket	&BoostConnectSocket::operator<<(const APacket &packet)
 
 BoostConnectSocket	&BoostConnectSocket::operator>>(APacket &packet)
 {
-    std::vector<char> buffer(ReadSize);
+    std::vector<uint8_t> buffer(ReadSize);
     boost::system::error_code	ec;
 
     boost::asio::read(_socket, boost::asio::buffer(buffer, ReadSize), ec);

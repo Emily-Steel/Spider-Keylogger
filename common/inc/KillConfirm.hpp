@@ -7,7 +7,7 @@ class KillConfirm: public Result
 {
 public:
     KillConfirm();
-    KillConfirm(char success);
+    KillConfirm(uint8_t success);
 };
 
 #endif

@@ -6,7 +6,7 @@ KillConfirm::KillConfirm()
     
 }
 
-KillConfirm::KillConfirm(char success)
+KillConfirm::KillConfirm(uint8_t success)
 : Result(APacket::PacketType::KILLRESPONSE, success)
 {
     

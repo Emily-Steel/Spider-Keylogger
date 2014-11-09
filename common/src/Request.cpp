@@ -18,9 +18,9 @@ void Request::print()
     std::cout << (int)_type << std::endl;
 }
 
-std::vector<char> Request::to_bytes_body() const
+std::vector<uint8_t> Request::to_bytes_body() const
 {
-    return (std::vector<char>());
+    return (std::vector<uint8_t>());
 }
 
 void Request::to_readable_body(IReadable &) const
@@ -28,7 +28,7 @@ void Request::to_readable_body(IReadable &) const
 
 }
 
-void Request::from_bytes_body(const std::vector<char> &)
+void Request::from_bytes_body(const std::vector<uint8_t> &)
 {
     
 }

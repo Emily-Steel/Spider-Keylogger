@@ -25,9 +25,9 @@ void KeyStroke::print()
     std::cout << _data << std::endl;
 }
 
-std::vector<char> KeyStroke::to_bytes_body() const
+std::vector<uint8_t> KeyStroke::to_bytes_body() const
 {
-    std::vector<char> ret;
+    std::vector<uint8_t> ret;
 
     fill_bytes(ret, static_cast<int>(_data.size()));
     for (auto c : _data)
@@ -41,7 +41,7 @@ void KeyStroke::to_readable_body(IReadable &parser) const
     parser.put("Data", _data);
 }
 
-void KeyStroke::from_bytes_body(const std::vector<char> &bytes)
+void KeyStroke::from_bytes_body(const std::vector<uint8_t> &bytes)
 {
     std::size_t pos = 1;
     unsigned int size = 0;

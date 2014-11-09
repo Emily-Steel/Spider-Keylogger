@@ -6,7 +6,7 @@ HandshakeResult::HandshakeResult()
 
 }
 
-HandshakeResult::HandshakeResult(char success)
+HandshakeResult::HandshakeResult(uint8_t success)
 : Result(APacket::PacketType::HANDSHAKE, success)
 {
     

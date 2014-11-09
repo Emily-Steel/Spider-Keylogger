@@ -27,9 +27,9 @@ void MouseClick::print()
     std::cout << _posY << std::endl;
 }
 
-std::vector<char> MouseClick::to_bytes_body() const
+std::vector<uint8_t> MouseClick::to_bytes_body() const
 {
-    std::vector<char> ret;
+    std::vector<uint8_t> ret;
     
     fill_bytes(ret, _button);
     fill_bytes(ret, _posX);
@@ -44,7 +44,7 @@ void MouseClick::to_readable_body(IReadable &parser) const
     parser.put("Y", _posY);
 }
 
-void MouseClick::from_bytes_body(const std::vector<char> &bytes)
+void MouseClick::from_bytes_body(const std::vector<uint8_t> &bytes)
 {
     std::size_t pos = 1;
     

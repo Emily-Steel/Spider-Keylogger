@@ -21,14 +21,14 @@ ScreenShot::~ScreenShot()
 
 void ScreenShot::print()
 {
-    std::cout << static_cast<int>(_type) << std::endl;
+    std::cout << static_cast<uint8_t>(_type) << std::endl;
     std::cout << _success << std::endl;
     std::cout << _data << std::endl;
 }
 
-std::vector<char> ScreenShot::to_bytes_body() const
+std::vector<uint8_t> ScreenShot::to_bytes_body() const
 {
-    std::vector<char> ret;
+    std::vector<uint8_t> ret;
     
     fill_bytes(ret, _success);
     if (_success)
@@ -50,7 +50,7 @@ void ScreenShot::to_readable_body(IReadable &parser) const
     }
 }
 
-void ScreenShot::from_bytes_body(const std::vector<char> &bytes)
+void ScreenShot::from_bytes_body(const std::vector<uint8_t> &bytes)
 {
     std::size_t pos = 1;
     unsigned int size = 0;
