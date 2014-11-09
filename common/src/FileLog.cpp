@@ -60,7 +60,7 @@ std::vector<APacket *>  FileLog::dump()
     while (std::getline(_fileHandle, tmp))
         buf += tmp;
     
-    while (!buf.empty() && buf != "\n")
+	while (!buf.empty() && buf != "\n")
     {
         tmp = buf;
         try
@@ -71,8 +71,15 @@ std::vector<APacket *>  FileLog::dump()
         }
         catch (std::invalid_argument)
         {
-            _mouse.from_readable(buf, *_parser);
-            tab.push_back(new MouseClick(_mouse));
+			try
+			{
+				_mouse.from_readable(buf, *_parser);
+				tab.push_back(new MouseClick(_mouse));
+				buf = tmp;
+			}
+			catch (std::invalid_argument)
+			{
+			}
         }
     }
 

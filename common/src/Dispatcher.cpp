@@ -18,15 +18,9 @@ Dispatcher::~Dispatcher()
 void                    Dispatcher::dispatch(const APacket &packet)
 {
 	if (_net.isConnected())
-	{
-		std::cout << "WRITE NET" << std::endl;
 		_net << packet;
-	}
 	else
-	{
-		std::cout << "WRITE LOG" << std::endl;
 		_log->insert(packet, "");
-	}
 }
 
 void                    Dispatcher::handlePacket()
@@ -38,11 +32,11 @@ void                    Dispatcher::handlePacket()
 			if (_net.connect(PORT, HOST, _id))
 			{
 				std::cout << "CONNECTED" << std::endl;
-				//std::vector<APacket *> dump = _log->dump();
+				std::vector<APacket *> dump = _log->dump();
 
-				//if (dump.size())
-					//for (auto it : dump)
-						//_net << (*it);
+				if (!dump.empty())
+					for (auto it : dump)
+						_net << (*it);
 			}
 		}
 		std::this_thread::sleep_for(std::chrono::seconds(2));
