@@ -13,7 +13,7 @@
 
 class Network {
 public:
-  Network(uint16_t port, const std::string &addr = "0.0.0.0");
+  Network(const std::string &addr, uint16_t port, ALog& log);
   virtual ~Network() = default;
 
   void		poll_clients();
@@ -25,7 +25,7 @@ public:
   void      unregisterSpider(const std::shared_ptr<Spider>& spider);
 
 private:
-  void		queueAccept(void);
+  void		queueAccept();
 
   void		onAccept(const std::shared_ptr<IConnectSocket>& newSock);
   void		onWrite(const std::shared_ptr<Spider>& spider, size_t size);
@@ -33,6 +33,7 @@ private:
   ISslCtx	*_ssl;
   std::unique_ptr<IListenSocket>	_acceptor;
   std::set<std::shared_ptr<Spider>>	_clients;
+  ALog&     _log;
 };
 
 #endif

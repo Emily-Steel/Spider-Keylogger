@@ -5,9 +5,10 @@
 #include "BoostOpenSslListenSocket.hpp"
 #include "BoostSslCtxServer.hpp"
 
-Network::Network(uint16_t port, const std::string &addr)
-: _ssl(new BoostSslCtxServer())
-, _acceptor(std::unique_ptr<IListenSocket>(new BoostOpenSslListenSocket(*static_cast<BoostSslCtx *>(_ssl))))
+Network::Network(const std::string &addr, uint16_t port, ALog& log)
+: _ssl(new BoostSslCtxServer()),
+  _acceptor(std::unique_ptr<IListenSocket>(new BoostOpenSslListenSocket(*static_cast<BoostSslCtx *>(_ssl)))),
+  _log(log)
 {
   _acceptor->bind(addr, port);
   _acceptor->listen(20);
@@ -57,7 +58,7 @@ void	Network::queueAccept()
 
 void	Network::onAccept(const std::shared_ptr<IConnectSocket>& newSock)
 {
-  std::shared_ptr<Spider> spider(new Spider(newSock, *this));
+  std::shared_ptr<Spider> spider(new Spider(newSock, *this, _log));
   std::cout << "New client." << std::endl;
   spider->spy();
   queueAccept();

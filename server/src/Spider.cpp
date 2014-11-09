@@ -12,12 +12,13 @@
 
 #include "BoostCircularBuffer.hpp"
 
-Spider::Spider(const std::shared_ptr<IConnectSocket>& sock, Network& net)
+Spider::Spider(const std::shared_ptr<IConnectSocket>& sock, Network& net, ALog& log)
 : _identified(false),
   _protoVersion(0),
   _read(Spider::bufferSize),
   _socket(std::move(sock)),
-  _network(net)
+  _network(net),
+  _log(log)
 {
     _write.clear();
 }
@@ -129,8 +130,7 @@ void	Spider::onRead(size_t size)
                       tmp2.insert(tmp2.end(), _read.begin(), _read.end() + dasize);
                       ks.from_bytes(tmp2);
 
-
-                      //put in db here
+                      _log.insert(ks, _identity);
 
                       read(1);
                   });
@@ -145,7 +145,7 @@ void	Spider::onRead(size_t size)
                   tmp.insert(tmp.end(), _read.begin(), _read.begin() + csize);
                   mc.from_bytes(tmp);
 
-                  //put in db here
+                  _log.insert(mc, _identity);
 
                   read(1);
               });

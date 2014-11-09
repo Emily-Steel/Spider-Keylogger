@@ -1,6 +1,7 @@
 #include "Server.hpp"
 
 #include <algorithm>
+#include <memory>
 #include <functional>
 
 #include "IFileSystemHelper.hpp"
@@ -10,7 +11,6 @@
 #include "BoostSignal.hpp"
 
 Server::Server(const std::string &logPath, uint16_t port) noexcept
- : _network(port)
 {
     std::unique_ptr<IFileSystemHelper> fileSystem = AFactory<IFileSystemHelper>::instance().create("BoostFileSystemHelper");
 
@@ -25,6 +25,8 @@ Server::Server(const std::string &logPath, uint16_t port) noexcept
 
     std::cout << "Opening " << logPath << std::endl;
     _log->open(logPath);
+
+    _network = std::unique_ptr<Network>(new Network("0.0.0.0", port, *_log));
 
     //_signalHandler = AFactory<ISignal>::instance().create("BoostSignal");
     _signalHandler = std::unique_ptr<ISignal>(new BoostSignal(std::bind(&Server::handleSignals, this, std::placeholders::_1)));
@@ -47,7 +49,7 @@ void Server::run() {
     _inputThread = std::thread(&Server::handleInput, this);
     _signalHandler->start();
 
-    _network.run();
+    _network->run();
     std::cout << "Server shutdown." << std::endl;
 }
 
@@ -58,7 +60,7 @@ void Server::handleInput() {
         {
             try {
                 if (line == "quit")
-                    _network.stop(); //_quit = true;
+                    _network->stop(); //_quit = true;
                 else if (line == "help")
                     std::cout << "This is an help !" << std::endl;
                 else if (line.compare(0, std::string("broadcast ").size(), "broadcast ") == 0)
@@ -66,7 +68,7 @@ void Server::handleInput() {
                     std::string	bcStr = line.substr(std::string("broadcast ").size());
                     std::vector<std::uint8_t>	bc(bcStr.length());
                     std::copy(bcStr.begin(), bcStr.end(), bc.begin());
-                    _network.broadcast(bc);
+                    _network->broadcast(bc);
                 }
             }
             catch (std::exception& e)
@@ -74,7 +76,7 @@ void Server::handleInput() {
                 std::cerr << line << " throwed exception: " << e.what() << std::endl;
             }
         }
-        _network.stop(); //_quit = true;
+        _network->stop(); //_quit = true;
     }
     catch (std::exception& e)
         {
@@ -85,5 +87,5 @@ void Server::handleInput() {
 void Server::handleSignals(int sig) {
    // std::cout << "Received signal " << sig << std::endl;
     if (sig == SIGINT || sig == SIGTERM || sig == SIGQUIT)
-        _network.stop(); //_quit = true;
+        _network->stop(); //_quit = true;
 }

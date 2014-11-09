@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 
-
+#include "ALog.hpp"
 #include "ICircularBuffer.hpp"
 #include "IConnectSocket.hpp"
 
@@ -15,7 +15,7 @@ class Spider : public std::enable_shared_from_this<Spider>
   constexpr static unsigned	bufferSize = 1024;
 
 public:
-  Spider(const std::shared_ptr<IConnectSocket>& sock, Network& net);
+  Spider(const std::shared_ptr<IConnectSocket>& sock, Network& net, ALog& log);
   virtual ~Spider();
   Spider(const Spider& other) = delete;
   Spider&	operator=(const Spider& other) = delete;
@@ -47,6 +47,7 @@ private:
   std::shared_ptr<IConnectSocket> _socket;
 
   Network&      _network;
+  ALog&       _log;
 };
 
 #endif /* SPIDER_H */
