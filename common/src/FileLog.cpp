@@ -46,44 +46,50 @@ void FileLog::insert(const APacket &packet, const std::string &id)
 
 std::vector<APacket *>  FileLog::dump()
 {
-    KeyStroke   _key;
-    MouseClick  _mouse;
+	std::vector<APacket *>  tab;
 
-    std::vector<APacket *>  tab;
-    std::string buf;
-    std::string tmp;
+	try
+	{
+		KeyStroke   _key;
+		MouseClick  _mouse;
 
-    if (!isGood() || !_parser)
-        throw std::invalid_argument("Error while dumping the file");
-    
-    _fileHandle.seekg(std::ios_base::beg);
-    while (std::getline(_fileHandle, tmp))
-        buf += tmp;
-    
-	while (!buf.empty() && buf != "\n")
-    {
-        tmp = buf;
-        try
-        {
-            _key.from_readable(tmp, *_parser);
-            tab.push_back(new KeyStroke(_key));
-            buf = tmp;
-        }
-        catch (std::invalid_argument)
-        {
+		std::string buf;
+		std::string tmp;
+
+		if (!isGood() || !_parser)
+			throw std::invalid_argument("Error while dumping the file");
+
+		_fileHandle.seekg(std::ios_base::beg);
+		while (std::getline(_fileHandle, tmp))
+			buf += tmp;
+
+		while (!buf.empty() && buf != "\n")
+		{
+			tmp = buf;
 			try
 			{
-				_mouse.from_readable(buf, *_parser);
-				tab.push_back(new MouseClick(_mouse));
+				_key.from_readable(tmp, *_parser);
+				tab.push_back(new KeyStroke(_key));
 				buf = tmp;
 			}
 			catch (std::invalid_argument)
 			{
+				try
+				{
+					_mouse.from_readable(buf, *_parser);
+					tab.push_back(new MouseClick(_mouse));
+					buf = tmp;
+				}
+				catch (std::invalid_argument)
+				{
+				}
 			}
-        }
-    }
-
-    _fileHandle.close();
-    _fileHandle.open(_filePath.c_str(), std::fstream::in | std::fstream::out | std::fstream::trunc);
+		}
+	}
+	catch (std::exception)
+	{
+		_fileHandle.close();
+		_fileHandle.open(_filePath.c_str(), std::fstream::in | std::fstream::out | std::fstream::trunc);
+	}
     return (tab);
 }

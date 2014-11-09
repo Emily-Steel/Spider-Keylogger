@@ -31,7 +31,6 @@ void                    Dispatcher::handlePacket()
 		{
 			if (_net.connect(PORT, HOST, _id))
 			{
-				std::cout << "CONNECTED" << std::endl;
 				std::vector<APacket *> dump = _log->dump();
 
 				if (!dump.empty())
