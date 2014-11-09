@@ -17,14 +17,6 @@ KeyStroke::~KeyStroke()
     
 }
 
-#include <iostream>
-
-void KeyStroke::print()
-{
-    std::cout << (int)_type << std::endl;
-    std::cout << _data << std::endl;
-}
-
 std::vector<uint8_t> KeyStroke::to_bytes_body() const
 {
     std::vector<uint8_t> ret;
