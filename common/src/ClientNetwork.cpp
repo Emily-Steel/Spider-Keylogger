@@ -31,7 +31,7 @@ bool ClientNetwork::connect(int port, std::string host, const std::string &id)
 			test.from_bytes(result);
 			_connect = true;
 		}
-		catch (std::runtime_error &e)
+		catch (std::runtime_error)
 		{
 			_connect = false;
 		}
