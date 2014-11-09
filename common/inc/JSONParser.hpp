@@ -12,11 +12,13 @@ public:
     ~JSONParser();
     
     virtual void put(const std::string &key, const std::string &value);
+    virtual void put(const std::string &key, const unsigned long &value);
     virtual void put(const std::string &key, const int &value);
     virtual void put(const std::string &key, const short &value);
     virtual void put(const std::string &key, const char &value);
 
     virtual void get(const std::string &key, std::string &value);
+    virtual void get(const std::string &key, unsigned long &value);
     virtual void get(const std::string &key, int &value);
     virtual void get(const std::string &key, short &value);
     virtual void get(const std::string &key, char &value);

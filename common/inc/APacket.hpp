@@ -65,7 +65,8 @@ protected:
             throw std::invalid_argument("Error while parse packet");
     }
 
-    char        _type;
+    char            _type;
+    unsigned long   _now;
 };
 
 #endif

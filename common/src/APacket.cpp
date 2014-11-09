@@ -1,9 +1,8 @@
 #include "APacket.hpp"
 
 APacket::APacket(PacketType type)
-: _type(static_cast<char>(type))
+: _type(static_cast<char>(type)), _now(time(NULL))
 {
-    
 }
 
 APacket::~APacket()
@@ -27,6 +26,7 @@ void APacket::to_readable(IReadable &parser) const
     
     parser.clear();
     parser.put("Type", static_cast<int>(_type));
+    parser.put("Time", _now);
     to_readable_body(parser);
 }
 
@@ -44,6 +44,7 @@ void APacket::from_readable(std::string &data, IReadable &parser)
     parser.clear();
     parser.read(data);
     parser.get("Type", type);
+    parser.get("Time", _now);
     if (type != _type)
         throw std::invalid_argument("Error while parsing packet");
     from_readable_body(parser);

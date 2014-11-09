@@ -14,6 +14,14 @@ void DataBaseParser::put(const std::string &key, const std::string &value)
     _map[key] = value;
 }
 
+void DataBaseParser::put(const std::string &key, const unsigned long &value)
+{
+    std::stringstream ss("");
+    
+    ss << value;
+    _map[key] = ss.str();
+}
+
 void DataBaseParser::put(const std::string &key, const int &value)
 {
     std::stringstream ss("");
@@ -41,6 +49,14 @@ void DataBaseParser::put(const std::string &key, const char &value)
 void DataBaseParser::get(const std::string &key, std::string &value)
 {
     value = _map[key];
+}
+
+void DataBaseParser::get(const std::string &key, unsigned long &value)
+{
+    std::string str = _map[key];
+    std::stringstream ss(str);
+    
+    ss >> value;
 }
 
 void DataBaseParser::get(const std::string &key, int &value)
