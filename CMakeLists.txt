@@ -7,6 +7,7 @@ set(NAME_LIB "common")
 set(NAME_CLIENT "client")
 set(NAME_SERVER "server")
 set(TEST_EXEC "UnitTester")
+set(KEY_DIR "certs")
 
 set(INCLUDE_DIRECTORY "${PROJECT_SOURCE_DIR}/${NAME_LIB}/inc/"
 					  "${PROJECT_SOURCE_DIR}/${NAME_DLL}/inc/"
@@ -126,6 +127,14 @@ file(
   GLOB_RECURSE
   server_include_files
   ${NAME_SERVER}/inc/*
+)
+
+# Copy keys to build dir
+file(
+  COPY
+  ${KEY_DIR}
+  DESTINATION
+  ${CMAKE_BINARY_DIR}
 )
 
 # configure a header file to pass some of the CMake settings
