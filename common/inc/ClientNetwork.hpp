@@ -11,6 +11,7 @@
 # include "ScreenShot.hpp"
 # include "ScreenShotRequest.hpp"
 # include "KillRequest.hpp"
+# include "ICircularBuffer.hpp"
 
 #include <boost/asio.hpp> //ToRemove boost
 
@@ -20,7 +21,7 @@ public:
 	ClientNetwork();
 	~ClientNetwork();
 
-	bool connect(int port, std::string host);
+	bool connect(int port, std::string host, const std::string &id);
 	bool isConnected();
 
 	ClientNetwork &operator<<(const APacket &packet);
@@ -28,6 +29,7 @@ public:
 
 private:
     std::unique_ptr<IConnectSocket> _socket;
+	std::unique_ptr<ICircularBuffer>	_buf;
     bool _connect;
     boost::asio::io_service _ios;
 };

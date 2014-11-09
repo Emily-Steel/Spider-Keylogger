@@ -1,8 +1,8 @@
 #include "Dispatcher.hpp"
 #include "FileLog.hpp"
 
-Dispatcher::Dispatcher()
-	: _connect(false), _log(new FileLog())
+Dispatcher::Dispatcher(const std::string &id)
+	: _connect(false), _log(new FileLog()), _id(id)
 {
 	_log->open(FILEPATH);
 	_log->setParser(new JSONParser());
@@ -40,7 +40,7 @@ void                    Dispatcher::handlePacket()
 		else
 		{
 			_connect = false;
-			if (_net.connect(PORT, HOST))
+			if (_net.connect(PORT, HOST, _id))
 				std::cout << "CONNECTED" << std::endl;
 		}
 		std::this_thread::sleep_for(std::chrono::seconds(2));

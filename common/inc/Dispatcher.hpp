@@ -15,7 +15,7 @@
 class Dispatcher
 {
 public:
-    Dispatcher();
+    Dispatcher(const std::string &id);
     ~Dispatcher();
     
     void                    dispatch(const APacket &packet);
@@ -27,6 +27,7 @@ private:
     ClientNetwork           _net;
     std::unique_ptr<ALog>   _log;
 	std::thread				_thread;
+	std::string				_id;
 };
 
 #endif
