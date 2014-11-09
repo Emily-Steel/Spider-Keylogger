@@ -1,13 +1,13 @@
 #include "KeyStroke.hpp"
 
 KeyStroke::KeyStroke()
-: APacket(APacket::PacketType::KEYSTROKES), _now(std::time(nullptr)), _data()
+	: APacket(APacket::PacketType::KEYSTROKES), _now(static_cast<unsigned long>(std::time(nullptr))), _data()
 {
 
 }
 
 KeyStroke::KeyStroke(const std::string &data)
-	: APacket(APacket::PacketType::KEYSTROKES), _now(std::time(nullptr)), _data(data)
+	: APacket(APacket::PacketType::KEYSTROKES), _now(static_cast<unsigned long>(std::time(nullptr))), _data(data)
 {
 
 }
@@ -15,14 +15,6 @@ KeyStroke::KeyStroke(const std::string &data)
 KeyStroke::~KeyStroke()
 {
     
-}
-
-#include <iostream>
-
-void KeyStroke::print()
-{
-    std::cout << (int)_type << std::endl;
-    std::cout << _data << std::endl;
 }
 
 std::vector<uint8_t> KeyStroke::to_bytes_body() const

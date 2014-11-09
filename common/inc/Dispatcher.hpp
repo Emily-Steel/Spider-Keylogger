@@ -9,8 +9,8 @@
 
 # define FILEPATH "log.json"
 
-# define HOST "10.10.253.209"
-# define PORT 6060
+# define HOST "10.10.253.250"
+# define PORT 2000
 
 class Dispatcher
 {

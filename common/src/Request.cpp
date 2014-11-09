@@ -11,13 +11,6 @@ Request::~Request()
     
 }
 
-#include <iostream>
-
-void Request::print()
-{
-    std::cout << (int)_type << std::endl;
-}
-
 std::vector<uint8_t> Request::to_bytes_body() const
 {
     return (std::vector<uint8_t>());

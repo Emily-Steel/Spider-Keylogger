@@ -12,8 +12,6 @@ public:
     Result(PacketType type, char success);
     ~Result();
 
-    void print();
-
 protected:
     virtual std::vector<uint8_t> to_bytes_body() const;
     virtual void to_readable_body(IReadable &parser) const;
