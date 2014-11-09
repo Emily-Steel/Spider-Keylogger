@@ -1,6 +1,5 @@
 #include "ClientNetwork.hpp"
-
-#include "BoostOpenSslConnectSocket.hpp"
+#include "BoostConnectSocket.hpp"
 #include "BoostSslCtxClient.hpp"
 
 ClientNetwork::ClientNetwork()
@@ -8,7 +7,7 @@ ClientNetwork::ClientNetwork()
 {
     BoostSslCtxClient ctx;
     BoostSslCtx &ctxref = ctx;
-    _socket = std::unique_ptr<IConnectSocket>(new BoostOpenSslConnectSocket(_ios, ctxref));
+	_socket = std::unique_ptr<IConnectSocket>(new BoostConnectSocket(_ios));
 }
 
 ClientNetwork::~ClientNetwork()

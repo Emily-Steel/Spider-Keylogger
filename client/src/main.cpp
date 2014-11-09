@@ -6,7 +6,7 @@ int	main(int ac, char **av)
 {
 	ClientLogger client;
 
-	//FreeConsole();
+	FreeConsole();
 	if (!client.init(av[0]))
 	{
 		std::cerr << GetLastError() << std::endl;

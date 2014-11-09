@@ -22,7 +22,7 @@ std::vector<uint8_t> KeyStroke::to_bytes_body() const
     std::vector<uint8_t> ret;
 
 	fill_bytes(ret, _now);
-    fill_bytes(ret, static_cast<int>(_data.size()));
+    fill_bytes(ret, static_cast<short>(_data.size()));
     for (auto c : _data)
         ret.push_back(c);
     return (ret);
