@@ -25,7 +25,7 @@ bool ClientNetwork::connect(int port, std::string host, const std::string &id)
 
 		_socket->write(&version, sizeof(version));
 		_socket->write(id.c_str(), id.size() + 1);
-		_socket->read(result, 10);
+		_socket->read(result, 2);
 		try
 		{
 			test.from_bytes(result);

