@@ -6,8 +6,8 @@
 #include "BoostSslCtxServer.hpp"
 
 Network::Network(uint16_t port, const std::string &addr)
-: _ssl(new BoostSslCtxServer())
-, _acceptor(std::unique_ptr<IListenSocket>(new BoostOpenSslListenSocket(*static_cast<BoostSslCtx *>(_ssl))))
+  : _ssl(new BoostSslCtxServer())
+  , _acceptor(std::unique_ptr<IListenSocket>(new BoostOpenSslListenSocket(*static_cast<BoostSslCtx *>(_ssl.get()))))
 {
   _acceptor->bind(addr, port);
   _acceptor->listen(20);
@@ -16,7 +16,7 @@ Network::Network(uint16_t port, const std::string &addr)
 
 void	Network::poll_clients()
 {
-    _acceptor->poll();
+  _acceptor->poll();
 }
 
 void    Network::run()
@@ -31,13 +31,13 @@ void    Network::stop()
 
 void    Network::registerSpider(const std::shared_ptr<Spider>& spider)
 {
-    std::cout << "Spider registered with id: " << spider->getIdentity() << std::endl;
-    _clients.insert(spider);
+  std::cout << "Spider registered with id: " << spider->getIdentity() << std::endl;
+  _clients.insert(spider);
 }
 
 void      Network::unregisterSpider(const std::shared_ptr<Spider>& spider)
 {
-    _clients.erase(spider);
+  _clients.erase(spider);
 }
 
 void	Network::broadcast(const std::vector<uint8_t> &buffer)
@@ -66,6 +66,5 @@ void	Network::onAccept(const std::shared_ptr<IConnectSocket>& newSock)
 void	Network::onWrite(const std::shared_ptr<Spider>& spider, std::size_t size)
 {
   (void)spider;
-  //spider->onWrite(size);
   std::cout << "Sent a message to a spider (" << size << ")" << std::endl;
 }
