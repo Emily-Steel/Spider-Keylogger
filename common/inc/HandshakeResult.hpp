@@ -7,7 +7,7 @@ class HandshakeResult: public Result
 {
 public:
     HandshakeResult();
-    HandshakeResult(char success);
+    HandshakeResult(uint8_t success);
 };
 
 #endif

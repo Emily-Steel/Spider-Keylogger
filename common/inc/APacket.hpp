@@ -6,6 +6,7 @@
 # include <string>
 # include <vector>
 # include <stdexcept>
+# include <cstdint>
 
 # include <ctime>
 
@@ -31,19 +32,19 @@ public:
     APacket(PacketType type);
     virtual ~APacket();
     
-    std::vector<char> to_bytes() const;
+    std::vector<uint8_t> to_bytes() const;
     void to_readable(IReadable &parser) const;
-    void from_bytes(const std::vector<char> &bytes);
+    void from_bytes(const std::vector<uint8_t> &bytes);
     void from_readable(std::string &data, IReadable &parser);
 
 protected:
-    virtual std::vector<char> to_bytes_body() const = 0;
+    virtual std::vector<uint8_t> to_bytes_body() const = 0;
     virtual void to_readable_body(IReadable &parser) const = 0;
-    virtual void from_bytes_body(const std::vector<char> &bytes) = 0;
+    virtual void from_bytes_body(const std::vector<uint8_t> &bytes) = 0;
     virtual void from_readable_body(IReadable &parser) = 0;
 
     template <typename T>
-    void fill_bytes(std::vector<char> &bytes, T nb) const
+    void fill_bytes(std::vector<uint8_t> &bytes, T nb) const
     {
         auto it = bytes.end();
 
@@ -55,7 +56,7 @@ protected:
     }
     
     template <typename T>
-    void get_bytes(const std::vector<char> &bytes, std::size_t &pos, T &nb) const
+    void get_bytes(const std::vector<uint8_t> &bytes, std::size_t &pos, T &nb) const
     {
         std::size_t i = 0;
         
@@ -66,7 +67,7 @@ protected:
             throw std::invalid_argument("Error while parse packet");
     }
 
-    char            _type;
+    uint8_t          _type;
     unsigned long   _now;
 };
 

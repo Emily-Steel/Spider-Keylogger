@@ -1,7 +1,7 @@
 #include "APacket.hpp"
 
 APacket::APacket(PacketType type)
-: _type(static_cast<char>(type)), _now(time(NULL))
+: _type(static_cast<uint8_t>(type)), _now(time(NULL))
 {
 }
 
@@ -10,10 +10,10 @@ APacket::~APacket()
     
 }
 
-std::vector<char> APacket::to_bytes() const
+std::vector<uint8_t> APacket::to_bytes() const
 {
-    std::vector<char> ret;
-    std::vector<char> tmp = to_bytes_body();
+    std::vector<uint8_t> ret;
+    std::vector<uint8_t> tmp = to_bytes_body();
 
     ret.push_back(_type);
 	fill_bytes(ret, _now);
@@ -31,7 +31,7 @@ void APacket::to_readable(IReadable &parser) const
     to_readable_body(parser);
 }
 
-void APacket::from_bytes(const std::vector<char> &bytes)
+void APacket::from_bytes(const std::vector<uint8_t> &bytes)
 {
     if (bytes.empty() && bytes[0] != _type)
         throw std::invalid_argument("Error while parsing packet");

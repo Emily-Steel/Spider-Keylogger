@@ -12,9 +12,9 @@ public:
     void print();
 
 protected:
-    virtual std::vector<char> to_bytes_body() const;
+    virtual std::vector<uint8_t> to_bytes_body() const;
     virtual void to_readable_body(IReadable &parser) const;
-    virtual void from_bytes_body(const std::vector<char> &);
+    virtual void from_bytes_body(const std::vector<uint8_t> &);
     virtual void from_readable_body(IReadable &parser);
 
 };
