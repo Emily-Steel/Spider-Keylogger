@@ -17,6 +17,7 @@ protected:
 public:
     typedef std::function<void(size_t)> t_writeCallback;
     typedef std::function<void(size_t)> t_readCallback;
+    typedef std::function<void()> t_errorCallback;
 
 public:
     virtual ~IConnectSocket() = default;
@@ -28,6 +29,7 @@ public:
     virtual std::size_t	read(std::vector<uint8_t>& buffer, size_t size) = 0;
     virtual void async_write(const std::vector<uint8_t>& data, const t_writeCallback& callback) = 0;
     virtual void async_read(std::vector<uint8_t>& buffer, size_t size, const t_readCallback& callback) = 0;
+    virtual void async_error(const t_errorCallback& callback) = 0;
 
     virtual bool connect(const std::string& address, unsigned short port) = 0;
 

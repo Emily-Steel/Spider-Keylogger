@@ -106,6 +106,11 @@ void	BoostConnectSocket::async_read(std::vector<uint8_t>& buffer, size_t size, c
     boost::asio::async_read(_socket, boost::asio::buffer(buffer, size), f);
 }
 
+void    BoostConnectSocket::async_error(const t_errorCallback& callback)
+{
+    _errorCall = callback;
+}
+
 bool	BoostConnectSocket::isConnected() const
 {
     return _connected;
@@ -121,6 +126,7 @@ void	BoostConnectSocket::onWrite(const t_writeCallback& callback,
     {
         _connected = false;
         std::cerr << "Error write: " << ec.message() << std::endl;
+        _errorCall();
     }
 }
 
@@ -133,6 +139,7 @@ void	BoostConnectSocket::onRead(const t_readCallback& callback,
     {
         _connected = false;
         std::cerr << "Error read: " << ec.message() << std::endl;
+        _errorCall();
     }
 }
 

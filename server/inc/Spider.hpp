@@ -16,7 +16,7 @@ class Spider : public std::enable_shared_from_this<Spider>
 
 public:
   Spider(const std::shared_ptr<IConnectSocket>& sock, Network& net);
-  virtual ~Spider(void) = default;
+  virtual ~Spider();
   Spider(const Spider& other) = delete;
   Spider&	operator=(const Spider& other) = delete;
 
@@ -37,8 +37,6 @@ public:
 private:
   std::string _identity;
 
-  IConnectSocket::t_writeCallback _writeCallback;
-  IConnectSocket::t_readCallback _readCallback;
   std::vector<uint8_t>  _read;
   std::vector<uint8_t>  _write;
   std::shared_ptr<IConnectSocket> _socket;

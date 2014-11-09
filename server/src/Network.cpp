@@ -40,12 +40,12 @@ void      Network::unregisterSpider(const std::shared_ptr<Spider>& spider)
 void	Network::broadcast(const std::vector<uint8_t> &buffer)
 {
   for (auto &client : _clients) {
-    std::function<void(std::size_t)> w(std::bind(&Network::onWrite, this, client, std::placeholders::_1));
+    std::function<void(size_t)> w(std::bind(&Network::onWrite, this, client, std::placeholders::_1));
     client->getSocket()->async_write(buffer, w);
   }
 }
 
-void	Network::queueAccept(void)
+void	Network::queueAccept()
 {
   std::function<void(std::shared_ptr<IConnectSocket>)> acc(std::bind(&Network::onAccept, this, std::placeholders::_1));
 

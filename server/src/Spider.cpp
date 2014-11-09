@@ -13,14 +13,29 @@ Spider::Spider(const std::shared_ptr<IConnectSocket>& sock, Network& net)
   _network(net)
 {
     _write.clear();
-    _writeCallback = std::bind(&Spider::onWrite, this, std::placeholders::_1);
-    _readCallback = std::bind(&Spider::onRead, this, std::placeholders::_1);
+}
+
+Spider::~Spider()
+{
+    std::cout << "Bye spider" << std::endl;
 }
 
 void Spider::spy()
 {
-    _network.registerSpider(shared_from_this());
+    auto self(shared_from_this());
+    _socket->async_error(std::bind([this](std::shared_ptr<Spider> lself)
+    {
+        std::cout << "zfjzefzpoefzeprfjozpjozfzefefepjofpjoz" << std::endl;
+        _network.unregisterSpider(lself);
+        std::cout << lself.use_count() << std::endl;
+    }, self));
+
+
+    //do handshake checking here
+
    read(5);
+
+  // _network.registerSpider(shared_from_this());
 }
 
 const std::shared_ptr<IConnectSocket>&	Spider::getSocket(void) const
@@ -36,12 +51,20 @@ Spider& Spider::operator<<(const std::vector<uint8_t>& buff)
 
 void    Spider::read(size_t size)
 {
-    _socket->async_read(_read, size, _readCallback);
+    auto self(shared_from_this());
+    _socket->async_read(_read, size, [this, self](size_t csize)
+    {
+        onRead(csize);
+    });
 }
 
 void    Spider::write()
 {
-    _socket->async_write(_write, _writeCallback);
+    auto self(shared_from_this());
+    _socket->async_write(_read, [this, self](size_t csize)
+    {
+        onWrite(csize);
+    });
 }
 
 void	Spider::onRead(size_t size)

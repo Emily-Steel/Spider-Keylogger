@@ -18,6 +18,7 @@ public:
     std::size_t	read(std::vector<uint8_t>& buffer, size_t size) override;
     void async_write(const std::vector<uint8_t>& data, const t_writeCallback& callback) override;
     void async_read(std::vector<uint8_t>& buffer, size_t size, const t_readCallback& callback) override;
+    void async_error(const t_errorCallback& callback) override;
 
     bool connect(const std::string& address, unsigned short port) override;
 
@@ -30,6 +31,7 @@ protected:
     void onRead(const t_readCallback& callback, const boost::system::error_code &ec, size_t size);
 
 private:
+    t_errorCallback _errorCall;
     boost::asio::ip::tcp familyFromAddr(const boost::asio::ip::address& addr) const;
 
 protected:
