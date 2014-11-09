@@ -3,11 +3,12 @@
 #include "AFactory.hpp"
 
 #include "BoostOpenSslListenSocket.hpp"
+#include "BoostListenSocket.hpp"
 #include "BoostSslCtxServer.hpp"
 
 Network::Network(const std::string &addr, uint16_t port, ALog& log)
   : _ssl(new BoostSslCtxServer()),
-   _acceptor(std::unique_ptr<IListenSocket>(new BoostOpenSslListenSocket(*static_cast<BoostSslCtx *>(_ssl.get())))),
+   _acceptor(new BoostListenSocket),
    _log(log)
 {
   _acceptor->bind(addr, port);

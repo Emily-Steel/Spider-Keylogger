@@ -121,8 +121,9 @@ void	Spider::onRead(size_t size)
                   tmp.push_back(static_cast<uint8_t>(APacket::PacketType::KEYSTROKES));
                   tmp.insert(tmp.end(), _read.begin(), _read.begin() + csize);
                   uint16_t textSize = 0;
-                  for (size_t i = 0; i < sizeof(textSize); ++i)
-                      textSize = ((textSize << 8) | tmp[8 + i]);
+                  textSize |= ((tmp.data())[9] << 8);
+                  textSize |= ((tmp.data())[8]);
+                  
                   _socket->async_read(_read, textSize, [this, self, tmp](size_t dasize)
                   {
                       std::vector<uint8_t> tmp2;
