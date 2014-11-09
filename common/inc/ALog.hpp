@@ -2,6 +2,7 @@
 # define _ILOG_HPP_
 
 #include <string>
+#include <memory>
 
 #include "APacket.hpp"
 #include "IReadable.hpp"
@@ -21,10 +22,10 @@ public:
     bool isGood() const;
     operator bool() const;
 
-    void    setParser(IReadable *parser);
+    void    setParser(const std::shared_ptr<IReadable>& parser);
     
 protected:
-    IReadable   *_parser;
+    std::shared_ptr<IReadable>   _parser;
     bool _good;
 };
 

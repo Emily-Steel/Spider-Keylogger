@@ -8,6 +8,9 @@
 #include "AFactory.hpp"
 #include "FileLog.hpp"
 #include "DataBaseLog.hpp"
+#include "DataBaseParser.hpp"
+#include "JSONParser.hpp"
+
 #include "BoostSignal.hpp"
 
 Server::Server(const std::string &logPath, uint16_t port) noexcept
@@ -16,10 +19,14 @@ Server::Server(const std::string &logPath, uint16_t port) noexcept
 
     std::string dbext = fileSystem->fileExtension(logPath);
 
-    if (dbext == ".json")
+    if (dbext == ".json") {
         _log = std::unique_ptr<ALog>(new FileLog()); //AFactory<ALog>::instance().create("FileLog");
-    else if (dbext == ".db")
+        _log->setParser(std::shared_ptr<IReadable>(new JSONParser()));
+    }
+    else if (dbext == ".db") {
         _log = std::unique_ptr<ALog>(new DataBaseLog()); //AFactory<ALog>::instance().create("DataBaseLog");
+        _log->setParser(std::shared_ptr<IReadable>(new DataBaseParser()));
+    }
     else
         throw std::runtime_error("Bad db extension.");
 
