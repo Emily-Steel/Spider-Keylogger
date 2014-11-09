@@ -5,7 +5,7 @@ Dispatcher::Dispatcher(const std::string &id)
 	: _log(new FileLog()), _id(id)
 {
 	_log->open(FILEPATH);
-	_log->setParser(new JSONParser());
+	_log->setParser(std::shared_ptr<IReadable>(new JSONParser()));
 
 	_thread = std::thread(&Dispatcher::handlePacket, this);
 }

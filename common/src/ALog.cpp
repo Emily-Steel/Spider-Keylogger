@@ -16,7 +16,7 @@ ALog::operator bool() const
 }
 
 
-void ALog::setParser(IReadable *parser)
+void ALog::setParser(const std::shared_ptr<IReadable>& parser)
 {
     _parser = parser;
 }
