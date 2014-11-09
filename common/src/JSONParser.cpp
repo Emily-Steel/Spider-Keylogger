@@ -17,7 +17,7 @@ void JSONParser::put(const std::string &key, const std::string &value)
     _json.put(key, value);
 }
 
-void JSONParser::put(const std::string &key, const unsigned long &value)
+void JSONParser::put(const std::string &key, const unsigned long long &value)
 {
     _json.put(key, value);
 }
@@ -42,9 +42,9 @@ void JSONParser::get(const std::string &key, std::string &value)
     value = _json.get<std::string>(key);
 }
 
-void JSONParser::get(const std::string &key, unsigned long &value)
+void JSONParser::get(const std::string &key, unsigned long long &value)
 {
-    value = _json.get<unsigned long>(key);
+    value = _json.get<unsigned long long>(key);
 }
 
 void JSONParser::get(const std::string &key, int &value)

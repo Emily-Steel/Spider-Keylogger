@@ -28,7 +28,7 @@ protected:
     virtual void from_readable_body(IReadable &parser);
 
 private:
-	unsigned long	_now;
+	unsigned long long	_now;
     unsigned char   _button;
     unsigned short  _posX;
     unsigned short  _posY;

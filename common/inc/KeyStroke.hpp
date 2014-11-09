@@ -20,7 +20,7 @@ protected:
     
     
 private:
-	unsigned long	_now;
+	unsigned long long	_now;
     std::string		_data;
 };
 

@@ -31,7 +31,11 @@ bool BoostConnectSocket::connect(const std::string &address, unsigned short port
 BoostConnectSocket	&BoostConnectSocket::operator<<(const APacket &packet)
 {
     boost::system::error_code	ec;
-    boost::asio::write(_socket, boost::asio::buffer(packet.to_bytes()), ec);
+	for (auto it : packet.to_bytes())
+	{
+		std::cout << (int)it << ":";
+	}
+	boost::asio::write(_socket, boost::asio::buffer(packet.to_bytes()), ec);
     if (ec)
         _connected = false;
     return *this;
@@ -71,7 +75,8 @@ std::size_t	BoostConnectSocket::write(const void* data, size_t size)
     boost::system::error_code	ec;
     std::size_t			len;
 
-    len = boost::asio::write(_socket, boost::asio::buffer(data, size), ec);
+
+	len = boost::asio::write(_socket, boost::asio::buffer(data, size), ec);
     if (!ec)
         return len;
     else
