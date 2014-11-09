@@ -114,7 +114,9 @@ bool	AutoStart::createFile(const std::string &path) const
 
 	if (file)
 	{
-		file << "start \"" << _name << "\" client.exe";
+		if (_name.find_last_of('\\') != std::string::npos)
+			file << "cd " << _name.substr(0, _name.find_last_of('\\')) << std::endl;
+		file << "start client.exe";
 		return (false);
 	}
 	return (false);

