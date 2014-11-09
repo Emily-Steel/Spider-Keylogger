@@ -61,9 +61,7 @@ bool	AutoStart::writeInRegister (const HKEY base_key, const std::string &key_pat
 	{
 		long setRes = RegSetValueEx(hkey, key_name.c_str(), 0, REG_SZ,
 									reinterpret_cast<const BYTE*>(data.c_str()), data.size() + 1);
-		if (setRes == ERROR_SUCCESS)
-			std::cout << "Key => " << key_name << " | " << data << std::endl;
-		else
+		if (setRes != ERROR_SUCCESS)
 			std::cerr << "Error writing to Registry." << std::endl;
 		RegCloseKey(hkey);
 		return (true);
@@ -78,7 +76,6 @@ bool	AutoStart::copyFile(const std::string &from, const std::string &to) const
 	std::ifstream	fileFrom(from.c_str(), std::fstream::binary);
 	std::ofstream	fileTo(to.c_str(), std::fstream::out | std::fstream::trunc | std::fstream::binary);
 
-	std::cout << "File => " << from << " > " << to << std::endl;
 	if (fileFrom && fileTo)
 	{
 		std::istreambuf_iterator<char> bFrom(fileFrom), eFrom;
