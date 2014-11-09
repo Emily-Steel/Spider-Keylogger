@@ -9,8 +9,6 @@ public:
     Request(PacketType type);
     ~Request();
     
-    void print();
-
 protected:
     virtual std::vector<uint8_t> to_bytes_body() const;
     virtual void to_readable_body(IReadable &parser) const;

@@ -1,7 +1,5 @@
 #include "ScreenShot.hpp"
 
-#include <iostream>
-
 ScreenShot::ScreenShot()
 : APacket(APacket::PacketType::SCREENSHOT), _success(false), _data("")
 {
@@ -17,13 +15,6 @@ ScreenShot::ScreenShot(bool success, const std::string &data)
 ScreenShot::~ScreenShot()
 {
     
-}
-
-void ScreenShot::print()
-{
-    std::cout << static_cast<uint8_t>(_type) << std::endl;
-    std::cout << _success << std::endl;
-    std::cout << _data << std::endl;
 }
 
 std::vector<uint8_t> ScreenShot::to_bytes_body() const

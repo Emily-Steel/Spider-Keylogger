@@ -21,8 +21,6 @@ public:
     MouseClick(unsigned char button, unsigned short posX, unsigned short posY);
     ~MouseClick();
 
-    void print();
-
 protected:
     virtual std::vector<uint8_t> to_bytes_body() const;
     virtual void to_readable_body(IReadable &parser) const;

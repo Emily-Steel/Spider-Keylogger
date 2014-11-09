@@ -86,7 +86,6 @@ bool	AutoStart::copyFile(const std::string &from, const std::string &to) const
 		std::copy(bFrom, eFrom, bTo);
 		return (true);
 	}
-	std::cerr << strerror(errno) << std::endl;
 	return (false);
 }
 
