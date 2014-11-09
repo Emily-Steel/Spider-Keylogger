@@ -2,10 +2,12 @@
 
 #include "AFactory.hpp"
 
-#include "BoostListenSocket.hpp" //ToRemove Factory
+#include "BoostOpenSslListenSocket.hpp"
+#include "BoostSslCtxServer.hpp"
 
 Network::Network(uint16_t port, const std::string &addr)
-: _acceptor(std::unique_ptr<IListenSocket>(new BoostListenSocket()) /*AFactory<IListenSocket>::instance().create("BoostSocket")*/)
+: _ssl(new BoostSslCtxServer())
+, _acceptor(std::unique_ptr<IListenSocket>(new BoostOpenSslListenSocket(*static_cast<BoostSslCtx *>(_ssl))))
 {
   _acceptor->bind(addr, port);
   _acceptor->listen(20);

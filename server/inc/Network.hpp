@@ -9,6 +9,7 @@
 #include "ALog.hpp"
 #include "IListenSocket.hpp"
 #include "Spider.hpp"
+#include "ISslCtx.hpp"
 
 class Network {
 public:
@@ -29,8 +30,9 @@ private:
   void		onAccept(const std::shared_ptr<IConnectSocket>& newSock);
   void		onWrite(const std::shared_ptr<Spider>& spider, size_t size);
 
+  ISslCtx	*_ssl;
   std::unique_ptr<IListenSocket>	_acceptor;
-  std::set<std::shared_ptr<Spider>> _clients;
+  std::set<std::shared_ptr<Spider>>	_clients;
 };
 
 #endif

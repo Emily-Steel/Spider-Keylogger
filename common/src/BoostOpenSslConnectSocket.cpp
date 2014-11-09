@@ -20,7 +20,7 @@ bool BoostOpenSslConnectSocket::connect(const std::string &address, unsigned sho
     boost::asio::connect(_sslsocket.lowest_layer(), resolver.resolve({address, std::to_string(port)}));
     _sslsocket.handshake(boost::asio::ssl::stream_base::client);
   } catch (boost::system::system_error &e) {
-    std::cout << "Can't connect to remote, reason: " << e.what() << std::endl;
+    std::cerr << "Can't connect to remote, reason: " << e.what() << std::endl;
     return false;
   }
   _connected = true;
@@ -124,6 +124,14 @@ void BoostOpenSslConnectSocket::onAccept()
   auto f = std::bind(&BoostOpenSslConnectSocket::onHandshake, this,
 		     std::placeholders::_1);
   _sslsocket.async_handshake(boost::asio::ssl::stream_base::server, f);
+}
+
+void BoostOpenSslConnectSocket::onHandshake(const boost::system::error_code &ec)
+{
+  if (ec) {
+    _connected = false;
+    std::cerr << "Can't connect to remote, reason: " << ec.message() << std::endl;
+  }
 }
 
 bool BoostOpenSslConnectSocket::isConnected() const
