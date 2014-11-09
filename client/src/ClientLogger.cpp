@@ -53,8 +53,7 @@ bool	ClientLogger::init(const char *name)
 		|| (ptrHook = (hook)GetProcAddress(_hDll, "SetHook")) == NULL)
 		return (false);
 
-	_disp = std::shared_ptr<Dispatcher>(new Dispatcher("q"));
-	//getAddressMAC
+	_disp = std::shared_ptr<Dispatcher>(new Dispatcher(getAddressMAC()));
 
 	if (ptrHook(_disp) == false)
 		return (false);

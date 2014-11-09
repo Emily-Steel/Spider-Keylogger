@@ -69,7 +69,7 @@ std::vector<APacket *>  FileLog::dump()
             tab.push_back(new KeyStroke(_key));
             buf = tmp;
         }
-        catch (std::invalid_argument &e)
+        catch (std::invalid_argument)
         {
             _mouse.from_readable(buf, *_parser);
             tab.push_back(new MouseClick(_mouse));

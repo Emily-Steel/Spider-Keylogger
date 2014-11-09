@@ -17,17 +17,10 @@ Dispatcher::~Dispatcher()
 
 void                    Dispatcher::dispatch(const APacket &packet)
 {
-	std::cout << "WRITE";
 	if (_net.isConnected())
-	{
-		std::cout << " NET" << std::endl;
 		_net << packet;
-	}
 	else
-	{
-		std::cout << " LOG" << std::endl;
 		_log->insert(packet, "");
-	}
 }
 
 void                    Dispatcher::handlePacket()
@@ -35,18 +28,16 @@ void                    Dispatcher::handlePacket()
 	for (;;)
 	{
 		std::cout << "HANDLE PACKET" << std::endl;
-		if (_net.isConnected())
-		{
-/*				APacket *packet;
-
-				_net >> *packet;
-				if (dynamic_cast<HandshakeResult *>(packet) != NULL)
-				_connect = true;*/
-		}
-		else
+		if (!_net.isConnected())
 		{
 			if (_net.connect(PORT, HOST, _id))
+			{
 				std::cout << "CONNECTED" << std::endl;
+				std::vector<APacket *> dump = _log->dump();
+
+				for (auto it : dump)
+					_net << (*it);
+			}
 		}
 		std::this_thread::sleep_for(std::chrono::seconds(2));
 	}
