@@ -29,7 +29,6 @@ public:
 
 private:
     std::unique_ptr<IConnectSocket> _socket;
-	std::unique_ptr<ICircularBuffer>	_buf;
     bool _connect;
     boost::asio::io_service _ios;
 };
