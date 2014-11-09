@@ -16,7 +16,7 @@ std::vector<uint8_t> APacket::to_bytes() const
     std::vector<uint8_t> tmp = to_bytes_body();
 
     ret.push_back(_type);
-	fill_bytes(ret, _now);
+	//fill_bytes(ret, _now);
     ret.insert(ret.end(), tmp.begin(), tmp.end());
     return (ret);
 }

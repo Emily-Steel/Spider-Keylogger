@@ -29,6 +29,7 @@ void    Network::stop()
 
 void    Network::registerSpider(const std::shared_ptr<Spider>& spider)
 {
+    std::cout << "Spider registered with id: " << spider->getIdentity() << std::endl;
     _clients.insert(spider);
 }
 
@@ -55,7 +56,7 @@ void	Network::queueAccept()
 void	Network::onAccept(const std::shared_ptr<IConnectSocket>& newSock)
 {
   std::shared_ptr<Spider> spider(new Spider(newSock, *this));
-  std::cout << "Accepted a spider." << std::endl;
+  std::cout << "New client." << std::endl;
   spider->spy();
   queueAccept();
 }

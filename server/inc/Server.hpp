@@ -27,7 +27,6 @@ private:
     void handleSignals(int sig);
 
 private:
-    std::atomic_bool _quit;
     std::thread _inputThread;
     std::unique_ptr<ALog> _log;
     Network _network;

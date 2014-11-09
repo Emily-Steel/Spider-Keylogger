@@ -10,7 +10,7 @@
 #include "BoostSignal.hpp"
 
 Server::Server(const std::string &logPath, uint16_t port) noexcept
- : _quit(false), _network(port)
+ : _network(port)
 {
     std::unique_ptr<IFileSystemHelper> fileSystem = AFactory<IFileSystemHelper>::instance().create("BoostFileSystemHelper");
 
@@ -54,7 +54,7 @@ void Server::run() {
 void Server::handleInput() {
     try {
         std::string line;
-        while (!_quit && std::getline(std::cin, line))
+        while (std::getline(std::cin, line))
         {
             try {
                 if (line == "quit")

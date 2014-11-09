@@ -1,7 +1,9 @@
 #include "Spider.hpp"
 
 #include <functional>
+#include <algorithm>
 
+#include "HandshakeResult.hpp"
 #include "Network.hpp"
 #include "AFactory.hpp"
 
@@ -45,9 +47,15 @@ void Spider::doHandshake(size_t size)
   if ((_protoVersion == 0) && (size == 4))
   {
       _protoVersion = *(reinterpret_cast<uint32_t*>(_read.data()));
-      std::cout << "Client Proto Version: " << _protoVersion << std::endl;
       if (_protoVersion == 0x312E3076) {
           _socket->async_read(_read, 1, [this, self](size_t csize){doHandshake(csize);});
+      }
+      else
+      {
+          std::vector<uint8_t> resp = HandshakeResult(0).to_bytes();
+          _write.insert(_write.begin(), resp.begin(), resp.end());
+          _socket->async_write(_write, [this, self](size_t csize){onWrite(csize);});
+          std::cout << "Wrong protocol version." << std::endl;
       }
   }
   else if (size == 1)
@@ -61,8 +69,10 @@ void Spider::doHandshake(size_t size)
       }
       else {
           _network.registerSpider(self);
-          _socket->async_write(_write, [this, self](size_t csize){onWrite(csize);});
-          _socket->async_read(_read, 1, [this, self](size_t csize){onRead(csize);});
+          std::vector<uint8_t> resp = HandshakeResult(1).to_bytes();
+          _write.insert(_write.begin(), resp.begin(), resp.end());
+          write();
+          read(1);
       }
   }
 }
@@ -85,7 +95,7 @@ void    Spider::read(size_t size)
 void    Spider::write()
 {
     auto self(shared_from_this());
-    _socket->async_write(_read, [this, self](size_t csize)
+    _socket->async_write(_write, [this, self](size_t csize)
     {
         onWrite(csize);
     });
@@ -93,7 +103,7 @@ void    Spider::write()
 
 void	Spider::onRead(size_t size)
 {
-
+    (void)size;
 /*    std::cout << "onRead(" << size << ") " << static_cast<const unsigned char*>(_read.data()) << std::endl;
 
     _write.insert(_write.end(), _read.begin(), _read.begin() + size);
@@ -102,8 +112,5 @@ void	Spider::onRead(size_t size)
 
 void	Spider::onWrite(size_t size)
 {
-    _write.clear();
-    std::cout << "onWrite(" << size << ") " << std::endl;
-
-    read(5);
+    (void)size;
 }
