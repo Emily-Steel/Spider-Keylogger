@@ -1,8 +1,8 @@
-#include "BoostOpenSsl.hpp"
+#include "BoostSslCtx.hpp"
 
 //AFactoryRegistration<IOpenSsl, BoostOpenSsl> boostOpenSslFactRegister("BoostOpenSsl");
 
-BoostOpenSsl::BoostOpenSsl()
+BoostSslCtx::BoostSslCtx()
 : _ctx(boost::asio::ssl::context::sslv23)
 {
 

@@ -1,10 +1,13 @@
 #include <iostream>
+#include <iomanip>
 #include "ClientLogger.hpp"
 
 int	main(int ac, char **av)
 {
 	ClientLogger client;
 
+	//FreeConsole();
+	std::cout << client.getAddressMAC() << std::endl;
 	if (!client.init(av[0]))
 	{
 		std::cerr << GetLastError() << std::endl;

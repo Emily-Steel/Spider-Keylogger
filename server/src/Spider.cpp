@@ -2,58 +2,83 @@
 
 #include <functional>
 
+#include "Network.hpp"
 #include "AFactory.hpp"
 
 #include "BoostCircularBuffer.hpp"
 
-Spider::Spider(const std::shared_ptr<IConnectSocket>& sock)
-:  _handshake_done(false),
-   _read(new BoostCircularBuffer(Spider::bufferSize)),
-  _write(new BoostCircularBuffer(Spider::bufferSize)),
-  _socket(sock)
+Spider::Spider(const std::shared_ptr<IConnectSocket>& sock, Network& net)
+: _read(Spider::bufferSize),
+  _socket(std::move(sock)),
+  _network(net)
 {
-    _writeCallback = std::bind(&Spider::onWrite, this, std::placeholders::_1);
-    _readCallback = std::bind(&Spider::onRead, this, std::placeholders::_1);
+    _write.clear();
+}
+
+Spider::~Spider()
+{
+    std::cout << "Bye spider" << std::endl;
+}
+
+void Spider::spy()
+{
+    auto self(shared_from_this());
+    _socket->async_error(std::bind([this](std::shared_ptr<Spider> lself)
+    {
+        std::cout << "zfjzefzpoefzeprfjozpjozfzefefepjofpjoz" << std::endl;
+        _network.unregisterSpider(lself);
+        std::cout << lself.use_count() << std::endl;
+    }, self));
+
+
+    //do handshake checking here
+
+   read(5);
+
+  // _network.registerSpider(shared_from_this());
 }
 
 const std::shared_ptr<IConnectSocket>&	Spider::getSocket(void) const
 {
   return _socket;
 }
-/*
-std::unique_ptr<ICircularBuffer>	&Spider::getReadBuf(void)
+
+Spider& Spider::operator<<(const std::vector<uint8_t>& buff)
 {
-  return _read;
+    _write.insert(_write.end(), buff.begin(), buff.end());
+    return *this;
 }
 
-std::unique_ptr<ICircularBuffer>	&Spider::getWriteBuf(void)
+void    Spider::read(size_t size)
 {
-  return _write;
-}*/
-
-void    Spider::read()
-{
-    _socket->async_read(_buff, 1, _readCallback);
+    auto self(shared_from_this());
+    _socket->async_read(_read, size, [this, self](size_t csize)
+    {
+        onRead(csize);
+    });
 }
 
-void    Spider::write() const
+void    Spider::write()
 {
-    _socket->async_write(_buff2, _writeCallback);
+    auto self(shared_from_this());
+    _socket->async_write(_read, [this, self](size_t csize)
+    {
+        onWrite(csize);
+    });
 }
 
-bool	Spider::isHandshakeDone(void) const
+void	Spider::onRead(size_t size)
 {
-  return _handshake_done;
+    std::cout << "onRead(" << size << ") " << static_cast<const unsigned char*>(_read.data()) << std::endl;
+
+    _write.insert(_write.end(), _read.begin(), _read.begin() + size);
+    write();
 }
 
-void	Spider::onRead(const std::vector<uint8_t> &buffer)
+void	Spider::onWrite(size_t size)
 {
-    std::cout << "onRead " << static_cast<const unsigned char*>(buffer.data()) << std::endl;
-    _read->pushData(buffer);
-}
+    _write.clear();
+    std::cout << "onWrite(" << size << ") " << std::endl;
 
-void	Spider::onWrite(std::size_t size)
-{
-    std::cout << "onWrite " << size << std::endl;
-    _write->discardData(size);
+    read(5);
 }
