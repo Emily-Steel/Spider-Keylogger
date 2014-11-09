@@ -86,6 +86,7 @@ Spider& Spider::operator<<(const std::vector<uint8_t>& buff)
 
 void    Spider::read(size_t size)
 {
+    std::cout << "Wait cmdid" << std::endl;
     auto self(shared_from_this());
     _socket->async_read(_read, size, [this, self](size_t csize)
     {
@@ -108,6 +109,7 @@ void	Spider::onRead(size_t size)
   if (size == 1)
   {
       uint8_t cmdId = _read[0];
+      std::cout << "Received id: " << (int)cmdId << std::endl;
 
       switch (static_cast<APacket::PacketType>(cmdId))
       {
@@ -128,31 +130,45 @@ void	Spider::onRead(size_t size)
 
                       tmp2.insert(tmp2.end(), tmp.begin(), tmp.end());
                       tmp2.insert(tmp2.end(), _read.begin(), _read.end() + dasize);
-                      ks.from_bytes(tmp2);
 
-                      _log.insert(ks, _identity);
-
+                      try {
+                          ks.from_bytes(tmp2);
+                          _log.insert(ks, _identity);
+                      } catch (std::exception& e)
+                      {
+                          std::cerr << e.what() << std::endl;
+                      }
                       read(1);
                   });
               });
               break;
-          case APacket::PacketType::MOUSECLICK:
+          case APacket::PacketType::MOUSECLICK: {
               _socket->async_read(_read, 13, [this, self](size_t csize)
               {
-                  std::vector<uint8_t> tmp;
-                  MouseClick mc;
-                  tmp.push_back(static_cast<uint8_t>(APacket::PacketType::MOUSECLICK));
-                  tmp.insert(tmp.end(), _read.begin(), _read.begin() + csize);
-                  mc.from_bytes(tmp);
-
-                  _log.insert(mc, _identity);
-
+              std::vector<uint8_t> tmp;
+              MouseClick mc;
+              tmp.push_back(static_cast<uint8_t>(APacket::PacketType::MOUSECLICK));
+              tmp.insert(tmp.end(), _read.begin(), _read.begin() + csize);
+                 try {
+                     mc.from_bytes(tmp);
+                     _log.insert(mc, _identity);
+                 } catch (std::exception& e)
+                 {
+                     std::cerr << e.what() << std::endl;
+                  }
                   read(1);
               });
+          }
               break;
           default:
+              read(1);
               break;
       }
+  }
+    else
+  {
+      std::cout << "Proto error" << std::endl;
+      read(1);
   }
 }
 
