@@ -35,6 +35,11 @@ public:
   const std::string& getIdentity() const {return _identity;};
 
 private:
+    void   doHandshake(size_t size);
+
+private:
+  bool        _identified;
+  uint32_t    _protoVersion;
   std::string _identity;
 
   std::vector<uint8_t>  _read;

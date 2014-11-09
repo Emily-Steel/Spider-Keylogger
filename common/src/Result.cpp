@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "Result.hpp"
 
 Result::Result(PacketType type)
@@ -16,8 +18,6 @@ Result::~Result()
 {
     
 }
-
-#include <iostream>
 
 void Result::print()
 {

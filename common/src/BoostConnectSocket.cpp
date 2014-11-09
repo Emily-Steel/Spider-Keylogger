@@ -3,8 +3,7 @@
 //AFactoryRegistration<IConnectSocket, BoostConnectSocket> boostConnectSocketFactReg("BoostConnectSocket");
 
 BoostConnectSocket::BoostConnectSocket(boost::asio::io_service& ios)
-: _socket(ios)
-, _connected(false)
+: _socket(ios), _connected(false)
 {
 
 }
@@ -117,8 +116,7 @@ bool	BoostConnectSocket::isConnected() const
 }
 
 void	BoostConnectSocket::onWrite(const t_writeCallback& callback,
-        const boost::system::error_code &ec,
-        size_t size)
+        const boost::system::error_code &ec, size_t size)
 {
     if (!ec)
         callback(size);

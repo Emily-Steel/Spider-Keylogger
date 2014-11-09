@@ -18,8 +18,8 @@ protected:
     virtual void from_bytes_body(const std::vector<char> &bytes);
     virtual void from_readable_body(IReadable &parser);
     
-    private:
-        char _success;
+private:
+    char _success;
 };
 
 #endif
