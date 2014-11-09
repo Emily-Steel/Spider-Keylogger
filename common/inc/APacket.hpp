@@ -68,7 +68,6 @@ protected:
     }
 
     uint8_t          _type;
-    unsigned long   _now;
 };
 
 #endif

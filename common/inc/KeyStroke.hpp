@@ -22,7 +22,8 @@ protected:
     
     
 private:
-    std::string _data;
+	unsigned long	_now;
+    std::string		_data;
 };
 
 #endif

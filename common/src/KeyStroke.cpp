@@ -1,13 +1,13 @@
 #include "KeyStroke.hpp"
 
 KeyStroke::KeyStroke()
-: APacket(APacket::PacketType::KEYSTROKES), _data()
+: APacket(APacket::PacketType::KEYSTROKES), _now(std::time(nullptr)), _data()
 {
 
 }
 
 KeyStroke::KeyStroke(const std::string &data)
-: APacket(APacket::PacketType::KEYSTROKES), _data(data)
+	: APacket(APacket::PacketType::KEYSTROKES), _now(std::time(nullptr)), _data(data)
 {
 
 }
@@ -29,6 +29,7 @@ std::vector<uint8_t> KeyStroke::to_bytes_body() const
 {
     std::vector<uint8_t> ret;
 
+	fill_bytes(ret, _now);
     fill_bytes(ret, static_cast<int>(_data.size()));
     for (auto c : _data)
         ret.push_back(c);
@@ -37,8 +38,9 @@ std::vector<uint8_t> KeyStroke::to_bytes_body() const
 
 void KeyStroke::to_readable_body(IReadable &parser) const
 {
-    parser.put("Size", static_cast<int>(_data.size()));
-    parser.put("Data", _data);
+	parser.put("Time", _now);
+	parser.put("Size", static_cast<int>(_data.size()));
+	parser.put("Data", _data);
 }
 
 void KeyStroke::from_bytes_body(const std::vector<uint8_t> &bytes)
@@ -46,6 +48,7 @@ void KeyStroke::from_bytes_body(const std::vector<uint8_t> &bytes)
     std::size_t pos = 1;
     unsigned int size = 0;
 
+	get_bytes(bytes, pos, _now);
     get_bytes(bytes, pos, size);
     for (;pos < bytes.size();pos++)
         _data += bytes[pos];
@@ -57,8 +60,9 @@ void KeyStroke::from_readable_body(IReadable &parser)
 {
     int size;
     
-    parser.get("Size", size);
-    parser.get("Data", _data);
+	parser.get("Time", _now);
+	parser.get("Size", size);
+	parser.get("Data", _data);
     
     if (static_cast<unsigned int>(size) != _data.size())
         throw std::invalid_argument("Error while parsing packet");
