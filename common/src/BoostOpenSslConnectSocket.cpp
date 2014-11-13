@@ -2,8 +2,8 @@
 
 //AFactoryRegistration<IConnectSocket, BoostOpenSslConnectSocket> boostOpenSslSockFactRegister("BoostOpenSslConnectSocket");
 
-BoostOpenSslConnectSocket::BoostOpenSslConnectSocket(boost::asio::io_service &ios, BoostSslCtx &ssl)
-  : _sslsocket(ios, ssl.context()), _ios(ios), _connected(false)
+BoostOpenSslConnectSocket::BoostOpenSslConnectSocket(boost::asio::io_service &ios, const std::shared_ptr<ISslCtx> &ssl)
+  : _sslsocket(ios, (std::dynamic_pointer_cast<BoostSslCtx>(ssl))->context()), _ios(ios), _connected(false)
 {
 
 }
@@ -119,19 +119,21 @@ void BoostOpenSslConnectSocket::async_error(const t_errorCallback &callback)
   _errorCall = callback;
 }
 
-void BoostOpenSslConnectSocket::onAccept()
+void BoostOpenSslConnectSocket::onAccept(const std::function<void()>& f)
 {
-  auto f = std::bind(&BoostOpenSslConnectSocket::onHandshake, this,
-		     std::placeholders::_1);
-  _sslsocket.async_handshake(boost::asio::ssl::stream_base::server, f);
+  auto func = std::bind(&BoostOpenSslConnectSocket::onHandshake, this,
+		     std::placeholders::_1, f);
+  _sslsocket.async_handshake(boost::asio::ssl::stream_base::server, func);
 }
 
-void BoostOpenSslConnectSocket::onHandshake(const boost::system::error_code &ec)
+void BoostOpenSslConnectSocket::onHandshake(const boost::system::error_code &ec,  std::function<void()> f)
 {
   if (ec) {
     _connected = false;
     std::cerr << "Can't connect to remote, reason: " << ec.message() << std::endl;
   }
+  else
+    f();
 }
 
 bool BoostOpenSslConnectSocket::isConnected() const

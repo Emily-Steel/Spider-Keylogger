@@ -1,13 +1,14 @@
 #include "ClientNetwork.hpp"
+
 #include "BoostConnectSocket.hpp"
+#include "BoostOpenSslConnectSocket.hpp"
 #include "BoostSslCtxClient.hpp"
 
 ClientNetwork::ClientNetwork()
 : _connect(false)
 {
-    BoostSslCtxClient ctx;
-    BoostSslCtx &ctxref = ctx;
-	_socket = std::unique_ptr<IConnectSocket>(new BoostConnectSocket(_ios));
+    _context = std::shared_ptr<ISslCtx>(new BoostSslCtxClient());
+	_socket = std::unique_ptr<IConnectSocket>(new BoostOpenSslConnectSocket(_ios, _context));
 }
 
 ClientNetwork::~ClientNetwork()

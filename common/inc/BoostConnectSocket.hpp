@@ -24,7 +24,7 @@ public:
 
     boost::asio::ip::tcp::socket& socket() {return _socket;};
 
-    void onAccept();
+    void onAccept(const std::function<void()>& f = [](){}) override;
     bool isConnected() const override;
 
 protected:

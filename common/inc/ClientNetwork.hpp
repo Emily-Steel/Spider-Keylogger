@@ -12,6 +12,7 @@
 # include "ScreenShotRequest.hpp"
 # include "KillRequest.hpp"
 # include "ICircularBuffer.hpp"
+# include "ISslCtx.hpp"
 
 #include <boost/asio.hpp> //ToRemove boost
 
@@ -29,6 +30,7 @@ public:
 
 private:
     std::unique_ptr<IConnectSocket> _socket;
+    std::shared_ptr<ISslCtx> _context;
     bool _connect;
     boost::asio::io_service _ios;
 };

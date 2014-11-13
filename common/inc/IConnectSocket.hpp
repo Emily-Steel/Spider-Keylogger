@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <functional>
 #include <cstdint>
 
 #include "AFactory.hpp"
@@ -31,7 +32,7 @@ public:
     virtual void async_read(std::vector<uint8_t> &buffer, size_t size, const t_readCallback &callback) = 0;
     virtual void async_error(const t_errorCallback &callback) = 0;
 
-    virtual void onAccept() = 0;
+    virtual void onAccept(const std::function<void()>& f = [](){}) = 0;
     virtual bool connect(const std::string &address, unsigned short port) = 0;
 
     virtual bool isConnected() const = 0;

@@ -125,9 +125,9 @@ void    BoostConnectSocket::async_error(const t_errorCallback& callback)
     _errorCall = callback;
 }
 
-void	BoostConnectSocket::onAccept()
+void	BoostConnectSocket::onAccept(const std::function<void()>& f)
 {
-
+  f();
 }
 
 bool	BoostConnectSocket::isConnected() const

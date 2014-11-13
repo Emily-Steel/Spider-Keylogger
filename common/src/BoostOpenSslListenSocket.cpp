@@ -1,13 +1,15 @@
+#include <thread>
 #include "BoostOpenSslListenSocket.hpp"
 
 #include "BoostOpenSslConnectSocket.hpp"
 
-BoostOpenSslListenSocket::BoostOpenSslListenSocket(BoostSslCtx &ssl, const std::shared_ptr<boost::asio::io_service>& ios)
-  : _ssl(ssl)
+BoostOpenSslListenSocket::BoostOpenSslListenSocket(const std::shared_ptr<ISslCtx> &ssl, const std::shared_ptr<boost::asio::io_service>& ios)
+  : _ssl(std::dynamic_pointer_cast<BoostSslCtx>(ssl))
   , _ios(ios)
   , _acceptor(*_ios)
 {
-
+  if (_ssl.get() == nullptr)
+      throw std::runtime_error("BoostOpenSslListenSocket::BoostOpenSslListenSocket context isn't an BoostSslCtx.");
 }
 
 BoostOpenSslListenSocket::~BoostOpenSslListenSocket()
@@ -52,8 +54,7 @@ void	BoostOpenSslListenSocket::onAccept(const t_acceptCallback& callback,
 					   const std::shared_ptr<IConnectSocket> &sock)
 {
   if (!ec) {
-    callback(sock);
-    sock->onAccept();
+      sock->onAccept(std::bind(callback, sock));
   } else {
     std::cerr << "Error onAccept " << ec.message() << std::endl;
   }

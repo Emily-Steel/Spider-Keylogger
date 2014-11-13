@@ -8,7 +8,7 @@
 
 Network::Network(const std::string &addr, uint16_t port, ALog& log)
   : _ssl(new BoostSslCtxServer()),
-   _acceptor(new BoostListenSocket),
+   _acceptor(new BoostOpenSslListenSocket(_ssl)),
    _log(log)
 {
   _acceptor->bind(addr, port);
@@ -52,7 +52,7 @@ void	Network::broadcast(const std::vector<uint8_t> &buffer)
 
 void	Network::queueAccept()
 {
-  std::function<void(std::shared_ptr<IConnectSocket>)> acc(std::bind(&Network::onAccept, this, std::placeholders::_1));
+  auto acc(std::bind(&Network::onAccept, this, std::placeholders::_1));
 
   _acceptor->async_accept(acc);
 }

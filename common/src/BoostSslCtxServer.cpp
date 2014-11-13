@@ -10,7 +10,7 @@ BoostSslCtxServer::BoostSslCtxServer()
     _ctx.use_certificate_chain_file("certs/server.crt");
     _ctx.use_private_key_file("certs/server.key", boost::asio::ssl::context::pem);
   } catch (const boost::system::system_error& e) {
-    std::cerr << "failed to load server-side certificate: " << e.what() << std::endl;
+    std::cerr << "Failed to load server-side certificate: " << e.what() << std::endl;
   }
 }
 

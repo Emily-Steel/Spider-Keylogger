@@ -13,7 +13,7 @@ class BoostOpenSslConnectSocket : public IConnectSocket
 public:
   typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket>	ssl_socket;
 
-  BoostOpenSslConnectSocket(boost::asio::io_service &ios, BoostSslCtx &ssl);
+  BoostOpenSslConnectSocket(boost::asio::io_service &ios, const std::shared_ptr<ISslCtx> &ssl);
   virtual ~BoostOpenSslConnectSocket();
 
   virtual BoostOpenSslConnectSocket &operator<<(const APacket &packet) override;
@@ -27,7 +27,7 @@ public:
 
   ssl_socket::lowest_layer_type& socket() {return _sslsocket.lowest_layer();};
 
-  virtual void onAccept() override;
+  virtual void onAccept(const std::function<void()>& f = [](){}) override;
   virtual bool connect(const std::string &address, unsigned short port) override;
 
   virtual bool isConnected() const override;
@@ -35,7 +35,7 @@ public:
 private:
   void onWrite(const t_writeCallback& callback, const boost::system::error_code &ec, size_t size);
   void onRead(const t_readCallback& callback, const boost::system::error_code &ec, size_t size);
-  void onHandshake(const boost::system::error_code &ec);
+  void onHandshake(const boost::system::error_code &ec, std::function<void()> f);
 
   ssl_socket _sslsocket;
   boost::asio::io_service	&_ios;
