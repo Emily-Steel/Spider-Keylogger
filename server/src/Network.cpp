@@ -8,7 +8,7 @@
 
 Network::Network(const std::string &addr, uint16_t port, ALog& log)
   : _ssl(new BoostSslCtxServer()),
-   _acceptor(new BoostOpenSslListenSocket(_ssl)),
+   _acceptor(new BoostListenSocket()),
    _log(log)
 {
   _acceptor->bind(addr, port);

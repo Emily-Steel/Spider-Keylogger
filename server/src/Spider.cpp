@@ -30,14 +30,16 @@ Spider::~Spider()
 
 void Spider::spy()
 {
-    auto self(shared_from_this());
-    _socket->async_error(std::bind([this](std::shared_ptr<Spider> lself)
+    std::weak_ptr<Spider> self(shared_from_this());
+    std::shared_ptr<Spider> nwself(shared_from_this());
+    _socket->async_error(std::bind([this](std::weak_ptr<Spider> lself)
     {
-        _network.unregisterSpider(lself);
-        std::cout << lself.use_count() << std::endl;
+        if (auto sself = lself.lock()) {
+            _network.unregisterSpider(sself);
+        }
     }, self));
 
-    _socket->async_read(_read, 4, [this, self](size_t csize){doHandshake(csize);});
+    _socket->async_read(_read, 4, [this, nwself](size_t csize){doHandshake(csize);});
 }
 
 const std::shared_ptr<IConnectSocket>&	Spider::getSocket(void) const
