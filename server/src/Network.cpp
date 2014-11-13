@@ -62,7 +62,6 @@ void	Network::onAccept(const std::shared_ptr<IConnectSocket>& newSock)
   std::shared_ptr<Spider> spider(new Spider(newSock, *this, _log));
   std::cout << "New client." << std::endl;
   spider->spy();
-  queueAccept();
 }
 
 void	Network::onWrite(const std::shared_ptr<Spider>& spider, std::size_t size)

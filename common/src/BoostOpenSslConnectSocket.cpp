@@ -5,7 +5,8 @@
 BoostOpenSslConnectSocket::BoostOpenSslConnectSocket(boost::asio::io_service &ios, const std::shared_ptr<ISslCtx> &ssl)
   : _sslsocket(ios, (std::dynamic_pointer_cast<BoostSslCtx>(ssl))->context()), _ios(ios), _connected(false)
 {
-
+  if ((std::dynamic_pointer_cast<BoostSslCtx>(ssl)).get() == nullptr)
+     throw std::runtime_error("BoostOpenSslConnectSocket::BoostOpenSslConnectSocket context isn't an BoostSslCtx.");
 }
 
 BoostOpenSslConnectSocket::~BoostOpenSslConnectSocket()

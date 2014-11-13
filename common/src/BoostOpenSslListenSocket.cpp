@@ -58,6 +58,7 @@ void	BoostOpenSslListenSocket::onAccept(const t_acceptCallback& callback,
   } else {
     std::cerr << "Error onAccept " << ec.message() << std::endl;
   }
+  async_accept(callback);
 }
 
 void BoostOpenSslListenSocket::poll()

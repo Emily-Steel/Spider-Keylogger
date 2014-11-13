@@ -53,6 +53,7 @@ void	BoostListenSocket::onAccept(const t_acceptCallback& callback,
         callback(sock);
     else
         std::cerr << "Error onAccept " << ec.message() << std::endl;
+    async_accept(callback);
 }
 
 void BoostListenSocket::poll()
