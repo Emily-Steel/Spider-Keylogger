@@ -122,15 +122,14 @@ void	Spider::onRead(size_t size)
                   tmp.insert(tmp.end(), _read.begin(), _read.begin() + csize);
                   uint16_t textSize = 0;
                   textSize |= ((tmp.data())[9] << 8);
-                  textSize |= ((tmp.data())[8]);
-
+                  textSize |= ((tmp.data())[10]);
                   _socket->async_read(_read, textSize, [this, self, tmp](size_t dasize)
                   {
                       std::vector<uint8_t> tmp2;
                       KeyStroke ks;
 
                       tmp2.insert(tmp2.end(), tmp.begin(), tmp.end());
-                      tmp2.insert(tmp2.end(), _read.begin(), _read.end() + dasize);
+                      tmp2.insert(tmp2.end(), _read.begin(), _read.begin() + dasize);
 
                       try {
                           ks.from_bytes(tmp2);
