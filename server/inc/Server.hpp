@@ -13,7 +13,7 @@
 
 class Server {
 public:
-    static constexpr const char* defaultLogPath = "spiderDb.json";
+    static constexpr const char* defaultLogPath = "spiderDb.db";
     static const uint16_t defaultPort = 4569;
 
 public:
@@ -27,7 +27,6 @@ private:
     void handleSignals(int sig);
 
 private:
-    std::atomic_bool _quit;
     std::thread _inputThread;
     std::unique_ptr<ALog> _log;
     std::unique_ptr<Network> _network;

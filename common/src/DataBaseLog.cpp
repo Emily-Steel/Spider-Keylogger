@@ -65,13 +65,13 @@ void DataBaseLog::insert(APacket const &param, std::string const &id) {
             _dataBaseParser.get("X", x);
             _dataBaseParser.get("Y", y);
             _dataBaseParser.get("Button", button);
-            query += "INSERT INTO SPIDER(x, y, button, client_id) VALUES(" + x + ", " + y + ", "  + button + ", " + id + ");";
+            query += "INSERT INTO SPIDER(x, y, button, client_id) VALUES(" + x + ", " + y + ", "  + button + ", \"" + id + "\");";
             break;
         case APacket::PacketType::KEYSTROKES: {
             std::string text = "";
 
             _dataBaseParser.get("Data", text);
-            query += "INSERT INTO SPIDER(text, client_id) VALUES(\"" + text + "\", " + id + ");";
+            query += "INSERT INTO SPIDER(text, client_id) VALUES(\"" + text + "\", \"" + id + "\");";
             break;
         }
         default:
@@ -80,7 +80,7 @@ void DataBaseLog::insert(APacket const &param, std::string const &id) {
     }
     int ret = sqlite3_exec(_sqlDataBase, query.c_str(), nullptr, nullptr, &sqlErrMsg);
     if (ret != SQLITE_OK) {
-        std::cerr << sqlErrMsg << std::endl;
+        std::cerr << "Insert Error: " << sqlErrMsg << std::endl;
         sqlite3_free(sqlErrMsg);
     }
 }
