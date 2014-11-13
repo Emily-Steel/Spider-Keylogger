@@ -16,7 +16,7 @@ ClientNetwork::~ClientNetwork()
 
 }
 
-bool ClientNetwork::connect(int port, std::string host, const std::string &id)
+bool ClientNetwork::connect(int port, const std::string& host, const std::string &id)
 {
 	if (!_socket->connect(host, port))
 		_connect = false;
